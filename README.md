@@ -1,4 +1,4 @@
 Introduction
 ===
 
-This is the source of [triangelos.no](http://triangelos.no) and its language variants.
+This is the source of [sda.digital](http://sda.digital).
