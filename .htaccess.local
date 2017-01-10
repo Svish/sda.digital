@@ -1,0 +1,22 @@
+
+# Charset
+AddDefaultCharset UTF-8
+
+
+# Environment
+RewriteEngine on
+RewriteBase /sda.digital/
+SetEnv BASE /sda.digital/
+SetEnv ENV dev
+
+
+
+
+# Static files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+
+# Route anything else through the app
+#RewriteRule .* index.php/$0 [L]
+RewriteRule .* index.php?path_uri=/$0 [PT,L,QSA]

@@ -1,0 +1,36 @@
+{
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"*.mp3",
+				"*.ogg",
+				"*.pdf",
+				"*.png",
+				"*.min.*",
+				"*.sublime-*"
+			],
+			"folder_exclude_patterns":
+			[
+				".git",
+				".cache",
+				"vendor",
+				"_new",
+				"_files"
+			],
+			"path": "."
+		}
+	],
+	"build_systems":
+	[
+		{
+			"cmd":
+			[
+				"sync.bat"
+			],
+			"name": "Sync",
+			"working_dir": "${project_path}"
+		}
+	]
+}

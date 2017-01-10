@@ -1,0 +1,115 @@
+<?php
+/**
+ * PDO helper
+ *
+ * @see https://phpdelusions.net/pdo
+ */
+class DB
+{
+	const DIR = __DIR__.DIRECTORY_SEPARATOR.'_schema'.DIRECTORY_SEPARATOR;
+
+
+	private static $instance = NULL;
+
+	private function __construct() { }
+	private function __clone() { }
+
+	public static function instance()
+	{
+		if (!self::$instance)
+		{
+			$config = Config::database()[ENV];
+			$timezone = date_default_timezone_get();
+
+			self::$instance = new PDO
+			(
+				$config['dsn'],
+				$config['username'],
+				$config['password'],
+				[
+					PDO::MYSQL_ATTR_INIT_COMMAND => "SET SQL_MODE='TRADITIONAL', TIME_ZONE='{$timezone}'",
+				]
+			);
+			self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			self::$instance->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
+			self::migrate();
+		}
+
+		return self::$instance;
+	}
+
+	public static function exec($statement)
+	{
+		return self::instance()->exec($statement);
+	}
+
+	public static function prepare($statement)
+	{
+		return new Query(self::instance()->prepare($statement));
+	}
+
+	public static function query($statement, int $col = NULL)
+	{
+		if($col === NULL)
+			return new Query(self::instance()->query($statement));
+		return new Query(self::instance()->query($statement, PDO::FETCH_COLUMN, $col));
+	}
+
+	public static function migrate()
+	{
+		// Try get version number
+		try
+		{
+			$current = (int) DB::query('SELECT * FROM version')->fetchColumn();
+		}
+		catch(PDOException $e)
+		{
+			// Create version table
+			DB::query('CREATE TABLE IF NOT EXISTS `version` (`version` int(10) UNSIGNED NOT NULL) ENGINE=InnoDB');
+			DB::query('INSERT INTO `version` VALUES(0)');
+			$current = 0;
+		}
+
+		foreach(glob(self::DIR.'*.sql') as $m)
+		{
+			// Get version number from filename
+			$version = (int) str_replace(self::DIR, NULL, $m);
+
+			if($version > $current)
+			{
+				try
+				{
+					// Get SQL script, without # comments
+					$script = preg_replace('/#.++/m', NULL, file_get_contents($m));
+
+					// Split into queries
+					$queries = preg_split('/;$\s*+/m', $script, -1, PREG_SPLIT_NO_EMPTY);
+
+					// Run each query
+					foreach($queries as $q)
+						if(trim($q) != '')
+							DB::prepare($q)->execute();
+
+					// Run <version>.php if it exists
+					if(file_exists(self::DIR.$version.'.php'))
+						require self::DIR.$version.'.php';
+
+					// Update version table
+					DB::query('UPDATE version SET version = '.$version);
+
+					// Clear DB cache
+					$cache = new Cache(DB::class);
+					$cache->clear();
+				}
+				catch(Exception $e)
+				{
+					var_dump($e->getMessage());
+					break;
+				}
+			}
+		}
+
+
+	}
+}

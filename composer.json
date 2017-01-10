@@ -1,0 +1,22 @@
+{
+	"repositories":
+	[
+		{"type": "vcs", "url": "https://github.com/Svish/php-image"}
+	],
+	"require":
+	{
+		"php": "7.*",
+		"mustache/mustache": "2.*",
+		"leafo/lessphp": "0.*",
+		"swiftmailer/swiftmailer": "5.*",
+		"james-heinrich/getid3": "1.*",
+		"league/commonmark": "0.*",
+		"webuni/commonmark-attributes-extension": "^0.3.2",
+		"webuni/commonmark-table-extension": "^0.4.3"
+	},
+	
+	"autoload":
+	{
+		"psr-0": {"": "src/"}
+	}
+}
