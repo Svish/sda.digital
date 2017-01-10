@@ -84,7 +84,7 @@ class DB
 					$script = preg_replace('/#.++/m', NULL, file_get_contents($m));
 
 					// Split into queries
-					$queries = preg_split('/;$\s*+/m', $script, -1, PREG_SPLIT_NO_EMPTY);
+					$queries = preg_split('/;\s*$/m', $script, -1, PREG_SPLIT_NO_EMPTY);
 
 					// Run each query
 					foreach($queries as $q)
@@ -102,10 +102,9 @@ class DB
 					$cache = new Cache(DB::class);
 					$cache->clear();
 				}
-				catch(Exception $e)
+				catch(PDOException $e)
 				{
-					var_dump($e->getMessage());
-					break;
+					throw new HttpException('DB Migration failed.', 500, $e);
 				}
 			}
 		}
