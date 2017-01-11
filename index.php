@@ -10,8 +10,7 @@ if(ENV=='dev')
 
 // Error handling
 error_reporting(E_ALL);
-// TODO: set_exception_handler(new Controller_Error());
-// http://php.net/manual/en/language.errors.php7.php
+set_exception_handler(new Controller_Error());
 
 
 // Get path from htaccess parameter

@@ -45,10 +45,25 @@ class Website
 	}
 
 
+	protected static function create_handler($handler)
+	{
+		if( ! class_exists($handler))
+			throw new HttpException("Handler class '$handler' does not exist.");
+		return new $handler;
+	}
+
 
 	protected static function execute($request)
 	{
-		$handler = new $request['handler'];
+		// Try create handler
+		try
+		{
+			$handler = self::create_handler($request['handler']);
+		}
+		catch(HttpException $e)
+		{
+			throw new HttpException("Page '{$request['path']}' not found", 404, $e);
+		}
 
 		// Call handler::before
 		if( method_exists($handler, 'before'))

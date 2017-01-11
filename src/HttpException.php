@@ -5,7 +5,7 @@ class HttpException extends Exception
 	protected $httpStatus;
 	protected $httpTitle;
 
-	public function __construct($message, $httpStatus = 500, Exception $cause = null, $code = E_USER_ERROR)
+	public function __construct($message, $httpStatus = 500, Throwable $cause = null, $code = E_USER_ERROR)
 	{
 		parent::__construct($message, $code, $cause);
 
