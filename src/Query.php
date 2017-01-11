@@ -6,6 +6,8 @@
  */
 class Query
 {
+	// TODO: Document methods.
+
 	private $pdo;
 
 	public function __construct(PDOStatement $statement)
@@ -31,6 +33,17 @@ class Query
 		return $this;
 	}
 
+	public function close()
+	{
+		$this->pdo->closeCursor();
+	}
+
+	public function exec($input_parameters = NULL)
+	{
+		$this->pdo->execute($input_parameters);
+		$this->close();
+	}
+
 	public function lastInsertId()
 	{
 		return DB::instance()->lastInsertId();
@@ -43,9 +56,12 @@ class Query
 
 	public function fetch($class_name = NULL, $ctor_arguments = array())
 	{
-		return $class_name
+		$result = $class_name
 			? $this->pdo->fetchObject($class_name, $ctor_arguments)
 			: $this->pdo->fetch(PDO::FETCH_ASSOC);
+		$this->close();
+		return $result;
+
 	}
 
 	public function fetchArray($grouped = false)
@@ -67,7 +83,9 @@ class Query
 
 	public function fetchColumn($column = 0)
 	{
-		return $this->pdo->fetchColumn($column);
+		$result = $this->pdo->fetchColumn($column);
+		$this->close();
+		return $result;
 	}
 
 	public function debug()

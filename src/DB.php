@@ -41,11 +41,14 @@ class DB
 				$config['username'],
 				$config['password'],
 				[
-					PDO::MYSQL_ATTR_INIT_COMMAND => "SET SQL_MODE='TRADITIONAL', TIME_ZONE='{$timezone}'",
+					PDO::MYSQL_ATTR_INIT_COMMAND => "SET SQL_MODE='TRADITIONAL', TIME_ZONE='{$timezone}';",
 				]
 			);
 			self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			self::$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
+			if('mysql' == self::$pdo->getAttribute(PDO::ATTR_DRIVER_NAME))
+				self::$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
 
 			self::migrate();
 		}
@@ -62,13 +65,14 @@ class DB
 		// Try get version number
 		try
 		{
-			$current = (int) DB::query('SELECT * FROM version')->fetchColumn();
+			$current = (int) DB::query('SELECT * FROM version')
+				->fetchColumn();
 		}
 		catch(PDOException $e)
 		{
 			// Create version table
-			DB::query('CREATE TABLE IF NOT EXISTS `version` (`version` int(10) UNSIGNED NOT NULL) ENGINE=InnoDB');
-			DB::query('INSERT INTO `version` VALUES(0)');
+			DB::exec('CREATE TABLE IF NOT EXISTS `version` (`version` int(10) UNSIGNED NOT NULL) ENGINE=InnoDB');
+			DB::exec('INSERT INTO `version` VALUES(0)');
 			$current = 0;
 		}
 
@@ -90,7 +94,7 @@ class DB
 					// Run each query
 					foreach($queries as $q)
 						if(trim($q) != '')
-							DB::prepare($q)->execute();
+							DB::exec($q);
 
 					// Run <version>.php if it exists
 					if(file_exists(self::DIR.$version.'.php'))

@@ -22,8 +22,7 @@ abstract class SqlData extends Data
 		// Get table info (columns and primary keys)
 		$this->table_info = (new Cache(DB::class))->get($this->table_name, function($table_name)
 			{
-				$columns = DB::query("SHOW COLUMNS FROM $table_name")
-					->fetchArray(true);
+				$columns = DB::query("SHOW COLUMNS FROM $table_name")->fetchArray(true);
 				$columns = array_map('reset', $columns);
 
 				$info = (object)[
