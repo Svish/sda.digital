@@ -24,10 +24,15 @@ class Controller_Error extends Controller_Page
 
 	private static function collect_xdebug(Throwable $e = null)
 	{
-		if( ! $e)
-			return null;
+		if( ! $e) return null;
 
-		$msg = isset($e->xdebug_message) ? $e->xdebug_message : '<pre>'.$e->getMessage().'</pre>';
+		$msg = isset($e->xdebug_message)
+			? '<table>'.$e->xdebug_message.'</table>'
+			: '<pre>'
+				.'<b>'.$e->getMessage().'</b>'
+				."\r\n\r\n"
+				.$e->getTraceAsString()
+				.'</pre>';
 
 		return self::collect_xdebug($e->getPrevious()) . $msg;
 	}
