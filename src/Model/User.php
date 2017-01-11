@@ -36,6 +36,10 @@ class Model_User extends Model
 		if( ! $user->verify_password($password))
 			return false;
 
+		// Check role
+		if( ! $user->has_roles(['login']))
+			return false;
+
 		// Login
 		return $this->_login($user);
 	}
@@ -59,6 +63,10 @@ class Model_User extends Model
 
 		// Check token
 		if( ! $user->verify_token($token))
+			return false;
+
+		// Check role
+		if( ! $user->has_roles(['login']))
 			return false;
 
 		// Login
