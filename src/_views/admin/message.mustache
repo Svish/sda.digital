@@ -1,0 +1,24 @@
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}{{#_}}title/Send message{{/_}} - {{#_}}title/Tools{{/_}}{{/ title }}
+
+{{$ content}}
+
+<h1>{{#_}}title/Send message{{/_}}</h1>
+
+
+<form action="{{this}}" method="post">
+	
+	<p><input {{#errors.subject}}class="error"{{/errors.subject}} type="text" name="subject" placeholder="{{#_}}Your subject{{/_}}" value="{{_post.subject}}">
+	<ul class="errors">{{#errors.subject}}<li>{{.}}</li>{{/errors.subject}}</ul>
+	
+	<p><textarea {{#errors.message}}class="error"{{/errors.message}} name="message" placeholder="{{#_}}Your message{{/_}}">{{_post.message}}</textarea>
+	<ul class="errors">{{#errors.message}}<li>{{.}}</li>{{/errors.message}}</ul>
+	
+	<p><button class="icon" type="submit">{{#svg}}send;style="width:2em"{{/svg}}</button>
+</form>
+
+
+{{/ content}}
+
+{{/ layout }}

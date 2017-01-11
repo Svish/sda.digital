@@ -1,0 +1,66 @@
+#header
+{
+	position: relative;
+	padding: 1.5rem @padding;
+	line-height: 2rem;
+
+	background: fadeout(@accent-color, 90%);
+	border-bottom: 1px solid black;
+	.box-shadow(0, 0, 15px, black);
+
+	color: black;
+
+	*
+	{
+		display: inline;
+		//vertical-align: top;
+	}
+
+	h1
+	{
+		margin: 0;
+		padding: 0.55rem -@padding;
+		font-size: 2.5em;
+		text-shadow: rgba(0,0,0, 50%) 0 0 6px;
+		color: inherit;
+		a
+		{
+			color: inherit;
+		}
+	}
+
+	nav
+	{
+		display: inline-block;
+		ul
+		{
+			padding: 0;
+			margin: 0;
+
+			li
+			{
+				position: relative;
+				a
+				{
+					padding: 0.05rem 0;
+					margin-left: 0.95rem;
+					color: inherit;
+
+					border-bottom: 2px solid fadeout(@accent-color, 85%);
+
+					&:hover,
+					&:active
+					{
+						border-bottom: 2px solid fadeout(@accent-color, 60%);
+					}
+					&.current
+					{
+						border-bottom: 2px solid @accent-color;
+						.inset-shadow(0, 0, 7px, fade(@accent-color, 40%));
+					}
+				}
+			}
+		}
+	}
+	
+}

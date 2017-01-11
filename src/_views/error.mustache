@@ -1,0 +1,17 @@
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}{{status}} {{title}}{{/ title }}
+
+{{$ content}}
+
+
+	{{! TODO: Hide debug in production / not admin? }}
+	{{!^isProd}}
+		{{{debug}}}
+		{{{stack}}}
+	{{!/isProd}}
+
+
+
+{{/ content}}
+{{/ layout }}

@@ -1,0 +1,37 @@
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}Meg{{/ title }}
+
+{{$ content}}
+
+
+
+<h1>Meg</h1>
+
+<form action="{{this}}" method="post">
+	
+	<p>
+		<label for="name">Ditt navn</label>
+		<br>
+		<input {{#errors.name}}class="error"{{/errors.name}} type="text" name="name" value="{{user.name}}" autocomplete="name">
+	<ul class="errors">{{#errors.name}}<li>{{.}}</li>{{/errors.name}}</ul>
+
+	<p>
+		<label for="email">Din epost</label>
+		<br>
+		<input {{#errors.email}}class="error"{{/errors.email}} type="email" name="email" value="{{user.email}}" autocomplete="email">
+	<ul class="errors">{{#errors.email}}<li>{{.}}</li>{{/errors.email}}</ul>
+	
+	<p>
+		<label for="password">Nytt passord</label>
+		<br>
+		<input {{#errors.password}}class="error"{{/errors.password}} type="text" name="password" placeholder="Om du vil bytte" value="{{user.password}}" autocomplete="off">
+	<ul class="errors">{{#errors.password}}<li>{{.}}</li>{{/errors.password}}</ul>
+
+	<p><button class="icon" type="submit">{{#svg}}save{{/svg}}</button>
+</form>
+
+
+
+{{/ content}}
+{{/ layout }}

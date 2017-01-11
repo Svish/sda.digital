@@ -1,0 +1,29 @@
+body.about #content
+{
+	dt
+	{
+		clear: both;
+		margin-top: .5em;
+	}
+	dd
+	{
+		display: inline;
+		margin: 0;
+		margin-right: .5em;
+	}
+
+
+	.accent
+	{
+		border: 1px solid black;
+		padding: .5em 1.5em;
+		color: #fff;
+		.box-shadow(0,0,15px,rgba(0,0,0,.75));
+	}
+
+	.accent1 {border-color: @accent-color; background: fade(@accent-color, 75%); &:before {content: "#58129F"} }
+	.accent2 {border-color: @accent2-color; background: fade(@accent2-color, 75%); &:before {content: "#281CA4"} }
+	.accent3 {border-color: @accent3-color; background: fade(@accent3-color, 75%); &:before {content: "#A9078A"} }
+
+
+}

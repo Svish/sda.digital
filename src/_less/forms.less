@@ -1,0 +1,120 @@
+label[for]
+{
+	cursor: pointer;
+}
+
+input[type=text],
+input[type=email],
+input[type=url],
+input[type=password],
+input[type=number],
+input[type=tel],
+input[type=date],
+input[type=time],
+input[type=search],
+select,
+textarea
+{
+	font-size: .9em;
+	padding: .5em;
+	border: 1px solid rgba(0,0,0,.25);
+	width: 300px;
+	.box-sizing();
+}
+input[type=checkbox]
+{
+	margin-right: .5em;
+}
+textarea
+{
+	resize: vertical;
+	min-height: 200px;
+}
+
+
+
+// Focused
+input,
+select,
+textarea,
+button,
+a
+{
+	&:focus
+	{
+		outline: 1px dotted rgba(0,0,0,.5);
+	}
+}
+
+
+
+// Errors
+input.error,
+textarea.error
+{
+	border-color: fadeout(red, 30%) !important;
+}
+.errors
+{
+	margin-top: -1.1rem;
+	font-size: .8em;
+	color: red;
+}
+
+
+
+// Buttons
+button, a.button
+{
+	padding: .25em 1em;
+	font-size: .9em;
+	background: fade(@accent-color, 10%);
+	color: inherit;
+	border: 1px outset rgba(0,0,0,.25);
+	cursor: pointer;
+
+	&:hover,
+	&:active
+	{
+		background: fade(@accent-color, 20%);
+		border: 1px outset rgba(0,0,0,.35);
+		color: inherit;
+	}
+}
+a.button
+{
+	display: inline-block;	
+	line-height: 1em;
+	.no-select();
+}
+
+
+
+// Other
+address
+{
+	display: block;
+	font-style: normal;
+	margin-bottom: 1em;
+}
+
+
+
+// Responsiveness
+@media only screen and (max-width : 650px)
+{
+	input[type=text],
+	input[type=email],
+	input[type=url],
+	input[type=password],
+	input[type=number],
+	input[type=tel],
+	input[type=date],
+	input[type=time],
+	input[type=search],
+	select,
+	textarea
+	{
+		width: 100%;
+	}	
+}

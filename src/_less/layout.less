@@ -1,0 +1,252 @@
+
+@import "mixins";
+
+@padding: 8%;
+@accent-color: #12299F;
+@accent2-color: #CD580A;
+@accent3-color: #7F7F7F;
+@background-color: #eee;
+@text-color: #111;
+@shadow-color: #999;
+
+
+// Base stuff
+body,
+input,
+textarea,
+select
+{
+	font: 400 120%/1.5 'Open Sans', sans-serif;
+}
+
+html,
+body
+{
+	margin: 0;
+	padding: 0;
+	color: @text-color;
+	background: @background-color;
+}
+
+body
+{
+	cursor: default;
+	overflow-y: scroll;
+}
+
+
+b,
+strong
+{
+	font-weight: 600;
+}
+small,
+.small
+{
+	font-size: smaller;
+}
+
+
+pre
+{
+	white-space: pre-wrap;
+}
+
+
+// Headers
+h1,h2,h3,h4
+{
+	font-family: 'Open Sans Condensed', sans-serif;
+	font-weight: 300;
+	color: @accent-color;
+
+	a
+	{
+		color: inherit;
+	}
+	a:hover,
+	a:active
+	{
+		color: lighten(@accent-color, 25%);
+	}
+	&:first-child
+	{
+		margin-top: 0;
+	}
+
+	span
+	{
+		vertical-align: super;
+		font-size: medium;
+		color: black;
+	}
+}
+h1{font-size: 2em}
+h2{font-size: 1.5em}
+h3{font-size: 1.2em}
+
+
+
+// Links
+a
+{
+	text-decoration: none;
+
+	color: @accent2-color;
+
+	&:hover,
+	&:active
+	{
+		color: lighten(@accent2-color, 25%);
+		outline-color: lighten(@accent2-color, 25%);
+	}
+}
+
+
+
+// SVG
+svg
+{
+	vertical-align: baseline;
+	height: .8em;
+	width: 1em;
+	* {fill: currentColor}
+}
+svg.flag
+{
+	height: 11px;
+}
+
+
+
+// Lists
+ul li
+{
+	list-style: square;
+}
+
+
+// Definition lists
+dl
+{
+	dt
+	{
+		font-weight: bold;
+		margin-top: .5em;
+		&:first-of-type {margin-top: 0;}
+	}
+	dd
+	{
+		font-size: medium;
+	}
+}
+
+
+
+// Horizontal lines
+hr
+{
+	margin: 2rem 0;
+	height: 1px;
+	border: 0;
+	font-size: 0;
+	color: darken(@background-color, 20%);
+	background: darken(@background-color, 20%);
+	.box-shadow(0, 0, 6px, rgba(0,0,0,.35));
+}
+
+
+
+// Quotes
+blockquote
+{
+	display: inline-block;
+	position: relative;
+	background: #fff;
+	padding: 15px 20px 15px 45px;
+	margin: 0 0 20px;
+
+	color: #666;
+	
+	border-left: 15px solid @accent-color;
+	border-right: 2px solid @accent-color;
+
+	.box-shadow(0, 0, 15px, @shadow-color);
+	border-radius: 5px;
+}
+blockquote::before{
+  content: "\201C"; /*Unicode for Left Double Quote*/
+  
+  /*Font*/
+  font-family: Georgia, serif;
+  font-size: 60px;
+  font-weight: bold;
+  color: #999;
+  
+  /*Positioning*/
+  position: absolute;
+  left: 10px;
+  top:5px;
+}
+blockquote::after{
+  /*Reset to make sure*/
+  content: "";
+}
+
+
+// Empty
+h1,h2,h3,p,div,span,ul,ol,li
+{
+	&:empty
+	{
+		display: none;
+	}
+}
+
+
+// Other
+.no-wrap
+{
+	white-space: nowrap;
+}
+.right:not(p)
+{
+	float: right;
+	margin-left: 1em;
+	margin-bottom: .5em;
+}
+p.right
+{
+	text-align: right;
+}
+.center
+{
+	text-align: center;
+}
+
+.responsive
+{
+	margin-right: 2rem;
+	display: inline-block;
+	vertical-align: top;
+
+	&:last-of-type
+	{
+		margin-right: 0;
+	}
+}
+
+
+
+@import "header";
+@import "message";
+@import "content";
+@import "footer";
+
+@import "fancy";
+
+@import "tables";
+@import "forms";
+
+@import "page-about";
+@import "page-admin";

@@ -1,0 +1,106 @@
+table
+{
+	width: 100%;
+	margin: 1em 0;
+	border-collapse: collapse;
+	empty-cells: hide;
+	font-size: small;
+
+	th,td
+	{
+		text-align: left;
+		vertical-align: top;
+		padding: .3rem .5rem;
+
+		&:not(.empty)
+		{
+			border: 1px solid black;
+		}
+	}
+
+	thead
+	{
+		background: fade(@accent-color, 40%);
+		border-bottom: 2px solid black;
+		th
+		{
+			overflow: hidden;
+			text-overflow: ellipsis;
+			font-weight: bold;
+		}
+	}
+
+	tbody
+	{
+		&.checkered
+		{
+			tr:nth-child(odd)
+			{
+				//td,th{&:nth-child(odd){background: fade(@accent-color, 5%);}}
+				td,th{&:nth-child(even){background: fade(@accent-color, 10%);}}
+			}
+			tr:nth-child(even)
+			{
+				td,th{&:nth-child(odd){background: fade(@accent-color, 10%);}}
+				//td,th{&:nth-child(even){background: fade(@accent-color, 5%);}}
+			}
+		}
+
+		&.striped
+		{
+			tr:nth-child(odd)
+			{
+				td,th{background: fade(@accent-color, 5%);}
+			}
+			tr:nth-child(even)
+			{
+				td,th{background: fade(@accent-color, 10%);}
+			}
+		}
+	}
+}
+
+@media only screen and (max-width : 700px)
+{
+	#content table
+	{
+		&,thead,tbody,tr,th,td
+		{
+			display: block;
+			position: relative;
+		}
+		colgroup, thead
+		{
+			display: none;
+		}
+
+		tbody
+		{
+			tr
+			{
+				border: 1px solid black;
+				margin: .5em 0;
+				td
+				{
+					border: none;
+					border-top: 1px solid black;
+				}
+				td:first-child
+				{
+					border-top: none;
+				}
+				td[data-key]:before
+				{
+					content: attr(data-key);
+					float: right;
+					background: fade(@accent-color, 50%);
+					margin: -.3rem -.5rem;
+					padding: .3rem .5rem;
+					font-weight: bold;
+					border-left: 1px solid black;
+					border-bottom: 1px solid black;
+				}
+			}
+		}
+	}
+}

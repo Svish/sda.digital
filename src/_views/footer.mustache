@@ -1,0 +1,34 @@
+<footer id="footer" class="no-select">
+	<nav role="navigation">
+		<span>Copyright © <a href="{{url}}">SDA.digital</a></span>
+		<span>| <a href="about">Om nettsiden</a></span>
+		<span>| <a href="contact">Kontakt oss</a></span>
+
+
+		{{^user}}
+		<span>| <a href="user/login">Logg inn</a></span>
+		{{/user}}
+
+		{{#user}}
+		<span>| <a href="user/logout">Logg ut</a></span>
+		<span>| <a href="user/me">{{email}}</a></span>
+		{{/user}}
+
+	</nav>
+</footer>
+
+
+{{#clicky}}
+{{#site_id}}
+<script type="text/javascript">
+	var clicky_site_ids = [{{site_id}}];
+	(function() {
+		var s = document.createElement('script');
+		s.type = 'text/javascript';
+		s.async = true;
+		s.src = '//static.getclicky.com/js';
+		( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+	})();
+</script>
+{{/site_id}}
+{{/clicky}}

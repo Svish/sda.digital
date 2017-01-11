@@ -1,0 +1,36 @@
+{{% BLOCKS }}
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+	<head>
+		<title>{{$title}}{{/title}} - SDA.digital</title>
+
+		<base href="{{#url}}/{{/url}}" />
+		<link rel="canonical" href="{{#url}}/{{this}}{{/url}}">
+
+		{{>favicons}}
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		{{#css}}
+		<link rel="stylesheet" type="text/css" href="{{.}}">
+		{{/css}}
+
+		{{#js}}
+		<script type="text/javascript" src="{{.}}"></script>
+		{{/js}}
+		<script>
+			var Site = {Url: {Base: '{{url}}', Current: '{{this}}'}};
+		</script>
+
+	</head>
+	<body class="{{class}}">
+		{{> header}}
+
+		{{> message}}
+
+		<div id="content">
+			{{$content}}{{/content}}
+		</div>
+
+		{{> footer}}
+	</body>
+</html>

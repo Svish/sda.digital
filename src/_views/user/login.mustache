@@ -1,0 +1,29 @@
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}{{#_}}title/Login{{/_}}{{/ title }}
+
+{{$ content}}
+
+
+
+<h1>{{#_}}title/Login{{/_}}</h1>
+
+<form action="{{this}}" method="post">
+
+	<input type="hidden" name="url" value="{{_get.url}}{{_post.url}}">
+	
+	<p><input type="email" name="email" placeholder="Epost" value="{{_post.email}}" autocomplete="email" autofocus>
+	
+	<p><input type="password" name="password" placeholder="Passord">
+	
+	<p>
+		<button class="icon" type="submit">{{#svg}}login{{/svg}}</button>
+		&nbsp;
+		<a class="small" href="user/reset">Glemt passord</a>
+	</p>
+</form>
+
+
+
+{{/ content}}
+{{/ layout }}
