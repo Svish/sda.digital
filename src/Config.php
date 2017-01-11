@@ -31,6 +31,9 @@ class Config
 		{
 			case 'ini':
 				return parse_ini_file($path, true, INI_SCANNER_RAW);
+			
+			case 'json':
+				return json_decode(file_get_contents($path));
 				
 			case 'inc':
 				return include $path;
