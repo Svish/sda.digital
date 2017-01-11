@@ -9,12 +9,13 @@ return [
 	# Contact
 	'/(contact)' => 'Controller_Contact',
 
-	# User
-	'/user/:alpha:' => 'Controller_User',
 
 	# Tools
-	'/admin/:alpha:' => 'Controller_Admin_$1',
+	'/admin/:alpha:/:alpha:' => 'Controller_Admin_$1',
 	'/admin' => 'Controller_Admin',
+
+	# User
+	'/:alpha:/:alpha:' => 'Controller_$1_$2',
 
 	# Other
 	0 => 'Controller_Page',

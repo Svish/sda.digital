@@ -3,17 +3,15 @@
 /**
  * Handles normal pages.
  */
-class Controller_Page extends SessionController
+class Controller_Page extends SecureController
 {
 	private $ctx = [];
 	protected $path;
-	protected $user;
 
 	public function before(array &$info)
 	{
 		parent::before($info);
 		$this->path = trim($info['path'], '/') ?: 'index';
-		$this->user = Model::user()->logged_in(true);
 	}
 
 
@@ -106,6 +104,6 @@ class Controller_Page extends SessionController
 		if($e instanceof ValidationException)
 			return Msg::error($error_msg) + ['errors' => array_map('array_values', $e->getErrors())];
 
-		return $context;
+		return Msg::error('internal_error', $e->getMessage());
 	}
 }

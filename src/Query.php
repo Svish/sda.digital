@@ -31,6 +31,11 @@ class Query
 		return $this;
 	}
 
+	public function lastInsertId()
+	{
+		return DB::instance()->lastInsertId();
+	}
+
 	public function rowCount()
 	{
 		return $this->pdo->rowCount();
@@ -43,9 +48,11 @@ class Query
 			: $this->pdo->fetch(PDO::FETCH_ASSOC);
 	}
 
-	public function fetchArray()
+	public function fetchArray($grouped = false)
 	{
-		return $this->pdo->fetchAll(PDO::FETCH_ASSOC);
+		return $grouped
+			? $this->pdo->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP)
+			: $this->pdo->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function fetchAll($fetch_argument = 'stdClass', $ctor_arguments = NULL, $fetch_style = PDO::FETCH_CLASS)

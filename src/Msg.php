@@ -10,7 +10,7 @@ class Msg
 	public static function __callStatic($type, $args)
 	{
 		$key = array_shift($args);
-		return self::get($type, Text::$type($key));
+		return self::get($type, Text::$type($key, $args));
 	}
 
 	public static function get($type, $text)

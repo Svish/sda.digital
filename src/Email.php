@@ -6,6 +6,21 @@
 class Email
 {
 	/**
+	 * Send info $to someone.
+	 */
+	public function send_info($to, $subject, $message)
+	{
+		$message = Swift_Message::newInstance()
+			->setFrom($this->config['smtp']['sender'])
+			->setTo($to)
+			->setSubject($subject)
+			->setBody($message);
+
+		return $this->send($message);
+	}
+
+
+	/**
 	 * Send contact email $from someone.
 	 */
 	public function send_feedback($from, $subject, $message)
@@ -29,7 +44,7 @@ class Email
 		$text = $message->getBody();
 		$html = Markdown::render($text);
 		$message
-			->setSender($this->config['smtp']['username'])
+			->setSender($this->config['smtp']['sender'])
 			->setBody($html, 'text/html')
 			->addPart($text, 'text/plain');
 
@@ -62,7 +77,7 @@ class Email
 		catch(Swift_SwiftException $e)
 		{
 			error_log("Failed to send '$name' email: " . $e->getMessage());
-			throw new HttpException('Failed to send email.', 500, $e);
+			throw new HttpException(Text::error('email_fail'), 500, $e);
 		}
 	}
 }

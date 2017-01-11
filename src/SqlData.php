@@ -22,39 +22,60 @@ abstract class SqlData extends Data
 		// Get table info (columns and primary keys)
 		$this->table_info = (new Cache(DB::class))->get($this->table_name, function($table_name)
 			{
-				$columns = DB::query("SHOW COLUMNS FROM $table_name")->fetchArray();
-				$info = (object)['columns' => [], 'primary_keys' => []];
-				foreach ($columns as $c)
+				$columns = DB::query("SHOW COLUMNS FROM $table_name")
+					->fetchArray(true);
+				$columns = array_map('reset', $columns);
+
+				$info = (object)[
+					'columns' => $columns,
+					'column_names' => array_keys($columns), 
+					'primary_keys' => [],
+					'rules' => [],
+					'auto_increment' => false,
+					];
+
+				foreach ($columns as $name => $column)
 				{
-					$info->columns[] = $c['Field'];
-					if($c['Key'] == 'PRI')
-						$info->primary_keys[] = $c['Field'];
+					// If auto_increment
+					if($column['Extra'] == 'auto_increment')
+						// Remember name for lastInsertId on save
+						$info->auto_increment = $name;
+
+					// If not, and not nullable
+					elseif($column['Null'] == 'NO')
+						// Add not_empty rule
+						$info->rules[$name][] = 'not_empty';
+
+					// Add db_type rule
+					$info->rules[$name][] = ['db_type', $column['Type']];
 				}
 
 				return $info;
 			});
-
-		// TODO: Add rules from table info? (max_length, unique, not_empty, ...)
 	}
 
 	
 	public function __set($key, $value)
 	{
-		if($this->table_info && in_array($key, $this->table_info->primary_keys))
-			throw new Exception("Primary key '$key' cannot be changed.");
-
 		$this->dirty[$key] = $value;
 		parent::__set($key, $value);
 	}
 	
 	public function __unset($key)
 	{
-		if($this->table_info && in_array($key, $this->table_info->primary_keys))
-			throw new Exception("Primary key '$key' cannot be changed.");
-
 		$this->dirty[$key] = null;
 		parent::__unset($key);
 	}
+
+
+
+	public function validate()
+	{
+		$rules = array_merge_recursive($this->table_info->rules, $this->rules);
+		Valid::check($this, $rules);
+		return $this;
+	}
+
 
 
 	public function save()
@@ -63,10 +84,10 @@ abstract class SqlData extends Data
 			return true;
 
 		// Validate
-		Valid::check($this, $this->rules);
+		$this->validate();
 
 		// Make query
-		$data = Util::array_whitelist($this->dirty + $this->data, $this->table_info->columns);
+		$data = Util::array_whitelist($this->dirty + $this->data, $this->table_info->column_names);
 		$columns = array_keys($data);
 
 		$query = sprintf("INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s",
@@ -77,13 +98,17 @@ abstract class SqlData extends Data
 			);
 
 		// Run query
-		$c = DB::prepare($query)
-			->execute($data)
-			->rowCount();
+		$x = DB::prepare($query)
+			->execute($data);
 
+		// If inserted/updated, get auto_increment value
+		if($x->rowCount() > 0 && $this->table_info->auto_increment)
+			$this->data[$this->table_info->auto_increment] = $x->lastInsertId();
+
+		// Reset $dirty
 		$this->dirty = [];
 
-		return $c;
+		return $this;
 	}
 
 

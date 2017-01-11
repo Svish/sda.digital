@@ -3,8 +3,7 @@
 class Data_User extends SqlData
 {
 	protected $rules = [
-			'name' => ['not_empty'],
-			'email' => ['not_empty', 'email', 'email_domain'],
+			'email' => ['email', 'email_domain'],
 		];
 
 
@@ -23,20 +22,18 @@ class Data_User extends SqlData
 	public function __set($key, $value)
 	{
 		parent::__set($key, $value);
+
 		switch($key)
 		{
 			// Hash password and token
 			case 'password':
-				// Unset if empty
-				if( ! $value)
-					unset($this->password);
 				// Add rule if setting password
-				else
+				if($value)
 					$this->rules += ['password' => [['min_length', 12]]];
 				
 			case 'token':
-				$key = "{$key}_hash";
-				$this->$key = password_hash($value, self::ALGO, self::ALGO_OPT);
+				$hash = password_hash($value, self::ALGO, self::ALGO_OPT);
+				parent::__set("{$key}_hash", $hash);
 				break;
 		}
 	}
@@ -54,6 +51,21 @@ class Data_User extends SqlData
 				break;
 		}
 	}
+
+
+
+	public function has_roles(array $roles)
+	{
+		$has = explode(',', $this->roles);
+
+		foreach($roles as $role)
+			if( ! in_array($role, $has))
+				return false;
+
+		return true;
+	}
+
+
 
 	public function verify_password($password)
 	{

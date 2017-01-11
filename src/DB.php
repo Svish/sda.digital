@@ -6,39 +6,6 @@
  */
 class DB
 {
-	const DIR = __DIR__.DIRECTORY_SEPARATOR.'_schema'.DIRECTORY_SEPARATOR;
-
-
-	private static $instance = NULL;
-
-	private function __construct() { }
-	private function __clone() { }
-
-	public static function instance()
-	{
-		if (!self::$instance)
-		{
-			$config = Config::database()[ENV];
-			$timezone = date_default_timezone_get();
-
-			self::$instance = new PDO
-			(
-				$config['dsn'],
-				$config['username'],
-				$config['password'],
-				[
-					PDO::MYSQL_ATTR_INIT_COMMAND => "SET SQL_MODE='TRADITIONAL', TIME_ZONE='{$timezone}'",
-				]
-			);
-			self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			self::$instance->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-
-			self::migrate();
-		}
-
-		return self::$instance;
-	}
-
 	public static function exec($statement)
 	{
 		return self::instance()->exec($statement);
@@ -49,12 +16,46 @@ class DB
 		return new Query(self::instance()->prepare($statement));
 	}
 
-	public static function query($statement, int $col = NULL)
+	public static function query($statement)
 	{
-		if($col === NULL)
-			return new Query(self::instance()->query($statement));
-		return new Query(self::instance()->query($statement, PDO::FETCH_COLUMN, $col));
+		return new Query(self::instance()->query($statement));
 	}
+
+
+
+	private static $pdo = NULL;
+
+	private function __construct() { }
+	private function __clone() { }
+
+	public static function instance()
+	{
+		if (!self::$pdo)
+		{
+			$config = Config::database()[ENV];
+			$timezone = date_default_timezone_get();
+
+			self::$pdo = new PDO
+			(
+				$config['dsn'],
+				$config['username'],
+				$config['password'],
+				[
+					PDO::MYSQL_ATTR_INIT_COMMAND => "SET SQL_MODE='TRADITIONAL', TIME_ZONE='{$timezone}'",
+				]
+			);
+			self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			self::$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
+			self::migrate();
+		}
+
+		return self::$pdo;
+	}
+
+
+
+	const DIR = __DIR__.DIRECTORY_SEPARATOR.'_schema'.DIRECTORY_SEPARATOR;
 
 	public static function migrate()
 	{

@@ -16,34 +16,41 @@ class Valid
 	{
 		$errors = [];
 
-		foreach($rule_set as $property => $rule)
+		foreach($rule_set as $property => $rules)
 		{
 			$value = $subject[$property];
 
-			foreach($rule as $func)
+			// If allowed empty, and value is empty, skip rules
+			if( ! in_array('not_empty', $rules) and ! self::not_empty($value))
+				continue;
+
+			foreach($rules as $rule)
 			{
-				// If rule is array, use first item as function and the rest as parameters
-				if(is_array($func))
+				// Get method and parameters
+				if(is_array($rule))
 				{
-					$params = $func;
-					$func = array_shift($params);
+					$method = array_shift($rule);
+					$params = $rule;
 					array_unshift($params, $value);
 				}
 				else
+				{
+					$method = $rule;
 					$params = [$value];
+				}
 
-				// If $func has no ::, assume self
-				if(strpos($func, '::') === false)
-					$func = Valid::class.'::'.$func;
+				// If $method has no ::, assume self
+				if(strpos($method, '::') === false)
+					$method = Valid::class.'::'.$method;
 
-				// TODO: Allow validation methods on $subject
+				// TODO: Allow validation methods on $subject (if starts $this->?)
 
 				// Call validation method
-				if( ! call_user_func_array($func, $params))
+				if( ! call_user_func_array($method, $params))
 				{
 					// Add error text
 					array_shift($params);
-					$errors[$property][$func] = Text::error($func, $params);
+					$errors[$property][$method] = Text::error($method, $params);
 					break;
 				}
 			}
@@ -55,18 +62,27 @@ class Valid
 	}
 
 
-	public static function keys_exist(array $array, array $keys)
+
+	public static function keys_exist(array $value, array $keys)
 	{
 		foreach($keys as $key)
-			if( ! array_key_exists($key, $array))
+			if( ! array_key_exists($key, $value))
 				return false;
 		return true;
 	}
 
+
+
+	public static function max_length($value, $length)
+	{
+		return strlen($value) <= $length;
+	}
+
 	public static function min_length($value, $length)
 	{
-		return strlen($value >= $length);
+		return strlen($value) >= $length;
 	}
+
 
 
 	public static function not_empty($value)
@@ -74,17 +90,45 @@ class Valid
 		return ! in_array($value, [null, false, '', []], true);
 	}
 
-	public static function email($email)
+
+
+	public static function email($value)
 	{
-		return Swift_Validate::email($email);
+		return Swift_Validate::email($value);
 	}
 
-	public static function email_domain($email)
+	public static function email_domain($value)
 	{
-		if ( ! Valid::not_empty($email))
-			return FALSE; // Empty fields cause issues with checkdnsrr()
+		if (empty($value))
+			return false; // Empty fields cause issues with checkdnsrr()
 
 		// Check if the email domain has a valid MX record
-		return (bool) checkdnsrr(preg_replace('/^[^@]++@/', '', $email), 'MX');
+		return (bool) checkdnsrr(preg_replace('/^[^@]++@/', '', $value), 'MX');
+	}
+
+
+
+	public static function db_type($value, $column_type)
+	{
+		// Ignore unmatching types
+		if( ! preg_match('/(?<type>\w+)\((?<m>[^)]+)\)/m', $column_type, $column_type))
+			return true;
+		extract($column_type);
+
+		switch($type)
+		{
+			// varchar(max_length)
+			case 'varchar':
+				return self::max_length($value, $m);
+
+			// set('allowed','values')
+			case 'set':
+				$value = explode(',', $value);
+				$allowed = explode(',', str_replace('\'', '', $m));
+				return $value == array_intersect($value, $allowed);
+
+			default:
+				return true;
+		}
 	}
 }
