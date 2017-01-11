@@ -10,7 +10,6 @@ class Controller_Javascript extends CachedController
 	public function __construct()
 	{
 		$this->config = self::config();
-		set_time_limit(30);
 	}
 
 	public function before(array &$info)
@@ -60,7 +59,6 @@ class Controller_Javascript extends CachedController
 			]),
 		));
 
-		set_time_limit(30);
 		$resp = curl_exec($c);
 		$info = curl_getinfo($c);
 

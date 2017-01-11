@@ -43,7 +43,6 @@ class Controller_Thumbnail extends CachedController
 	{
 		Session::close();
 		
-		set_time_limit(60);
 		ini_set('memory_limit','256M');
 		ini_set('gd.jpeg_ignore_warning', '1');
 

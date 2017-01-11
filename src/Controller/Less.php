@@ -8,7 +8,6 @@ class Controller_Less extends CachedController
 	public function __construct()
 	{
 		$this->config = self::config();
-		set_time_limit(30);
 	}
 
 
