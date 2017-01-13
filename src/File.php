@@ -37,7 +37,7 @@ class File
 	public static function put($filename, $contents)
 	{
 		if(empty($filename))
-			return trigger_error(__METHOD__.' called with empty filename.', E_USER_WARNING) and false;
+			throw new Exception(__METHOD__.' called with empty filename.');
 
 		self::mkdir(dirname($filename));
 

@@ -53,7 +53,7 @@ class Clicky
 			return;
 
 		if( ! in_array($data['type'], self::$types))
-			trigger_error("Invalid clicky log type: {$data['type']}", E_USER_ERROR);
+			throw new Exception("Invalid clicky log type: {$data['type']}");
 
 		$c = curl_init();
 		curl_setopt_array($c, array

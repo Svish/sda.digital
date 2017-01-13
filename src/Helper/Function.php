@@ -13,9 +13,8 @@ class Helper_Function
 		$this->function = new ReflectionFunction($function);
 
 		// Check required parameter count
-		$rp = $this->function->getNumberOfRequiredParameters();
-		if($rp != 1)
-			trigger_error("'$function' not usable via ".__CLASS__.". Has $rp required parameters, needs exactly 1.", E_USER_ERROR);
+		if(1 != $this->function->getNumberOfRequiredParameters())
+			throw new Exception("'$function' not usable via ".__CLASS__.". Has $rp required parameters, needs exactly 1.");
 	}
 
 
