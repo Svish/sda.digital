@@ -67,18 +67,21 @@ class File
 
 
 
-	public static function rdelete($directory)
+	public static function rdelete($directory, $keep_self = false)
 	{
 		if( ! is_dir($directory))
 			return;
 
-		$it = new RecursiveDirectoryIterator($directory);
+		$it = new RecursiveDirectoryIterator($directory,FilesystemIterator::SKIP_DOTS);
 		$it = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-
+ 
 		foreach($it as $file)
 			if($file->isDir())
 				@rmdir($file->getRealPath());
 			else
 				@unlink($file->getRealPath());
+
+		if( ! $keep_self)
+			@rmdir($directory);
 	}
 }
