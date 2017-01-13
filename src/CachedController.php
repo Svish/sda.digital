@@ -28,7 +28,7 @@ abstract class CachedController extends Controller
 		$get = Util::array_whitelist($_GET, $this->parameter_whitelist);
 		$get = json_encode($get, JSON_NUMERIC_CHECK);
 
-		$this->cache = new Cache(__CLASS__, true);
+		$this->cache = new Cache(__CLASS__);
 		$this->cache_key = $info['path'].$get;
 
 		// Check cache
