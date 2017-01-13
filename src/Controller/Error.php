@@ -19,7 +19,7 @@ class Controller_Error extends Controller_Page
 				'text' => $e->getMessage(),
 				],
 			'debug' => self::collect_xdebug($e),
-			'user' => Model::user()->logged_in(true),
+			'user' => Model::users()->logged_in(true),
 			]);
 	}
 

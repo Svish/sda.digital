@@ -67,3 +67,4 @@ Tidbits
 ===
 
 - Always fetch user and check roles in Model_User::logged_in?
+- class_exists('namespace/namespace/handlerclass')?

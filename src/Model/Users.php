@@ -4,7 +4,7 @@
 /**
  * User model for handling logins, etc.
  */
-class Model_User extends Model
+class Model_Users extends Model
 {
 	const SESSION_KEY = 'user';
 
@@ -104,7 +104,7 @@ class Model_User extends Model
 	/**
 	 * Get user by id or email.
 	 */
-	public static function get($id)
+	public function get($id)
 	{
 		if(is_int($id))
 		return DB::prepare('SELECT * 

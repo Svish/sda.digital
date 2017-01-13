@@ -14,7 +14,7 @@ class Controller_User_Reset extends Controller_Page
 
 		if(isset($_GET['email']))
 		{
-			if(Model::user()->login_token($_GET))
+			if(Model::users()->login_token($_GET))
 				HTTP::redirect('user/me?reset');
 			
 			HTTP::set_status(400);
@@ -28,7 +28,7 @@ class Controller_User_Reset extends Controller_Page
 	public function post()
 	{
 		// Look for user
-		$user = Model::user()->get($_POST['email']);
+		$user = Model::users()->get($_POST['email']);
 		if( ! $user)
 		{
 			HTTP::set_status(422);

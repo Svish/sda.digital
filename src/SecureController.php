@@ -13,7 +13,7 @@ abstract class SecureController extends SessionController
 		parent::before($info);
 
 		// Get logged in user (if any)
-		$this->user = Model::user()->logged_in(true);
+		$this->user = Model::users()->logged_in(true);
 
 		// Open to anyone if empty required_roles
 		if($this->required_roles === false)

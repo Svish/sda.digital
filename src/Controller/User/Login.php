@@ -7,7 +7,7 @@ class Controller_User_Login extends Controller_Page
 {
 	public function post()
 	{
-		if(Model::user()->login($_POST))
+		if(Model::users()->login($_POST))
 		{
 			$url = empty($_POST['url'])
 				? 'admin'

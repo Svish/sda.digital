@@ -7,7 +7,7 @@ class Controller_User_Logout extends Controller_Page
 {
 	public function get($url = null, $context = [])
 	{
-		Model::user()->logout();
+		Model::users()->logout();
 		HTTP::redirect();
 	}
 }
