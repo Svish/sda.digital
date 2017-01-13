@@ -19,38 +19,8 @@ abstract class SqlData extends Data
 		// Get table name from classname, if not set already
 		$this->table_name = $this->table_name ?? strtolower(substr(get_class($this), 5));
 
-		// Get table info (columns and primary keys)
-		$this->table_info = (new Cache(DB::class))->get($this->table_name, function($table_name)
-			{
-				$columns = DB::query("SHOW COLUMNS FROM $table_name")->fetchArray(true);
-				$columns = array_map('reset', $columns);
-
-				$info = (object)[
-					'columns' => $columns,
-					'column_names' => array_keys($columns), 
-					'primary_keys' => [],
-					'rules' => [],
-					'auto_increment' => false,
-					];
-
-				foreach ($columns as $name => $column)
-				{
-					// If auto_increment
-					if($column['Extra'] == 'auto_increment')
-						// Remember name for lastInsertId on save
-						$info->auto_increment = $name;
-
-					// If not, and not nullable
-					elseif($column['Null'] == 'NO')
-						// Add not_empty rule
-						$info->rules[$name][] = 'not_empty';
-
-					// Add db_type rule
-					$info->rules[$name][] = ['db_type', $column['Type']];
-				}
-
-				return $info;
-			});
+		// Get table info
+		$this->table_info = DB::getTableInfo($this->table_name);
 	}
 
 	
@@ -101,7 +71,7 @@ abstract class SqlData extends Data
 			->execute($data);
 
 		// If inserted/updated, get auto_increment value
-		if($x->rowCount() > 0 && $this->table_info->auto_increment)
+		if($x->affectedRows() > 0 && $this->table_info->auto_increment)
 			$this->data[$this->table_info->auto_increment] = $x->lastInsertId();
 
 		// Reset $dirty

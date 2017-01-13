@@ -7,7 +7,7 @@ class Cache
 {	
 	const DIR = DOCROOT.'.cache'.DIRECTORY_SEPARATOR;
 	
-	private $dir;
+	protected $dir;
 	protected $valid = [];
 
 
@@ -46,7 +46,19 @@ class Cache
 		}
 	}
 
+	/**
+	 * Preloads cache using callable if cache does not exist.
+	 * 
+	 * Callable should return/yield $key => $value pairs.
+	 */
+	public function preload(callable $loader)
+	{
+		if( ! file_exists($this->dir))
+			foreach($loader() as $key => $value)
+				$this->set($key, $value);
 
+		return $this;
+	}
 
 	/**
 	 * Reads and unserializes data from the cache file identified by $key.
