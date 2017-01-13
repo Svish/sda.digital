@@ -44,7 +44,7 @@ class Controller_Page extends SecureController
 		}
 		catch(Mustache_Exception_UnknownTemplateException $e)
 		{
-			throw new HttpException("Page '$url' not found", 404);
+			throw new HttpException("Page '$url' not found", 404, $e);
 		}
 	}
 
