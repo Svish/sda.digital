@@ -5,11 +5,15 @@
 {{$ content}}
 
 
+	<p class="center">
+		<img class="frame" src="https://http.cat/{{status}}">
+
+
 	{{! TODO: Hide debug in production / not admin? }}
-	{{!^isProd}}
+	{{#user}}
 		{{{debug}}}
 		{{{stack}}}
-	{{!/isProd}}
+	{{/user}}
 
 
 
