@@ -1,12 +1,29 @@
 #footer
 {
-	font-size: small;
 	clear: both;
-	padding: .75rem @padding;
-	margin: 2.5rem 0 0;
-	border-top: 1px solid @shadow-color;
+	position: relative;
+	z-index: 1;
+	padding: 1em @padding 0 @padding;
+	margin: 1.5rem 0;
+
+	font-size: small;
+	line-height: 1em;
+
+	background: darken(@background-color, 1%);
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+
 	span
 	{
 		display: inline-block;
+		padding: 0 .5em;
+		margin-bottom: 1em;
+		border-left: 1px solid @text-color;
+
+		&:first-child
+		{
+			border-left: none;
+			padding-left: 0;
+		}
 	}
 }

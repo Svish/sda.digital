@@ -1,16 +1,41 @@
 #message
 {
 	padding: .6rem @padding;
-	background: fadeout(blue, 30%);
+	
+	background: fadeout(blue, 50%);
+	border-bottom: 1px solid blue;
 	color: white;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+
+	animation: slideup 10s both;
 }
 
 #message.error
 {
-	background: fadeout(red, 30%);
+	background: fadeout(red, 50%);
+	border-bottom: 1px solid red;
 }
 
 #message.ok
 {
-	background: fadeout(green, 30%);
+	background: fadeout(green, 50%);
+	border-bottom: 1px solid green;
+}
+
+@keyframes slideup
+{
+	0%,100%
+	{
+		top: -3em;
+		opacity: 0;
+	}
+	10%,80%
+	{
+		top: 0;
+		opacity: 1;
+	}
 }

@@ -1,19 +1,17 @@
 #header
 {
-	position: relative;
-	padding: 1.5rem @padding;
-	line-height: 2rem;
+	margin: 1.5rem 0;
+	padding: 1.9rem @padding 1.2rem @padding;
 
-	background: fadeout(@accent-color, 90%);
+	background: darken(@background-color, 1%);
 	border-bottom: 1px solid black;
-	.box-shadow(0, 0, 15px, black);
 
-	color: black;
+	line-height: 1.75em;
+	color: @text-color;
 
 	*
 	{
-		display: inline;
-		//vertical-align: top;
+		display: inline-block;
 	}
 
 	h1
@@ -21,11 +19,17 @@
 		margin: 0;
 		padding: 0.55rem -@padding;
 		font-size: 2.5em;
-		text-shadow: rgba(0,0,0, 50%) 0 0 6px;
 		color: inherit;
+		font-style: italic;
 		a
 		{
 			color: inherit;
+		}
+		span
+		{
+			color: @accent-color;
+			display: inline-block;
+			margin-left: .075em;
 		}
 	}
 
@@ -40,27 +44,28 @@
 			li
 			{
 				position: relative;
+				margin-left: 0.95rem;
+
 				a
 				{
-					padding: 0.05rem 0;
-					margin-left: 0.95rem;
+					padding: 0 .5em;
 					color: inherit;
 
-					border-bottom: 2px solid fadeout(@accent-color, 85%);
+					border-bottom: 2px solid fade(@accent-color, 40%);
+
+					.transition(border-bottom, 200ms);
 
 					&:hover,
 					&:active
 					{
-						border-bottom: 2px solid fadeout(@accent-color, 60%);
+						border-bottom: 2px solid @accent-color;
 					}
 					&.current
 					{
 						border-bottom: 2px solid @accent-color;
-						.inset-shadow(0, 0, 7px, fade(@accent-color, 40%));
 					}
 				}
 			}
 		}
 	}
-	
 }

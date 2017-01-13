@@ -1,15 +1,13 @@
 // Fancy frames
 .frame
 {
-	border: 1px solid @shadow-color;
-	border-radius: 5px;
-	background: #fff;
-	.box-shadow(0,0,10px, @shadow-color);
 	display: inline-block;
+
+	background: darken(@background-color, 1%);
+	border: 1px solid @shadow-color;
 
 	img, span
 	{
-		border-radius: 5px;
 		display: block;
 	}
 }
@@ -17,12 +15,13 @@ a.frame
 {
 	text-align: center;
 	vertical-align: top;
-	line-height: 1em;
+	//line-height: 1em;
 	color: inherit;
 }
 a.frame:hover
 {
-	.box-shadow(0,0,15px, darken(@shadow-color, 30%));
+	border: 1px solid lighten(@shadow-color, 15%);
+
 }
 a.frame:hover img,
 a:not(.frame):hover img.frame
@@ -111,8 +110,4 @@ a.badge:active
 .badge-2
 {
 	background: fade(@accent2-color, 50%);
-}
-.badge-3
-{
-	background: fade(@accent3-color, 50%);
 }

@@ -1,10 +1,10 @@
 <nav role="navigation">
 	<ul id="main-menu">
-		<li><a href="person/index">Personer</a>
-		<li><a href="series/index">Møteserier</a>
-		<li><a href="place/index">Steder</a>
+		<li><a href="{{#isCurrent}}person/index{{/isCurrent}}">Personer</a>
+		<li><a href="{{#isCurrent}}series/index{{/isCurrent}}">Møteserier</a>
+		<li><a href="{{#isCurrent}}place/index{{/isCurrent}}">Steder</a>
 		{{#user}}
-		<li><a href="admin">Admin</a>
+		<li><a href="{{#isCurrent}}admin{{/isCurrent}}">Admin</a>
 		{{/user}}
 	</ul>
 </nav>

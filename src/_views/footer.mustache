@@ -1,17 +1,17 @@
 <footer id="footer" class="no-select">
 	<nav role="navigation">
 		<span>Copyright © <a href="{{url}}">SDA.digital</a></span>
-		<span>| <a href="about">Om nettsiden</a></span>
-		<span>| <a href="contact">Kontakt oss</a></span>
+		<span><a href="about">Om nettsiden</a></span>
+		<span><a href="contact">Kontakt oss</a></span>
 
 
 		{{^user}}
-		<span>| <a href="user/login">Logg inn</a></span>
+		<span><a href="user/login">Logg inn</a></span>
 		{{/user}}
 
 		{{#user}}
-		<span>| <a href="user/logout">Logg ut</a></span>
-		<span>| <a href="user/me">{{email}}</a></span>
+		<span><a href="user/logout">Logg ut</a></span>
+		<span><a href="user/me">{{email}}</a></span>
 		{{/user}}
 
 	</nav>

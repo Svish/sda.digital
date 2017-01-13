@@ -66,17 +66,18 @@ textarea.error
 // Buttons
 button, a.button
 {
+	cursor: pointer;
 	padding: .25em 1em;
 	font-size: .9em;
-	background: fade(@accent-color, 10%);
-	color: inherit;
+
+	background: fade(@text-color, 10%);
 	border: 1px outset rgba(0,0,0,.25);
-	cursor: pointer;
+	color: inherit;
 
 	&:hover,
 	&:active
 	{
-		background: fade(@accent-color, 20%);
+		background: fade(@text-color, 20%);
 		border: 1px outset rgba(0,0,0,.35);
 		color: inherit;
 	}

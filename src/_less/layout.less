@@ -2,12 +2,12 @@
 @import "mixins";
 
 @padding: 8%;
-@accent-color: #12299F;
-@accent2-color: #CD580A;
-@accent3-color: #7F7F7F;
-@background-color: #eee;
-@text-color: #111;
-@shadow-color: #999;
+@background-color: #0a0a0a;
+@shadow-color: #1c1c1c;
+@text-color: #f0f0f0;
+
+@accent-color: #ed782a;
+@accent2-color: #3b53cf;
 
 
 // Base stuff
@@ -38,7 +38,7 @@ body
 b,
 strong
 {
-	font-weight: 600;
+	font-weight: 700;
 }
 small,
 .small
@@ -63,22 +63,6 @@ h1,h2,h3,h4
 	a
 	{
 		color: inherit;
-	}
-	a:hover,
-	a:active
-	{
-		color: lighten(@accent-color, 25%);
-	}
-	&:first-child
-	{
-		margin-top: 0;
-	}
-
-	span
-	{
-		vertical-align: super;
-		font-size: medium;
-		color: black;
 	}
 }
 h1{font-size: 2em}
@@ -150,9 +134,8 @@ hr
 	height: 1px;
 	border: 0;
 	font-size: 0;
-	color: darken(@background-color, 20%);
-	background: darken(@background-color, 20%);
-	.box-shadow(0, 0, 6px, rgba(0,0,0,.35));
+	color: fade(@text-color, 25%);
+	background: fade(@text-color, 25%);
 }
 
 
@@ -170,9 +153,6 @@ blockquote
 	
 	border-left: 15px solid @accent-color;
 	border-right: 2px solid @accent-color;
-
-	.box-shadow(0, 0, 15px, @shadow-color);
-	border-radius: 5px;
 }
 blockquote::before{
   content: "\201C"; /*Unicode for Left Double Quote*/
