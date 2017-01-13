@@ -19,6 +19,7 @@ class Controller_Error extends Controller_Page
 				'text' => $e->getMessage(),
 				],
 			'debug' => self::collect_xdebug($e),
+			'user' => Model::user()->logged_in(true),
 			]);
 	}
 
@@ -27,7 +28,7 @@ class Controller_Error extends Controller_Page
 		if( ! $e) return null;
 
 		$msg = isset($e->xdebug_message)
-			? '<table>'.$e->xdebug_message.'</table>'
+			? '<table class="xdebug">'.$e->xdebug_message.'</table>'
 			: '<pre>'
 				.'<b>'.$e->getMessage().'</b>'
 				."\r\n\r\n"
