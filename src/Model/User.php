@@ -10,15 +10,6 @@ class Model_User extends Model
 
 
 	/**
-	 * Get single user.
-	 */
-	public function find($email)
-	{
-		return Data::user()->find($email);
-	}
-
-
-	/**
 	 * Try login user.
 	 */
 	public function login(array $data)
@@ -28,7 +19,7 @@ class Model_User extends Model
 		extract($_POST, EXTR_SKIP);
 
 		// Check if user exists
-		$user = $this->find($email);
+		$user = $this->get($email);
 		if( ! $user)
 			return false;
 
@@ -57,7 +48,7 @@ class Model_User extends Model
 		extract($data, EXTR_SKIP);
 
 		// Check if user exists
-		$user = $this->find($email);
+		$user = $this->get($email);
 		if( ! $user)
 			return false;
 
@@ -77,7 +68,7 @@ class Model_User extends Model
 
 	private function _login(Data_User $user)
 	{
-		$_SESSION[self::SESSION_KEY] = $user->email;
+		Session::set(self::SESSION_KEY, $user->id);
 		return true;
 	}
 
@@ -88,8 +79,7 @@ class Model_User extends Model
 	 */
 	public function logout()
 	{
-		unset($_SESSION[self::SESSION_KEY]);
-		return true;
+		Session::unset(self::SESSION_KEY);
 	}
 
 
@@ -99,14 +89,38 @@ class Model_User extends Model
 	 */
 	public function logged_in($return_user = false)
 	{
-		if( ! array_key_exists(self::SESSION_KEY, $_SESSION))
-			return false;
+		$id = Session::get(self::SESSION_KEY);
 
-		$id = $_SESSION[self::SESSION_KEY];
+		if($id === null)
+			return;
 		
 		return $return_user 
-			? $this->find($id) 
+			? $this->get($id)
 			: $id;
+	}
+
+
+
+	/**
+	 * Get user by id or email.
+	 */
+	public static function get($id)
+	{
+		if(is_int($id))
+		return DB::prepare('SELECT * 
+								FROM user 
+								WHERE id=:id')
+			->bindValue(':id', $id)
+			->execute()
+			->fetchFirst(Data_User::class);
+
+		else
+		return DB::prepare('SELECT * 
+								FROM user 
+								WHERE email=:email')
+			->bindValue(':email', $id)
+			->execute()
+			->fetchFirst(Data_User::class);
 	}
 
 }

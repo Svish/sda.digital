@@ -28,7 +28,7 @@ class Controller_User_Reset extends Controller_Page
 	public function post()
 	{
 		// Look for user
-		$user = Model::user()->find($_POST['email']);
+		$user = Model::user()->get($_POST['email']);
 		if( ! $user)
 		{
 			HTTP::set_status(422);

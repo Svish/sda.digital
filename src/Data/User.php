@@ -7,17 +7,6 @@ class Data_User extends SqlData
 		];
 
 
-	public static function find($email)
-	{
-		return DB::prepare('SELECT * 
-								FROM user 
-								WHERE email=:email')
-			->bindValue(':email', $email)
-			->execute()
-			->fetch(__CLASS__);
-	}
-
-
 
 	public function __set($key, $value)
 	{

@@ -10,6 +10,30 @@ class Session
 {
 	const ID = 'session';
 
+	public static function get($key)
+	{
+		if( ! session_id())
+			self::start();
+
+		return $_SESSION[$key] ?? null;
+	}
+
+	public static function set($key, $value)
+	{
+		if( ! session_id())
+			self::start();
+
+		return $_SESSION[$key] = $value;
+	}
+
+	public static function unset($key)
+	{
+		if( ! session_id())
+			self::start();
+
+		unset($_SESSION[$key]);
+	}
+
 	public static function start()
 	{
 		session_name(self::ID);
