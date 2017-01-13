@@ -7,10 +7,12 @@
 class Query
 {
 	protected $statement;
+	protected $pdo;
 
-	public function __construct(PDOStatement $statement)
+	public function __construct(PDOStatement $statement, PDO $pdo)
 	{
 		$this->statement = $statement;
+		$this->pdo = $pdo;
 	}
 
 
@@ -79,7 +81,7 @@ class Query
 	 */
 	public function lastInsertId()
 	{
-		return DB::instance()->lastInsertId();
+		return $this->pdo->lastInsertId();
 	}
 
 	/**

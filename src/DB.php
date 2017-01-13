@@ -12,11 +12,11 @@ class DB
 	}
 	public static function prepare($statement)
 	{
-		return new Query(self::instance()->pdo->prepare($statement));
+		return new Query(self::instance()->pdo->prepare($statement), self::instance()->pdo);
 	}
 	public static function query($statement)
 	{
-		return new Query(self::instance()->pdo->query($statement));
+		return new Query(self::instance()->pdo->query($statement), self::instance()->pdo);
 	}
 	public static function getTableInfo(string $table_name)
 	{
