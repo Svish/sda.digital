@@ -2,42 +2,33 @@
 
 class Website
 {
-	const ROUTE_FILENAME = 'routes.php';
-	const CACHE_FILENAME = 'route-cache';
-
 	protected $tokens = [
 			':any:' => '(.+)',
 			':alpha:' => '([\p{L}_]+)',
 			':number:' => '([\p{Nd}]+)',
 			':alphanum:'  => '([\p{L}\p{Nd}\p{Pd}_]+)',
 		];
-	protected $routes_filepath;
+	protected $routes;
+	protected $path;
 
 
-
-	public static function init()
+	public function __construct(array $routes)
 	{
-		return new self();
-	}
-
-	public function __construct()
-	{
-		$this->routes_filepath = DOCROOT.self::ROUTE_FILENAME;
+		$this->routes = $routes;
 	}
 
 
-
-	public function serve()
+	public function serve($path = null)
 	{
 		// Get path
-		$path = $_SERVER['PATH_INFO'];
+		$this->path = $path === null ? $_SERVER['PATH_INFO'] : $path;
 
-		// Parse path	
-		$request = $this->get_parsed_path($path);
+		// Parse path
+		$request = $this->get_parsed_path($this->path);
 
 		// Execute request
-		self::execute($request + [
-			'path' => $path,
+		$this->execute($request + [
+			'path' => $this->path,
 			'method' => strtolower($_SERVER['REQUEST_METHOD']),
 			'handler' => NULL,
 			'params' => [],
@@ -45,15 +36,7 @@ class Website
 	}
 
 
-	protected static function create_handler($handler)
-	{
-		if( ! class_exists($handler))
-			throw new HttpException("Handler class '$handler' does not exist.");
-		return new $handler;
-	}
-
-
-	protected static function execute($request)
+	protected function execute($request)
 	{
 		// Try create handler
 		try
@@ -83,6 +66,15 @@ class Website
 
 
 
+	protected function create_handler($handler)
+	{
+		if( ! class_exists($handler))
+			throw new HttpException("Handler class '$handler' does not exist.");
+		return new $handler;
+	}
+
+
+
 	protected function get_parsed_path($path)
 	{
 		$request = $this->parse_path($path);
@@ -97,14 +89,12 @@ class Website
 
 	protected function parse_path($path)
 	{
-		$routes = require $this->routes_filepath;
+		// 0: Check for direct match
+		if(array_key_exists($path, $this->routes))
+			return ['handler' => $this->routes[$path]];
 
-		// Direct match
-		if(array_key_exists($path, $routes))
-			return ['handler' => $routes[$path]];
-
-		// Pattern match
-		foreach($routes as $pattern => $handler)
+		// 1: Check for regex matches
+		foreach($this->routes as $pattern => $handler)
 		{
 			if( ! is_string($pattern))
 				continue;
@@ -115,7 +105,7 @@ class Website
 			{
 				unset($matches[0]);
 
-				if(strpos($handler, '$') !== false)
+				if(is_string($handler) && strpos($handler, '$') !== false)
 					foreach($matches as $i => $m)
 					{
 						$handler = str_replace("$$i", ucfirst($m), $handler, $count);
@@ -127,11 +117,11 @@ class Website
 			}
 		}
 
-		// Default route
-		if(array_key_exists(0, $routes))
-			return ['handler' => $routes[0], 'params' => [$path]];
+		// 2: Check for default route
+		if(array_key_exists(0, $this->routes))
+			return ['handler' => $this->routes[0], 'params' => [$path]];
 
-		// No route found
+		// 3: None found
 		return [];
 	}
 }
