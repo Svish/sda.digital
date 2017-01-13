@@ -18,8 +18,9 @@ class Config
 
 	private static function _get($name)
 	{
-		$files = glob(self::DIR."{.,}$name.{inc,ini}", GLOB_BRACE)
-			or trigger_error("Config for '$name' not found.", E_USER_ERROR);
+		$files = glob(self::DIR."{.,}$name.{inc,ini}", GLOB_BRACE);
+		if( ! $files)
+			throw new Exception("Config for '$name' not found.");
 
 		return self::_load($files[0]);
 	}
