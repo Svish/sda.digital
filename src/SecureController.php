@@ -6,7 +6,7 @@
 abstract class SecureController extends SessionController
 {
 	protected $user;
-	protected $require_roles = null;
+	protected $required_roles = false;
 
 	public function before(array &$info)
 	{
@@ -15,17 +15,18 @@ abstract class SecureController extends SessionController
 		// Get logged in user (if any)
 		$this->user = Model::user()->logged_in(true);
 
-		// Open to anyone if empty require_roles
-		if( ! $this->require_roles)
+		// Open to anyone if empty required_roles
+		if($this->required_roles === false)
 			return;
 
-		// Check logged in
+		// Check if logged in
 		if( ! $this->user)
 			// Redirect to login
 			HTTP::redirect('user/login?url='.urlencode(ltrim($info['path'], '/')));
 
 		// Check roles
-		if( ! $this->user->has_roles($this->require_roles))
+		$this->required_roles[] = 'login';
+		if( ! $this->user->has_roles($this->required_roles))
 			throw new HttpException('Ingen tilgang', 403);
 	}
 }

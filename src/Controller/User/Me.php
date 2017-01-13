@@ -3,11 +3,8 @@
 /**
  * Handles user account.
  */
-class Controller_User_Me extends Controller_Page
+class Controller_User_Me extends Controller_Admin
 {
-	protected $require_roles = ['login'];
-
-
 	public function get($url = null, $context = [])
 	{
 		if( ! $this->user)
