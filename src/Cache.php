@@ -10,18 +10,24 @@ class Cache
 	private $dir;
 	protected $valid = [];
 
-	use MemberLambdaFix;
 
 	/**
 	 * Creates a new cache instance.
 	 *
 	 * @param id Identifier for this cache
-	 * @param cache_validators Int for TTL seconds; Callable($mtime, $key) for custom; otherwise none
+	 * @param cache_validators 
+	 *			Int for TTL seconds
+	 *			Array for files to check mtime on
+	 *			Callable($mtime, $key) for custom;
 	 */
 	public function __construct($id, ...$cache_validators)
 	{
 		// Set cache directory
 		$this->dir = self::DIR.$id.DIRECTORY_SEPARATOR;
+
+		// Unless first is null, add default file validator
+		if(null !== reset($cache_validators))
+			$this->valid[] = new Cache_IncludedFilesValidator();
 
 		// Add cache validators
 		foreach($cache_validators as $v)
@@ -31,7 +37,7 @@ class Cache
 				$this->valid[] = new Cache_TimeValidator($v);
 
 			// array: list of files to check
-			if(is_array($v))
+			elseif(is_array($v))
 				$this->valid[] = new Cache_FileValidator($v);
 
 			// callable: callable to call
@@ -52,6 +58,7 @@ class Cache
 		// Try get data
 		$data = $this->_get($path);
 
+		// Return if existing and valid
         if($data !== NULL && $this->_valid(filemtime($path), $key))
 			return unserialize($data);
 
@@ -63,7 +70,7 @@ class Cache
 			return $this->_set($path, $default);
 		}
 
-		// Otherwise, just return default
+		// Otherwise, return $default
 		return $default;
 	}
 	private function _get($path)
@@ -71,28 +78,9 @@ class Cache
 		return File::get($path);
 	}
 
-	private static $checked_files = [];
 	private function _valid($mtime, $key)
 	{
-		if(isset($_GET['no-cache']))
-			return false;
-
-		// First check included files (except vendor and .cache files)
-		$lmod = array_filter(get_included_files(), function($s) 
-			{
-				return strpos($s, 'vendor'.DIRECTORY_SEPARATOR) === false
-					&& strpos($s, '.cache'.DIRECTORY_SEPARATOR) === false;
-			});
-		$lmod = array_diff($lmod, self::$checked_files);
-		self::$checked_files = array_merge(self::$checked_files, $lmod);
-		$lmod = array_map('filemtime', $lmod);
-		$lmod = array_reduce($lmod, 'max');
-
-		// If any unchecked files have changed
-		if($lmod !== null && $mtime < $lmod)
-			return false;
-
-		// If any validators fails
+		// False if any validators fails
 		foreach($this->valid as $valid)
 			if( ! $valid($mtime, $key))
 				return false;

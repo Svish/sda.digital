@@ -1,21 +1,27 @@
 <?php
 
 /**
- * Checks if any of the given files are newer than $mtime.
+ * Checks if given files have changed.
  */
 class Cache_FileValidator
 {
-	private $files;
+	protected $files;
+
+	/**
+	 * @param $files Files to check.
+	 */
 	public function __construct(array $files)
 	{
 		$this->files = $files;
 	}
 
-
-	public function __invoke($mtime)
+	/**
+	 * @return FALSE if any given files have changed since $time.
+	 */
+	public function __invoke($time)
 	{
 		foreach($this->files as $f)
-			if(filemtime($f) > $mtime)
+			if(filemtime($f) > $time)
 				return false;
 		return true;
 	}

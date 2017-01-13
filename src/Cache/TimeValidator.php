@@ -1,17 +1,25 @@
 <?php
 
 /**
- * Checks if given $mtime is older than $ttl
+ * Checks if TTL has passed.
  */
 class Cache_TimeValidator
 {
-	private $ttl;
+	protected $ttl;
+
+	/**
+	 * @param $ttl Max age in seconds.
+	 */
 	public function __construct($ttl)
 	{
 		$this->ttl = (int)$ttl;
 	}
-	public function __invoke($mtime, $key)
+
+	/**
+	 * @return FALSE if $time is older than TTL.
+	 */
+	public function __invoke($time, $key)
 	{
-		return (time() - $mtime) <= $this->ttl;
+		return (time() - $time) <= $this->ttl;
 	}
 }
