@@ -12,10 +12,12 @@ class Website
 	protected $path;
 
 
+
 	public function __construct(array $routes)
 	{
 		$this->routes = $routes;
 	}
+
 
 
 	public function serve($path = null)
@@ -23,17 +25,18 @@ class Website
 		// Get path
 		$this->path = $path === null ? $_SERVER['PATH_INFO'] : $path;
 
-		// Parse path
-		$request = $this->get_parsed_path($this->path);
+		// Find route
+		$route = $this->find_route($this->path);
 
 		// Execute request
-		$this->execute($request + [
+		$this->execute($route + [
 			'path' => $this->path,
 			'method' => strtolower($_SERVER['REQUEST_METHOD']),
-			'handler' => NULL,
+			'handler' => null,
 			'params' => [],
 			]);
 	}
+
 
 
 	protected function execute($request)
@@ -41,6 +44,9 @@ class Website
 		// Try create handler
 		try
 		{
+			if(is_callable($request['handler']))
+				$request['handler'] = $request['handler']($request);
+
 			$handler = self::create_handler($request['handler']);
 		}
 		catch(HttpException $e)
@@ -67,22 +73,22 @@ class Website
 
 
 	protected function create_handler($handler)
+    {
+        if( ! class_exists($handler))
+            throw new HttpException("Handler class '$handler' does not exist.");
+        return new $handler;
+    }
+
+
+
+	protected function find_route($path)
 	{
-		if( ! class_exists($handler))
-			throw new HttpException("Handler class '$handler' does not exist.");
-		return new $handler;
-	}
-
-
-
-	protected function get_parsed_path($path)
-	{
-		$request = $this->parse_path($path);
+		$route = $this->parse_path($path);
 		
-		if($request['handler'] === NULL)
-			throw new HttpException('No route found for '.$path, 404);
+		if($route['handler'] === NULL)
+			throw new HttpException("No page found for '$path'", 404);
 
-		return $request;
+		return $route;
 	}
 
 
@@ -91,7 +97,7 @@ class Website
 	{
 		// 0: Check for direct match
 		if(array_key_exists($path, $this->routes))
-			return ['handler' => $this->routes[$path]];
+			return ['handler' => $this->routes[$path], 'route' => $path];
 
 		// 1: Check for regex matches
 		foreach($this->routes as $pattern => $handler)
@@ -99,27 +105,18 @@ class Website
 			if( ! is_string($pattern))
 				continue;
 
-			$pattern = strtr($pattern, $this->tokens);
+			$regex = strtr($pattern, $this->tokens);
 
-			if(preg_match('#'.$pattern.'/?#Au', $path, $matches))
+			if(preg_match('#'.$regex.'/?#Au', $path, $matches))
 			{
 				unset($matches[0]);
-
-				if(is_string($handler) && strpos($handler, '$') !== false)
-					foreach($matches as $i => $m)
-					{
-						$handler = str_replace("$$i", ucfirst($m), $handler, $count);
-						if($count > 0)
-							unset($matches[$i]);
-					}
-
-				return ['handler' => $handler, 'params' => $matches];
+				return ['handler' => $handler, 'params' => $matches, 'route' => $pattern];
 			}
 		}
 
 		// 2: Check for default route
 		if(array_key_exists(0, $this->routes))
-			return ['handler' => $this->routes[0], 'params' => [$path]];
+			return ['handler' => $this->routes[0], 'route' => 0];
 
 		// 3: None found
 		return [];
