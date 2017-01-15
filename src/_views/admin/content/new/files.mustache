@@ -1,0 +1,16 @@
+
+{{#hasFiles}}
+<form action="{{self}}" method="post">
+
+	{{#files}}
+		<input type="checkbox" name="files[]" value="{{path}}" id="{{checkboxId}}" />
+		<label for="{{checkboxId}}">{{basename}}</label>
+		<br>
+	{{/files}}
+
+	<p>
+		<button type="button">...</button>
+		<button type="submit">→</button>
+
+</form>
+{{/hasFiles}}

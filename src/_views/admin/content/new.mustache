@@ -1,0 +1,19 @@
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}Nye filer{{/ title }}
+
+{{$ content}}
+
+<h1>Nye filer</h1>
+
+{{> groups}}
+
+{{^groups}}
+	<p>Ingen nye filer funnet...
+{{/groups}}
+
+
+<script src="js/admin-new.js"></script>
+
+{{/ content}}
+{{/ layout }}
