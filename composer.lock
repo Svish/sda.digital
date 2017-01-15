@@ -4,9 +4,65 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9fc3ecbb8b33d2628560c02a8fddfe5b",
-    "content-hash": "c3b4046ea18e579f5fd2018ce5a79f4d",
+    "hash": "83e3d5e337748c833cfa0ded2be5e3cd",
+    "content-hash": "87cb94054cf8555de02a595227477bd6",
     "packages": [
+        {
+            "name": "bitworking/mimeparse",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/conneg/mimeparse-php.git",
+                "reference": "2f0d7abc84c9373c440561c512e5a8141e184962"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/conneg/mimeparse-php/zipball/2f0d7abc84c9373c440561c512e5a8141e184962",
+                "reference": "2f0d7abc84c9373c440561c512e5a8141e184962",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "^0.9.0",
+                "phpunit/phpunit": "^4.7|^5.0",
+                "satooshi/php-coveralls": "^0.6.1",
+                "squizlabs/php_codesniffer": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Bitworking\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joe Gregorio",
+                    "homepage": "http://bitworking.org"
+                },
+                {
+                    "name": "Andrew \"Venom\" K."
+                },
+                {
+                    "name": "Ben Ramsey",
+                    "email": "ben@benramsey.com",
+                    "homepage": "http://benramsey.com"
+                }
+            ],
+            "description": "Basic functions for handling mime-types.",
+            "homepage": "https://github.com/conneg/mimeparse-php",
+            "keywords": [
+                "accept",
+                "http",
+                "mime"
+            ],
+            "time": "2016-02-09 18:45:00"
+        },
         {
             "name": "james-heinrich/getid3",
             "version": "v1.9.13",
