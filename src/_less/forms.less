@@ -1,109 +1,15 @@
-label[for]
+form
 {
-	cursor: pointer;
-}
+	@input-border-color: lighten(@background-color, 15%);
+	@input-background-color: darken(@background-color, 10%);
+	@error-color: #B40000;
 
-input[type=text],
-input[type=email],
-input[type=url],
-input[type=password],
-input[type=number],
-input[type=tel],
-input[type=date],
-input[type=time],
-input[type=search],
-select,
-textarea
-{
-	font-size: .9em;
-	padding: .5em;
-	border: 1px solid rgba(0,0,0,.25);
-	width: 300px;
-	.box-sizing();
-}
-input[type=checkbox]
-{
-	margin-right: .5em;
-}
-textarea
-{
-	resize: vertical;
-	min-height: 200px;
-}
-
-
-
-// Focused
-input,
-select,
-textarea,
-button,
-a
-{
-	&:focus
+	label[for]
 	{
-		outline: 1px dotted rgba(0,0,0,.5);
+		cursor: pointer;
+		font-weight: bold;
 	}
-}
 
-
-
-// Errors
-input.error,
-textarea.error
-{
-	border-color: fadeout(red, 30%) !important;
-}
-.errors
-{
-	margin-top: -1.1rem;
-	font-size: .8em;
-	color: red;
-}
-
-
-
-// Buttons
-button, a.button
-{
-	cursor: pointer;
-	padding: .25em 1em;
-	font-size: .9em;
-
-	background: fade(@text-color, 10%);
-	border: 1px outset rgba(0,0,0,.25);
-	color: inherit;
-
-	&:hover,
-	&:active
-	{
-		background: fade(@text-color, 20%);
-		border: 1px outset rgba(0,0,0,.35);
-		color: inherit;
-	}
-}
-a.button
-{
-	display: inline-block;	
-	line-height: 1em;
-	.no-select();
-}
-
-
-
-// Other
-address
-{
-	display: block;
-	font-style: normal;
-	margin-bottom: 1em;
-}
-
-
-
-// Responsiveness
-@media only screen and (max-width : 650px)
-{
 	input[type=text],
 	input[type=email],
 	input[type=url],
@@ -116,6 +22,115 @@ address
 	select,
 	textarea
 	{
-		width: 100%;
-	}	
+		padding: .5em;
+		width: 320px;
+		max-width: 100%;
+		.box-sizing();
+
+		//background: #4d391c;
+		background: @input-background-color;
+		border: 1px solid @input-border-color;
+		color: inherit;
+
+		font-size: .9em;
+
+
+		&:invalid
+		{
+			box-shadow: none;
+			//border-color: @error-color;
+		}
+
+		&:required
+		{
+			background-image: 
+				radial-gradient(@text-color 15%, transparent 16%);
+			background-size: 1em 1em;
+			background-position: top right;
+			background-repeat: no-repeat
+		}
+	}
+	input[type=checkbox]
+	{
+		margin-right: .5em;
+	}
+	textarea
+	{
+		resize: vertical;
+		min-height: 200px;
+	}
+
+
+
+	// Focused
+	input,
+	select,
+	textarea,
+	button,
+	a
+	{
+		&:focus
+		{
+			outline: 1px solid lighten(@input-border-color, 20%);
+		}
+	}
+
+
+
+	// Errors
+	input.error,
+	textarea.error
+	{
+		border-color: @error-color;
+		&:required
+		{
+			background-image: radial-gradient(@error-color 15%, transparent 16%);
+		}
+	}
+	ul.errors
+	{
+		margin-top: -1.1rem;
+		font-size: .8em;
+		color: @error-color;
+	}
+
+
+
+	// Buttons
+	button, a.button
+	{
+		cursor: pointer;
+		padding: .25em 1em;
+		font-size: .9em;
+
+		background: lighten(@background-color, 10%);
+		border: 1px outset fade(@background-color,50%);
+		color: inherit;
+
+		&:hover,
+		&:active
+		{
+			background: lighten(@background-color, 15%);
+			border: 1px outset fade(@background-color,50%);
+			color: inherit;
+		}
+		&:active
+		{
+			border: 1px inset fade(@background-color,50%);
+		}
+
+		svg
+		{
+		}
+	}
+
+
+
+	// Other
+	address
+	{
+		display: block;
+		font-style: normal;
+		margin-bottom: 1em;
+	}
 }

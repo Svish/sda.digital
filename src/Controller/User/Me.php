@@ -26,7 +26,6 @@ class Controller_User_Me extends Controller_Admin
 		if( ! $this->user)
 			HTTP::redirect('user/login?url='.urlencode(ltrim($info['path'], '/')));
 
-
 		try
 		{
 			$this->user
