@@ -25,7 +25,7 @@ class Controller_Page extends SecureController
 		
 		$url = ltrim($url, '/') ?: 'index';
 		$this->ctx = $context + [
-			'this' => $this->path,
+			'self' => $this->path,
 			'class' => str_replace('/', ' ', $this->path),
 
 			'user' => $this->user,

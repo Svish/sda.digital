@@ -8,7 +8,7 @@
 
 <h1>Meg</h1>
 
-<form action="{{this}}" method="post">
+<form action="{{self}}" method="post">
 	
 	<p>
 		<input {{#errors.name}}class="error"{{/errors.name}} type="text" name="name" value="{{user.name}}" placeholder="Ditt navn" autocomplete="name" required>
