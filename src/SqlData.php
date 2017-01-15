@@ -13,7 +13,7 @@ abstract class SqlData extends Data
 
 	public function __construct()
 	{
-		// Reset dirty (from PDO constructor)
+		// Clear dirt from PDO constructor
 		$this->dirty = [];
 
 		// Get table name from classname, if not set already
@@ -65,6 +65,8 @@ abstract class SqlData extends Data
 			implode(', ', self::cc($columns)),
 			implode(', ', self::cu($columns))
 			);
+
+		// TODO: Use bindValue with PARAM_ according to table_info?
 
 		// Run query
 		$x = DB::prepare($query)

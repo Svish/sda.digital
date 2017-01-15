@@ -21,16 +21,5 @@
 			],
 			"path": "."
 		}
-	],
-	"build_systems":
-	[
-		{
-			"cmd":
-			[
-				"sync.bat"
-			],
-			"name": "Sync",
-			"working_dir": "${project_path}"
-		}
 	]
 }
