@@ -3,8 +3,8 @@
 return [
 	
 	# Resources
-	'/:alpha:.js' => 'Controller_Javascript',
-	'/:alpha:.css' => 'Controller_Less',
+	'/js/(:alpha:.js)' => 'Controller_Javascript',
+	'/theme/(:alpha:.css)' => 'Controller_Less',
 
 	# Other
 	0 => function (array $request)

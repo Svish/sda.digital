@@ -3,22 +3,35 @@
 /**
  * Handles compression and serving of javascript files.
  *
+ * @see https://developers.google.com/closure/compiler/docs/api-ref
  * @see https://developers.google.com/closure/compiler/docs/api-tutorial1
  */
 class Controller_Javascript extends CachedController
 {
+	const DIR = DOCROOT.'src'.DIRECTORY_SEPARATOR.'_js'.DIRECTORY_SEPARATOR;
+
 	public function __construct()
 	{
 		$this->config = self::config();
+		
+		// Add full path to bundle files
+		array_walk_recursive($this->config->bundles, function(&$value)
+		{
+			if(is_string($value))
+				$value = self::DIR.$value;
+		});
+
+		// Add single files
+		foreach(glob(self::DIR.'*.js') as $file)
+			$this->config->bundles[basename($file)] = [$file];
 	}
 
 	public function before(array &$info)
 	{
-		// Check if known path
-		if( ! array_key_exists($info['path'], $this->config->path))
-			HTTP::exit_status(404, $info['path']);
+		$this->files = $this->config->bundles[$info['params'][1]] ?? null;
 
-		$this->files = $this->config->path[$info['path']];
+		if( ! $this->files)
+			HTTP::exit_status(404, $info['path']);
 
 		parent::before($info);
 	}
@@ -51,7 +64,8 @@ class Controller_Javascript extends CachedController
 			CURLOPT_CONNECTTIMEOUT => 5,
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_POSTFIELDS => http_build_query([
-				'language' => 'ECMASCRIPT5',
+				'language' => 'ECMASCRIPT6',
+				'language_out' => 'ECMASCRIPT5',
 				'output_info' => 'compiled_code',
 				'output_format' => 'text',
 				'compilation_level' => 'SIMPLE_OPTIMIZATIONS',
