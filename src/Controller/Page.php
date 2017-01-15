@@ -15,15 +15,15 @@ class Controller_Page extends SecureController
 	}
 
 
-	public function get($url = null, $context = [])
+	public function get($path = null, $context = [])
 	{
-		if(is_null($url))
-			$url = $this->path;
+		if(is_null($path))
+			$path = $this->path;
 
 		if( ! is_array($context))
 			$context = [];
 		
-		$url = ltrim($url, '/') ?: 'index';
+		$path = ltrim($path, '/') ?: 'index';
 		$this->ctx = $context + [
 			'self' => $this->path,
 			'class' => str_replace('/', ' ', $this->path),
@@ -40,11 +40,11 @@ class Controller_Page extends SecureController
 		try
 		{
 			header('content-type: text/html; charset=utf-8');
-			echo Mustache::engine()->render($url, $this);
+			echo Mustache::engine([], $path)->render($path, $this);
 		}
 		catch(Mustache_Exception_UnknownTemplateException $e)
 		{
-			throw new HttpException("Page '$url' not found", 404, $e);
+			throw new HttpException("Page '$path' not found", 404, $e);
 		}
 	}
 
