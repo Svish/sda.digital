@@ -64,7 +64,7 @@ class Controller_Javascript extends CachedController
 			CURLOPT_CONNECTTIMEOUT => 5,
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_POSTFIELDS => http_build_query([
-				'language' => 'ECMASCRIPT6',
+				'language' => 'ECMASCRIPT6_STRICT',
 				'language_out' => 'ECMASCRIPT5',
 				'output_info' => 'compiled_code',
 				'output_format' => 'text',

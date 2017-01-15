@@ -4,7 +4,7 @@ class Website
 {
 	protected $tokens = [
 			':any:' => '(.+)',
-			':alpha:' => '([\p{L}_]+)',
+			':alpha:' => '([\p{L}_-]+)',
 			':number:' => '([\p{Nd}]+)',
 			':alphanum:'  => '([\p{L}\p{Nd}\p{Pd}_]+)',
 		];
