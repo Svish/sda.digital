@@ -13,23 +13,21 @@ class Model_Users extends Model
 	 * Try login user.
 	 */
 	public function login(array $data)
-	{
-		if( ! Valid::keys_exist($data, ['email', 'password']))
-			return false;
+	{		
 		extract($_POST, EXTR_SKIP);
 
 		// Check if user exists
-		$user = $this->get($email);
+		$user = $this->get($email ?? null);
 		if( ! $user)
-			return false;
+			throw new UnknownLoginException();
 
 		// Check password
-		if( ! $user->verify_password($password))
-			return false;
+		if( ! $user->verify_password($password ?? null))
+			throw new UnknownLoginException();
 
 		// Check role
 		if( ! $user->has_roles(['login']))
-			return false;
+			throw new UnknownLoginException();
 
 		// Login
 		return $this->_login($user);
@@ -43,22 +41,23 @@ class Model_Users extends Model
 	public function login_token(array $data)
 	{
 		if( ! Valid::keys_exist($data, ['email', 'token']))
-			return false;
+			throw new UnknownTokenException();
 
 		extract($data, EXTR_SKIP);
+
 
 		// Check if user exists
 		$user = $this->get($email);
 		if( ! $user)
-			return false;
+			throw new UnknownTokenException();
 
 		// Check token
 		if( ! $user->verify_token($token))
-			return false;
+			throw new UnknownTokenException();
 
 		// Check role
 		if( ! $user->has_roles(['login']))
-			return false;
+			throw new UnknownTokenException();
 
 		// Login
 		return $this->_login($user);
@@ -68,7 +67,7 @@ class Model_Users extends Model
 
 	private function _login(Data_User $user)
 	{
-		Session::set(self::SESSION_KEY, $user->id);
+		Session::set(self::SESSION_KEY, (int) $user->id);
 		return true;
 	}
 
@@ -90,9 +89,8 @@ class Model_Users extends Model
 	public function logged_in($return_user = false)
 	{
 		$id = Session::get(self::SESSION_KEY);
-
 		if($id === null)
-			return;
+			return false;
 		
 		return $return_user 
 			? $this->get($id)

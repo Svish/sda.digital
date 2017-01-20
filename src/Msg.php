@@ -7,6 +7,11 @@
  */
 class Msg
 {
+	public static function exception(Exception $e)
+	{
+		return self::get('error', $e->getMessage());
+	}
+
 	public static function __callStatic($type, $args)
 	{
 		$key = array_shift($args);

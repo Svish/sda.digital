@@ -7,10 +7,12 @@ class Controller_Less extends CachedController
 {
 	const DIR = DOCROOT.'src'.DIRECTORY_SEPARATOR.'_less'.DIRECTORY_SEPARATOR;
 	const EXT = '.less';
+	private $config;
+
 
 	public function __construct()
 	{
-		$this->config = self::config();
+		$this->config = Config::less();
 		$this->config->valid = array_map('basename', glob(self::DIR.'*'.self::EXT));
 	}
 
@@ -60,12 +62,5 @@ class Controller_Less extends CachedController
 		return $new["updated"] > $old["updated"]
 			? $cache->set($cache_key, $new)
 			: $new;
-	}
-
-
-
-	public static function config()
-	{
-		return Config::less();
 	}
 }

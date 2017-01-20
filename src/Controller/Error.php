@@ -11,7 +11,7 @@ class Controller_Error extends Controller_Page
 			$e = new HttpException('Internal Server Error', 500, $e);
 
 		HTTP::set_status($e->getHttpStatus());
-		$this->get('error', [
+		TemplateView::output([
 			'status' => $e->getHttpStatus(),
 			'title' => $e->getHttpTitle(),
 			'message' => [
@@ -20,7 +20,7 @@ class Controller_Error extends Controller_Page
 				],
 			'debug' => self::collect_xdebug($e),
 			'user' => Model::users()->logged_in(true),
-			]);
+			], 'error');
 	}
 
 	private static function collect_xdebug(Throwable $e = null)

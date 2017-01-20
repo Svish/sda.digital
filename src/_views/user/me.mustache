@@ -8,18 +8,18 @@
 
 <h1>Meg</h1>
 
-<form action="{{self}}" method="post">
+<form action="{{PATH}}" method="post">
 	
 	<p>
-		<input {{#errors.name}}class="error"{{/errors.name}} type="text" name="name" value="{{user.name}}" placeholder="Ditt navn" autocomplete="name" required>
+		<input {{#errors.name}}class="error"{{/errors.name}} type="text" name="name" value="{{me.name}}" placeholder="Ditt navn" autocomplete="name" required>
 	<ul class="errors">{{#errors.name}}<li>{{.}}</li>{{/errors.name}}</ul>
 
 	<p>
-		<input {{#errors.email}}class="error"{{/errors.email}} type="email" name="email" value="{{user.email}}" placeholder="Din epost" autocomplete="email" required>
+		<input {{#errors.email}}class="error"{{/errors.email}} type="email" name="email" value="{{me.email}}" placeholder="Din epost" autocomplete="email" required>
 	<ul class="errors">{{#errors.email}}<li>{{.}}</li>{{/errors.email}}</ul>
 	
 	<p>
-		<input {{#errors.password}}class="error"{{/errors.password}} type="text" name="password" placeholder="Passord, om du vil bytte" value="{{user.password}}" autocomplete="off">
+		<input {{#errors.password}}class="error"{{/errors.password}} type="text" name="password" placeholder="Passord, om du vil bytte" value="{{me.password}}" autocomplete="off">
 	<ul class="errors" optional>{{#errors.password}}<li>{{.}}</li>{{/errors.password}}</ul>
 
 	<p><button class="icon" type="submit">{{#svg}}save{{/svg}}</button>

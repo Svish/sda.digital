@@ -3,12 +3,12 @@
 return [
 	
 	# Resources
-	'/js/(:alpha:.js)' => 'Controller_Javascript',
-	'/theme/(:alpha:.css)' => 'Controller_Less',
+	'js/(:alpha:.js)' => 'Controller_Javascript',
+	'theme/(:alpha:.css)' => 'Controller_Less',
 
 
 	# Slugs
-	'/:alpha:/:digit:/:alpha:' => function (array &$request)
+	':alpha:/:digit:/:alpha:' => function (array &$request)
 	{
 		// TODO: Does this work?
 		$params = explode('/', trim($request['path'], '/'));

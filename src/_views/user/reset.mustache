@@ -8,7 +8,7 @@
 
 <h1>Glemt passord</h1>
 
-<form action="{{self}}" method="post">
+<form action="{{PATH}}" method="post">
 	
 	<p><input type="email" name="email" placeholder="Epost" value="{{_post.email}}" autocomplete="email" autofocus>
 	<ul class="errors">{{#errors.email}}<li>{{.}}</li>{{/errors.email}}</ul>	

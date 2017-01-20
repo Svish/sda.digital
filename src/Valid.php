@@ -50,7 +50,7 @@ class Valid
 				{
 					// Add error text
 					array_shift($params);
-					$errors[$property][$method] = Text::error($method, $params);
+					$errors[$property][$method] = Text::validation($method, $params);
 					break;
 				}
 			}

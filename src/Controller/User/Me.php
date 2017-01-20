@@ -5,37 +5,45 @@
  */
 class Controller_User_Me extends Controller_Admin
 {
-	public function get($url = null, $context = [])
+	private $me;
+
+	public function before(array &$info)
 	{
-		if( ! $this->user)
-			HTTP::redirect('user/login?url='.urlencode(ltrim($info['path'], '/')));
+		parent::before($info);
 
-		if(isset($_GET['saved']))
-			return parent::get($this->path, Msg::ok('saved'));
-
-		if(isset($_GET['reset']))
-			return parent::get($this->path, Msg::ok('reset_done'));
-
-		return parent::get($this->path, $context);
+		//TODO: Allow Admin edit other users.
+		// $_GET['email'] ?? current user?
+		$this->me = $this->user;
 	}
 
+	public function get()
+	{
+		$x = ['me' => $this->me];
+
+		if(isset($_GET['saved']))
+			$x += Msg::ok('saved');
+
+		if(isset($_GET['reset']))
+			$x += Msg::ok('reset_done');
+
+		return TemplateView::output($x);
+	}
 
 
 	public function post()
 	{
-		if( ! $this->user)
-			HTTP::redirect('user/login?url='.urlencode(ltrim($info['path'], '/')));
-
 		try
 		{
-			$this->user
+			$this->me
 				->set($_POST)
 				->save();
 			HTTP::redirect('user/me?saved');
 		}
 		catch(ValidationException $e)
 		{
-			return parent::get($this->path, $this->error('save_fail', $e));
+			return parent::error($e);
 		}
+
+		return TemplateView::output(['me' => $_POST]);
 	}
 }

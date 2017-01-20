@@ -5,7 +5,7 @@ define('DOCROOT', realpath(__DIR__).DIRECTORY_SEPARATOR);
 define('WEBBASE', $_SERVER['BASE']);
 define('WEBROOT', 'http://'.$_SERVER['HTTP_HOST'].WEBBASE);
 define('HOST', $_SERVER['HTTP_HOST']);
-
+define('PATH', trim($_SERVER['PATH_INFO'], '/') ?: 'index');
 
 
 // Environment

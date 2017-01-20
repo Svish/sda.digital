@@ -5,23 +5,25 @@
  */
 class Controller_User_Reset extends Controller_Page
 {
-	public function get($url = null, $context = [])
+	public function get()
 	{
 		if(isset($_GET['sent']))
-		{
-			return parent::get($this->path, Msg::ok('reset_sent'));
-		}
+			return TemplateView::output(Msg::ok('reset_sent'));
 
 		if(isset($_GET['email']))
 		{
-			if(Model::users()->login_token($_GET))
+			try
+			{
+				Model::users()->login_token($_GET);
 				HTTP::redirect('user/me?reset');
-			
-			HTTP::set_status(400);
-			return parent::get($this->path, Msg::error('unknown_token'));
+			}
+			catch(UnknownTokenException $e)
+			{
+				return parent::error($e);
+			}
 		}
 
-		return parent::get($this->path);
+		return TemplateView::output();
 	}
 
 
@@ -32,7 +34,7 @@ class Controller_User_Reset extends Controller_Page
 		if( ! $user)
 		{
 			HTTP::set_status(422);
-			return parent::get($this->path, Msg::error('unknown_user'));
+			return TemplateView::output(Msg::error('unknown_user'));
 		}
 
 
@@ -55,14 +57,7 @@ class Controller_User_Reset extends Controller_Page
 
 		// Send email
 		$to = [$user->email => $user->name];
-		try
-		{
-			Email::info($to, $subject, $message);
-			HTTP::redirect('user/reset?sent');
-		}
-		catch(HttpException $e)
-		{
-			return parent::get($this->path, $this->error('email_fail', $e));
-		}
+		Email::info($to, $subject, $message);
+		HTTP::redirect('user/reset?sent');
 	}
 }

@@ -9,10 +9,12 @@
 class Controller_Javascript extends CachedController
 {
 	const DIR = DOCROOT.'src'.DIRECTORY_SEPARATOR.'_js'.DIRECTORY_SEPARATOR;
+	private $config;
+
 
 	public function __construct()
 	{
-		$this->config = self::config();
+		$this->config = Config::javascript();
 		
 		// Add full path to bundle files
 		array_walk_recursive($this->config->bundles, function(&$value)
@@ -90,12 +92,5 @@ class Controller_Javascript extends CachedController
 		}
 
 		curl_close($c);
-	}
-
-	
-
-	public static function config()
-	{
-		return Config::javascript();
 	}
 }

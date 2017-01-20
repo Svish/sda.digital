@@ -9,7 +9,6 @@ class Website
 			':alphanum:'  => '([\p{L}\p{Nd}\p{Pd}_]+)',
 		];
 	protected $routes;
-	protected $path;
 
 
 
@@ -20,17 +19,14 @@ class Website
 
 
 
-	public function serve($path = null)
+	public function serve($path)
 	{
-		// Get path
-		$this->path = $path === null ? $_SERVER['PATH_INFO'] : $path;
-
 		// Find route
-		$route = $this->find_route($this->path);
+		$route = $this->find_route($path);
 
 		// Execute request
 		$this->execute($route + [
-			'path' => $this->path,
+			'path' => $path,
 			'method' => strtolower($_SERVER['REQUEST_METHOD']),
 			'handler' => null,
 			'params' => [],

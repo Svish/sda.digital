@@ -8,7 +8,7 @@
 
 <h1>Kontakt oss</h1>
 
-<form action="{{self}}" method="post">
+<form action="{{PATH}}" method="post">
 	
 	<p><input {{#errors.from}}class="error"{{/errors.from}} type="email" name="from" placeholder="Din epost" value="{{_post.from}}" required>
 	<ul class="errors">{{#errors.from}}<li>{{.}}</li>{{/errors.from}}</ul>

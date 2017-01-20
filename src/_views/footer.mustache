@@ -5,14 +5,14 @@
 		<span><a href="contact">Kontakt oss</a></span>
 
 
-		{{^user}}
+		{{^_user}}
 		<span><a href="user/login">Logg inn</a></span>
-		{{/user}}
+		{{/_user}}
 
-		{{#user}}
+		{{#_user}}
 		<span><a href="user/logout">Logg ut</a></span>
 		<span><a href="user/me">{{email}}</a></span>
-		{{/user}}
+		{{/_user}}
 
 	</nav>
 </footer>
