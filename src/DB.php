@@ -88,12 +88,17 @@ class DB
 		catch(PDOException $e)
 		{
 			// Create version table
-			$this->pdo->exec('CREATE TABLE IF NOT EXISTS `version` (`version` int(10) UNSIGNED NOT NULL) ENGINE=InnoDB');
+			$this->pdo->exec('CREATE TABLE IF NOT EXISTS `version` (
+				`version` int(10) UNSIGNED NOT NULL
+				) ENGINE=InnoDB');
 			$this->pdo->exec('INSERT INTO `version` VALUES(0)');
 			$current = 0;
 		}
 
-		foreach(glob(self::DIR.'*.sql') as $m)
+		$files = glob(self::DIR.'*.sql', GLOB_NOSORT);
+		natsort($files);
+
+		foreach($files as $m)
 		{
 			// Get version number from filename
 			$version = (int) str_replace(self::DIR, NULL, $m);
@@ -107,11 +112,12 @@ class DB
 
 					// Split into queries
 					$queries = preg_split('/;\s*$/m', $script, -1, PREG_SPLIT_NO_EMPTY);
+					$queries = array_map('trim', $queries);
+					$queries = array_filter($queries);
 
 					// Run each query
 					foreach($queries as $q)
-						if(trim($q) != '')
-							$this->pdo->exec($q);
+						$this->pdo->exec($q);
 
 					// Run <version>.php if it exists
 					if(file_exists(self::DIR.$version.'.php'))
