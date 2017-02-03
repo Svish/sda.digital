@@ -11,7 +11,7 @@ class Model_NewFiles extends Model
 	const DIR = '_new'.DIRECTORY_SEPARATOR;
 
 	/**
-	 * Get user by id or email.
+	 * Returns a structure of grouped, new files.
 	 */
 	public function all()
 	{
@@ -23,6 +23,7 @@ class Model_NewFiles extends Model
 
 	private function group(RecursiveDirectoryIterator $it)
 	{
+		// Gather files and sub-groups
 		$files = [];
 		$groups = [];
 
@@ -36,18 +37,17 @@ class Model_NewFiles extends Model
 			$it->next();
 		}
 
+		// Sort 
+		Util::array_sort_by('name', $groups);
+		Util::array_sort_by('basename', $files);
+
+		
 		return self::group_info($it) +
 		[
 			'groups' => $groups,
 			'files' => $files,
-			'hasFiles' => !empty($files),
+			'hasFiles' => ! empty($files),
 		];
-
- 		foreach($it as $path => $item)
- 		{
-			if(IS_WIN)
-				$path = utf8_encode($path);
- 		}
 	}
 
 	private function group_info($it)
@@ -64,8 +64,6 @@ class Model_NewFiles extends Model
 		return 
 		[
 			'path' => self::pathfix($file->getPathname()),
-			'size' => $file->getSize(),
-			'sizeh' => File::human_size($file->getSize()),
 		] + array_map([__CLASS__, 'pathfix'], pathinfo($file->getPathname()));
 	}
 

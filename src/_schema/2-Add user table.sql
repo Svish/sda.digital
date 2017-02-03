@@ -1,5 +1,6 @@
 
-CREATE TABLE IF NOT EXISTS `user`
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user`
 (
 	`email` varchar(255) NOT NULL,
 	`name` varchar(255) NOT NULL,
@@ -8,4 +9,5 @@ CREATE TABLE IF NOT EXISTS `user`
 
 	PRIMARY KEY (`email`)
 )
+COMMENT='User accounts'
 ENGINE=InnoDB;

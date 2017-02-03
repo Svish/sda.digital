@@ -1,19 +1,17 @@
 <?php
 
 /**
- * Handles user account.
+ * View and select new content to add.
  */
 class Controller_Admin_Content_New extends Controller_Page
 {
 	protected $required_roles = ['editor'];
 
 
-	public function get($url = null, $context = [])
+	public function get()
 	{
 		$files = Model::newFiles()->all();
-		//var_dump($files);return;
-
-		parent::get($url, $context + ['groups' => $files]);
+		TemplateView::output(['groups' => $files]);
 	}
 
 	public function post()

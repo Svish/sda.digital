@@ -24,6 +24,12 @@ Admin
 	- Update info
 	- Browsing editable?
 
+	- Add remote content?
+		- YouTube?
+		- Vimeo?
+		- Facebook?
+		- Etc?
+
 
 - Series
 	- Delete
@@ -61,6 +67,7 @@ Public
 	- In titles and descriptions?
 
 - Allow embedding?
+	- Yes!
 
 
 Tidbits
@@ -68,3 +75,4 @@ Tidbits
 
 - Always fetch user and check roles in Model_User::logged_in?
 - class_exists('namespace/namespace/handlerclass')?
+- Add foreign key constraints to tables

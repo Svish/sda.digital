@@ -1,18 +1,20 @@
 <?php
 
 /**
- * Handles user account.
+ * Adding new content.
  */
 class Controller_Admin_Content_Add extends Controller_Page
 {
 	protected $required_roles = ['editor'];
 
-
-	public function get($url = null, $context = [])
+	public function get()
 	{
-		$adding = Session::get('adding', []);
-		var_dump($adding);return;
-		parent::get($url, $context + ['adding' => $adding]);
+		$files = Session::get('adding', []);
+
+		if( ! $files)
+			HTTP::redirect('admin/content/new');
+
+		TemplateView::output(['adding' => $files]);
 	}
 
 	public function post()

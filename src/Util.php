@@ -79,4 +79,19 @@ class Util
 	{
 		return array_diff_key($array, array_flip($blacklist));
 	}
+
+
+
+	/**
+	 * Sorts the array by given key.
+	 *
+	 * Uses natural, case-insensitive sorting.
+	 */
+	public static function array_sort_by($key, array &$array)
+	{
+		return usort($array, function($x, $y) use ($key)
+		{
+			return strnatcasecmp($x[$key] ?? null, $y[$key] ?? null);
+		});
+	}
 }
