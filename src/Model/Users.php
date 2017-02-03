@@ -86,15 +86,23 @@ class Model_Users extends Model
 	/**
 	 * Get logged in user; false if not logged in.
 	 */
-	public function logged_in($return_user = false)
+	public function logged_in()
 	{
+		// Supposed to be logged in
 		$id = Session::get(self::SESSION_KEY);
 		if($id === null)
 			return false;
-		
-		return $return_user 
-			? $this->get($id)
-			: $id;
+
+		// User (still) exists
+		$user = $this->get($id);
+		if( ! $user)
+			return false;
+
+		// User (still) has login role
+		if( ! $user->has_roles(['login']))
+			return false;
+
+		return $user;
 	}
 
 

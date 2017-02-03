@@ -1,7 +1,7 @@
 <?php
 
 /**
- * View using Mustache templates.
+ * Views using Mustache templates.
  */
 class TemplateView extends View
 {
@@ -18,6 +18,8 @@ class TemplateView extends View
 		$this->_template = $template ?? PATH;
 	}
 
+	
+
 	public function render($mime = 'text/html')
 	{
 		switch($mime)
@@ -26,7 +28,7 @@ class TemplateView extends View
 
 				// Common context
 				$this->_context += [
-					'_user' => Model::users()->logged_in(true),
+					'_user' => Model::users()->logged_in(),
 					'_post' => $_POST,
 					'_css' => (Config::less())->global,
 					'_js' => (Config::javascript())->global,
