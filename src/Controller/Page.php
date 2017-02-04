@@ -11,11 +11,11 @@ class Controller_Page extends SecureController
 	}
 
 
-	protected function error(HttpException $e)
+	protected function error(HttpException $e, array $context = [])
 	{
 		HTTP::set_status($e->getHttpStatus());
 
-		$context = Msg::exception($e);
+		$context += Msg::exception($e);
 		if($e instanceof ValidationException)
 			$context += ['errors' => array_map('array_values', $e->getErrors())];
 

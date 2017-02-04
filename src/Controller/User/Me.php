@@ -41,9 +41,7 @@ class Controller_User_Me extends Controller_Admin
 		}
 		catch(ValidationException $e)
 		{
-			return parent::error($e);
+			return parent::error($e, ['me' => $this->me]);
 		}
-
-		return TemplateView::output(['me' => $_POST]);
 	}
 }
