@@ -10,9 +10,8 @@ abstract class Data implements ArrayAccess
 	 */
 	public static function __callStatic($name, $args)
 	{
-		$name = __CLASS__.'_'.ucfirst($name);
-		$r = new ReflectionClass($name);
-		return $r->newInstanceArgs($args);
+		$name = __CLASS__.'\\'.ucfirst($name);
+		return new $name(...$args);
 	}
 
 

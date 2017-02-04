@@ -1,9 +1,11 @@
 <?php
 
+namespace Controller;
+
 /**
  * Base controller for admin area.
  */
-class Controller_Admin extends Controller_Page
+class Admin extends \Controller\Page
 {
 	protected $required_roles = [];
 }

@@ -1,10 +1,11 @@
 <?php
 
+namespace View\Helper;
 
 /**
  * Dumb an object.
  */
-class Helper_Debug
+class Debug
 {
 	public function __invoke($object)
 	{

@@ -1,10 +1,11 @@
 <?php
 
+namespace View\Helper;
 
 /**
  * Returns the first line of text.
  */
-class Helper_PathClasses
+class PathClasses
 {
 	public function __invoke()
 	{

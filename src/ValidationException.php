@@ -11,7 +11,7 @@ class ValidationException extends HttpException
 	public function __construct(array $errors)
 	{
 		$this->errors = $errors;
-		parent::__construct('Validation failed.', 400);
+		parent::__construct([count($errors)], 400);
 	}
 
 

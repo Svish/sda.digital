@@ -1,6 +1,8 @@
 <?php
 
-class Data_Speaker extends Data_Sluggish
+namespace Data;
+
+class Speaker extends Sluggish
 {
 	
 }

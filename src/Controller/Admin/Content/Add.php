@@ -1,25 +1,48 @@
 <?php
 
+namespace Controller\Admin\Content;
+use HTTP, Session, View, Mime;
+
 /**
  * Adding new content.
  */
-class Controller_Admin_Content_Add extends Controller_Page
+class Add extends \Controller\Admin
 {
 	protected $required_roles = ['editor'];
+
 
 	public function get()
 	{
 		$files = Session::get('adding', []);
-
 		if( ! $files)
-			HTTP::redirect('admin/content/new');
+			HTTP::redirect('admin/content/fresh');
 
-		TemplateView::output(['adding' => $files]);
+		$files = array_map(function($path)
+		{
+			return pathinfo($path) + [
+			'path' => $path,
+			'mime' => Mime::get(self::pathfix($path)),
+			];
+		}, $files);
+
+
+		var_dump($files);
+
+
+		// TODO: Json view how? 
+		View::template(['adding' => $files])
+			->output();
 	}
 
 	public function post()
 	{
-		var_dump($_POST);return;
+		Model::content()->add($_POST);
 		parent::get(null);
+	}
+
+
+	private static function pathfix($path)
+	{
+		return IS_WIN ? utf8_decode($path) : $path;
 	}
 }

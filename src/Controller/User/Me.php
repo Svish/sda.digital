@@ -1,9 +1,13 @@
 <?php
 
+namespace Controller\User;
+use HTTP, View, Message;
+use HttpException;
+
 /**
  * Handles user account.
  */
-class Controller_User_Me extends Controller_Admin
+class Me extends \Controller\Admin
 {
 	private $me;
 
@@ -13,20 +17,14 @@ class Controller_User_Me extends Controller_Admin
 
 		//TODO: Allow Admin edit other users.
 		// $_GET['email'] ?? current user?
+
 		$this->me = $this->user;
 	}
 
 	public function get()
 	{
-		$x = ['me' => $this->me];
-
-		if(isset($_GET['saved']))
-			$x += Msg::ok('saved');
-
-		if(isset($_GET['reset']))
-			$x += Msg::ok('reset_done');
-
-		return TemplateView::output($x);
+		return View::template(['me' => $this->me])
+			->output();;
 	}
 
 
@@ -37,9 +35,10 @@ class Controller_User_Me extends Controller_Admin
 			$this->me
 				->set($_POST)
 				->save();
-			HTTP::redirect_self('?saved');
+			Message::ok('saved');
+			HTTP::redirect_self();
 		}
-		catch(ValidationException $e)
+		catch(HttpException $e)
 		{
 			return parent::error($e, ['me' => $this->me]);
 		}

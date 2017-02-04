@@ -1,11 +1,16 @@
 <?php
-
 use Bitworking\Mimeparse;
-
 
 abstract class View
 {
 	protected $_accept = [];
+
+
+	public static function __callStatic($name, $args)
+	{
+		$name = __CLASS__.'\\'.ucfirst($name);
+		return new $name(...$args);
+	}
 
 
 	public function render($mime = 'text/plain')
@@ -15,10 +20,9 @@ abstract class View
 	}
 
 
-	public static function output()
+	public function output()
 	{
-		$view = new static(...func_get_args());
-		$mime = Mimeparse::bestMatch($view->_accept, $_SERVER['HTTP_ACCEPT'] ?? '*/*');
-		echo $view->render($mime);
+		$mime = Mimeparse::bestMatch($this->_accept, $_SERVER['HTTP_ACCEPT'] ?? '*/*');
+		echo $this->render($mime);
 	}
 }

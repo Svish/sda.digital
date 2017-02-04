@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * File helper.
  *

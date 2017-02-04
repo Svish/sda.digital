@@ -1,9 +1,11 @@
 <?php
+namespace View;
+use Config,Model,View,Mustache,HttpException;
 
 /**
  * Views using Mustache templates.
  */
-class TemplateView extends View
+class Template extends View
 {
 	protected $_accept = ['text/html'];
 
@@ -43,7 +45,7 @@ class TemplateView extends View
 					return Mustache::engine([], $this->_template)
 						->render($this->_template, $this);
 				}
-				catch(Mustache_Exception_UnknownTemplateException $e)
+				catch(\Mustache_Exception_UnknownTemplateException $e)
 				{
 					throw new HttpException('Page not found: '.PATH, 404, $e);
 				}
@@ -70,14 +72,16 @@ class TemplateView extends View
 		if(defined($key))
 			return $this->set($key, constant($key));
 
-		// Classes?
-		foreach($this->class_alternatives($key) as $name)
+		// Function?
+		if(Helper\PhpFunction::exists($key))
+			return $this->set($key, new Helper\PhpFunction($key));
+
+		// Class?
+		foreach($this->alternatives($key) as $name)
+		{
 			if(class_exists($name))
 				return $this->set($key, new $name($this));
-
-		// Function?
-		if(Helper_Function::exists($key))
-			return $this->set($key, new Helper_Function($key));
+		}
 
 		return false;
 	}
@@ -92,10 +96,9 @@ class TemplateView extends View
 
 
 
-	private function class_alternatives($key)
+	private function alternatives($key)
 	{
 		$key = ucfirst($key);
-		yield 'Helper_'.$key;
-		yield 'Model_'.$key;
+		yield __NAMESPACE__."\\Helper\\$key";
 	}
 }

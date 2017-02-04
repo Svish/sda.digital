@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Gets text from the text.ini file.
+ * Gets and formats text from the text.ini file.
  *
  * Examples: 
  *     Text::ok('email_sent');
- *     Text::error('between, [1, 10]);
+ *     Text::error('between', [1, 10]);
  */
 class Text
 {

@@ -1,21 +1,23 @@
 <?php
 
+namespace Controller\User;
+use HTTP, Model, Mustache, Email;
+use Model\UnknownTokenException;
+
 /**
  * Handles user account.
  */
-class Controller_User_Reset extends Controller_Page
+class Reset extends Controller\Page
 {
 	public function get()
 	{
-		if(isset($_GET['sent']))
-			return TemplateView::output(Msg::ok('reset_sent'));
-
 		if(isset($_GET['email']))
 		{
 			try
 			{
 				Model::users()->login_token($_GET);
-				HTTP::redirect('user/me?reset');
+				Message::ok('reset_done');
+				HTTP::redirect('user/me');
 			}
 			catch(UnknownTokenException $e)
 			{
@@ -23,7 +25,10 @@ class Controller_User_Reset extends Controller_Page
 			}
 		}
 
-		return TemplateView::output();
+		if(isset($_GET['sent']))
+			Message::ok('reset_sent');
+
+		return View::template()->output();
 	}
 
 
@@ -34,7 +39,8 @@ class Controller_User_Reset extends Controller_Page
 		if( ! $user)
 		{
 			HTTP::set_status(422);
-			return TemplateView::output(Msg::error('unknown_user'));
+			Message::error('unknown_user');
+			return View::template()->output();
 		}
 
 

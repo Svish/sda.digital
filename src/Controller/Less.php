@@ -1,11 +1,14 @@
 <?php
 
+namespace Controller;
+use Config, Cache, lessc;
+
 /**
  * Handles compilation and serving of LESS files as CSS.
  */
-class Controller_Less extends CachedController
+class Less extends Cached
 {
-	const DIR = ROOT.'src'.DIRECTORY_SEPARATOR.'_less'.DIRECTORY_SEPARATOR;
+	const DIR = SRC.'_less'.DIRECTORY_SEPARATOR;
 	const EXT = '.less';
 	private $config;
 

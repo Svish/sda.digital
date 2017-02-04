@@ -1,10 +1,12 @@
 <?php
 
+namespace View\Helper;
+use Mustache_LambdaHelper;
 
 /**
  * Formats durations.
  */
-class Helper_FormatDuration
+class FormatDuration
 {
 	public function __invoke($d, Mustache_LambdaHelper $render = null)
 	{

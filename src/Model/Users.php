@@ -1,10 +1,13 @@
 <?php
 
+namespace Model;
+use Model,Session,DB;
+use Data\User;
 
 /**
  * User model for handling logins, etc.
  */
-class Model_Users extends Model
+class Users extends Model
 {
 	const SESSION_KEY = 'user';
 
@@ -65,7 +68,7 @@ class Model_Users extends Model
 
 
 
-	private function _login(Data_User $user)
+	private function _login(User $user)
 	{
 		Session::set(self::SESSION_KEY, (int) $user->id);
 		return true;
@@ -121,7 +124,7 @@ class Model_Users extends Model
 								WHERE id=:id')
 			->bindValue(':id', $id)
 			->execute()
-			->fetchFirst(Data_User::class);
+			->fetchFirst(User::class);
 
 		else
 		return DB::prepare('SELECT * 
@@ -129,7 +132,7 @@ class Model_Users extends Model
 								WHERE email=:email')
 			->bindValue(':email', $id)
 			->execute()
-			->fetchFirst(Data_User::class);
+			->fetchFirst(User::class);
 	}
 
 }

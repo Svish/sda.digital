@@ -1,9 +1,12 @@
 <?php
 
+namespace Controller;
+use HTTP,Model;
+
 /**
- * Takes care of securing stuff.
+ * Base for secure controllers.
  */
-abstract class SecureController extends SessionController
+abstract class Secure extends Session
 {
 	protected $user;
 	protected $required_roles = false;
@@ -27,6 +30,6 @@ abstract class SecureController extends SessionController
 		// Check roles
 		$this->required_roles[] = 'login';
 		if( ! $this->user->has_roles($this->required_roles))
-			throw new HttpException('Ingen tilgang', 403);
+			throw new NoAccessException();
 	}
 }

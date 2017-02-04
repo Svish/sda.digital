@@ -1,10 +1,13 @@
 <?php
 
+namespace Model;
+use Model;
+use RecursiveDirectoryIterator,FilesystemIterator;
 
 /**
  * User model for handling logins, etc.
  */
-class Model_NewFiles extends Model
+class NewFiles extends Model
 {
 	const DIR = '_new'.DIRECTORY_SEPARATOR;
 
@@ -36,8 +39,8 @@ class Model_NewFiles extends Model
 		}
 
 		// Sort 
-		Util::array_sort_by('name', $groups);
-		Util::array_sort_by('basename', $files);
+		array_sort_by('name', $groups);
+		array_sort_by('basename', $files);
 
 		
 		return self::group_info($it) +

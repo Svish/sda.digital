@@ -5,7 +5,7 @@
  */
 class Mustache extends Mustache_Engine
 {
-	const DIR = __DIR__.DIRECTORY_SEPARATOR.'_views'.DIRECTORY_SEPARATOR;
+	const DIR = SRC.'_views'.DIRECTORY_SEPARATOR;
 
 	public static function engine(array $options = [], $template = null)
 	{

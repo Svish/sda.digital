@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Utility class for HTTP stuff.
  */
@@ -88,6 +87,8 @@ class HTTP
 	 */
 	public static function set_status($code)
 	{
+		if($code instanceof HttpException)
+			$code = $code->getHttpStatus();
 		http_response_code($code);
 	}
 

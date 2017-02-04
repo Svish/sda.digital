@@ -1,14 +1,17 @@
 <?php
 
+namespace Controller;
+use Config;
+
 /**
  * Handles compression and serving of javascript files.
  *
  * @see https://developers.google.com/closure/compiler/docs/api-ref
  * @see https://developers.google.com/closure/compiler/docs/api-tutorial1
  */
-class Controller_Javascript extends CachedController
+class Javascript extends Cached
 {
-	const DIR = ROOT.'src'.DIRECTORY_SEPARATOR.'_js'.DIRECTORY_SEPARATOR;
+	const DIR = SRC.'_js'.DIRECTORY_SEPARATOR;
 	private $config;
 
 

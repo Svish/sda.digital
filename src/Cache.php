@@ -27,18 +27,18 @@ class Cache
 
 		// Unless first is null, add default file validator
 		if(null !== reset($cache_validators))
-			$this->valid[] = new Cache_IncludedFilesValidator();
+			$this->valid[] = new Cache\IncludedFilesValidator();
 
 		// Add cache validators
 		foreach($cache_validators as $v)
 		{
 			// int: TTL
 			if(is_int($v))
-				$this->valid[] = new Cache_TimeValidator($v);
+				$this->valid[] = new Cache\TimeValidator($v);
 
 			// array: list of files to check
 			elseif(is_array($v))
-				$this->valid[] = new Cache_FileValidator($v);
+				$this->valid[] = new Cache\FileValidator($v);
 
 			// callable: callable to call
 			elseif(is_callable($v))

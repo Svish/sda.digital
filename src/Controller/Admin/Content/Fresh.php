@@ -1,9 +1,12 @@
 <?php
 
+namespace Controller\Admin\Content;
+use HTTP, Session, View, Model;
+
 /**
  * View and select new content to add.
  */
-class Controller_Admin_Content_New extends Controller_Page
+class Fresh extends \Controller\Admin
 {
 	protected $required_roles = ['editor'];
 
@@ -11,7 +14,7 @@ class Controller_Admin_Content_New extends Controller_Page
 	public function get()
 	{
 		$files = Model::newFiles()->all();
-		TemplateView::output(['groups' => $files]);
+		View::template(['groups' => $files])->output();
 	}
 
 	public function post()

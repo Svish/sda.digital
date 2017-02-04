@@ -1,9 +1,13 @@
 <?php
 
+namespace Data;
+use DB, Util, Data, Valid;
+
+
 /**
  * Base class for data from SQL tables.
  */
-abstract class SqlData extends Data
+abstract class Sql extends Data
 {
 	protected $_table_name;
 	protected $_rules;
@@ -17,7 +21,8 @@ abstract class SqlData extends Data
 		$this->_dirty = [];
 
 		// Get table name from classname, if not set already
-		$this->_table_name = $this->_table_name ?? strtolower(substr(get_class($this), 5));
+		$this->_table_name = $this->_table_name 
+			?? strtolower(get_class_name($this));
 
 		// Get table info
 		$this->_table_info = DB::getTableInfo($this->_table_name);
@@ -56,7 +61,7 @@ abstract class SqlData extends Data
 		$this->validate();
 
 		// Make query
-		$data = Util::array_whitelist($this->_dirty + $this->data, $this->_table_info->column_names);
+		$data = array_whitelist($this->_dirty + $this->data, $this->_table_info->column_names);
 		$column_names = array_keys($data);
 
 		$query = sprintf("INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s",

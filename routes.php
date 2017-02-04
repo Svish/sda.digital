@@ -3,8 +3,8 @@
 return [
 	
 	# Resources
-	'js/(:alpha:.js)' => 'Controller_Javascript',
-	'theme/(:alpha:.css)' => 'Controller_Less',
+	'js/(:alpha:.js)' => '\Controller\\Javascript',
+	'theme/(:alpha:.css)' => '\Controller\\Less',
 
 
 	# Slugs
@@ -25,9 +25,9 @@ return [
 	0 => function (array $request)
 	{
 		$h = explode('/', trim($request['path'], '/'));
-		$h = 'Controller_'.implode('_', array_map('ucfirst', $h));
+		$h = 'Controller\\'.implode('\\', array_map('ucfirst', $h));
 		return class_exists($h)
 			? $h
-			: 'Controller_Page';
+			: 'Controller\\Page';
 	},
 ];

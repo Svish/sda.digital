@@ -1,10 +1,13 @@
 <?php
 
+namespace View\Helper;
+use Mustache_LambdaHelper;
+
 
 /**
  * Menu hack for selecting active menu item.
  */
-class Helper_IsCurrent
+class IsCurrent
 {
 	public function __invoke($text, Mustache_LambdaHelper $render = null)
 	{

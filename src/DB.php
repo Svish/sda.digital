@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PDO helper
  *
@@ -27,9 +28,9 @@ class DB
 	
 	public static function getTableInfo(string $table_name)
 	{
-		return self::instance()->cache->get($table_name, function()
+		return self::instance()->cache->get($table_name, function($key)
 			{
-				throw new Exception('DB::getTableInfo called without preloading?');
+				throw new Exception("DB::getTableInfo('$key') called without preloading?");
 			});
 	}
 

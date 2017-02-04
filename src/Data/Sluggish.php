@@ -1,6 +1,8 @@
 <?php
 
-abstract class Data_Sluggish extends SqlData
+namespace Data;
+
+abstract class Sluggish extends Sql
 {
 	const SLUG_COLUMNS = ['name'];
 
@@ -23,8 +25,10 @@ abstract class Data_Sluggish extends SqlData
 			parent::__unset("$key_slug");
 	}
 
-	protected function slug($value)
+	protected function slug($txt)
 	{
-		return Util::slug($value);
+		$txt = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $txt);
+		$txt = preg_replace(['/\s+/', '/[^-\w.]+/'], ['-', ''], $txt);
+		return strtolower($txt);
 	}
 }

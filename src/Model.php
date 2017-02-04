@@ -1,19 +1,14 @@
 <?php
 
-
 /**
  * Base for model classes.
  */
 abstract class Model
 {
-	/**
-	 * Returns a new Model_$name.
-	 */
 	public static function __callStatic($name, $args)
 	{
-		$name = __CLASS__.'_'.ucfirst($name);
-		$r = new ReflectionClass($name);
-		return $r->newInstanceArgs($args);
+		$name = __CLASS__.'\\'.ucfirst($name);
+		return new $name(...$args);
 	}
 
 

@@ -1,9 +1,11 @@
 <?php
 
+namespace Cache;
+
 /**
  * Checks if given files have changed.
  */
-class Cache_FileValidator
+class FileValidator
 {
 	protected $files;
 

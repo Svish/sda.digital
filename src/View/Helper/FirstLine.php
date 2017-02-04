@@ -1,10 +1,12 @@
 <?php
 
+namespace View\Helper;
+use Mustache_LambdaHelper;
 
 /**
  * Returns the first line of text.
  */
-class Helper_FirstLine
+class FirstLine
 {
 	public function __invoke($text, Mustache_LambdaHelper $render = null)
 	{

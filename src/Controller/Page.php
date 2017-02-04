@@ -1,24 +1,27 @@
 <?php
 
+namespace Controller;
+use HTTP, View, Message, HttpException, ValidationException;
+
 /**
  * Handles normal pages.
  */
-class Controller_Page extends SecureController
+class Page extends Secure
 {
 	public function get()
 	{
-		return TemplateView::output();
+		return View::template()->output();
 	}
 
 
 	protected function error(HttpException $e, array $context = [])
 	{
-		HTTP::set_status($e->getHttpStatus());
+		HTTP::set_status($e);
+		Message::exception($e);
 
-		$context += Msg::exception($e);
 		if($e instanceof ValidationException)
 			$context += ['errors' => array_map('array_values', $e->getErrors())];
 
-		return TemplateView::output($context);
+		return View::template($context)->output();;
 	}
 }

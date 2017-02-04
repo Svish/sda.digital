@@ -1,9 +1,13 @@
 <?php
 
+namespace Controller\User;
+use HTTP, Model;
+use HttpException;
+
 /**
  * Handles user login.
  */
-class Controller_User_Login extends Controller_Page
+class Login extends \Controller\Page
 {
 	public function get()
 	{
@@ -21,9 +25,9 @@ class Controller_User_Login extends Controller_Page
 			if(HTTP::is_local($url))
 				HTTP::redirect($url);
 			else
-				throw new HttpException('Invalid redirect URL', 400);
+				HTTP::redirect('admin');
 		}
-		catch(UnknownLoginException $e)
+		catch(HttpException $e)
 		{
 			return $this->error($e);
 		}

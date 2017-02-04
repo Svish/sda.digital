@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Exception with HTTP status and title.
+ */
 class HttpException extends Exception
 {
 	protected $httpStatus;
@@ -7,10 +10,16 @@ class HttpException extends Exception
 
 	public function __construct($message, $httpStatus = 500, Throwable $cause = null, $code = E_USER_ERROR)
 	{
-		parent::__construct($message, $code, $cause);
+		if(is_array($message))
+		{
+			$class = get_class($this);
+			$class = preg_replace('/Exception$/', '', $class);
+			$message = Text::exception($class, $message);
+		}
 
 		$this->httpStatus = $httpStatus;
 		$this->httpTitle = HTTP::status($httpStatus);
+		parent::__construct($message, $code, $cause);
 	}
 
 	public function getHttpStatus()

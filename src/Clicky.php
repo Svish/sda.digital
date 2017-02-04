@@ -38,7 +38,7 @@ class Clicky
 			return;
 
 		// Filter and append default values
-		$data = Util::array_whitelist($data ?: [], self::$parameters)
+		$data = array_whitelist($data ?: [], self::$parameters)
 			+ [
 				'type' => self::$types[0],
 				'ip_address' =>  @$_SERVER['REMOTE_ADDR'],

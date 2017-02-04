@@ -11,8 +11,8 @@ class ErrorHandler
 		if( ! $e instanceof HttpException)
 			$e = new HttpException('Internal Server Error', 500, $e);
 
-		HTTP::set_status($e->getHttpStatus());
-		TemplateView::output([
+		HTTP::set_status($e);
+		View::template([
 			'status' => $e->getHttpStatus(),
 			'title' => $e->getHttpTitle(),
 			'message' => [
@@ -20,7 +20,8 @@ class ErrorHandler
 				'text' => $e->getMessage(),
 				],
 			'debug' => self::collect_xdebug($e),
-			], 'error');
+			], 'error')
+			->output();
 	}
 
 	private static function collect_xdebug(Throwable $e = null)

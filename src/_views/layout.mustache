@@ -7,7 +7,7 @@
 		<base href="{{#url}}/{{/url}}" />
 		<link rel="canonical" href="{{#url}}/{{PATH}}{{/url}}">
 
-		{{>favicons}}
+		{{!>favicons}}
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		{{#_css}}
@@ -25,7 +25,7 @@
 	<body class="{{pathClasses}}">
 		{{> header}}
 
-		{{> message}}
+		{{{messages}}}
 
 		<div id="content">
 			{{$content}}{{/content}}

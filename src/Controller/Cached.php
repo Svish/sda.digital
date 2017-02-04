@@ -1,9 +1,12 @@
 <?php
 
+namespace Controller;
+use HTTP,Cache;
+
 /**
  * Base controller which handles caching of content
  */
-abstract class CachedController extends Controller
+abstract class Cached extends Controller
 {
 	protected $max_age = 144000; // 4 hours
 	
@@ -25,7 +28,7 @@ abstract class CachedController extends Controller
 			return;
 
 		// Init our cache
-		$get = Util::array_whitelist($_GET, $this->parameter_whitelist);
+		$get = array_whitelist($_GET, $this->parameter_whitelist);
 		$get = json_encode($get, JSON_NUMERIC_CHECK);
 
 		$this->cache = new Cache(__CLASS__);

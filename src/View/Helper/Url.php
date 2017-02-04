@@ -1,10 +1,12 @@
 <?php
 
+namespace View\Helper;
+use Mustache_LambdaHelper;
 
 /**
  * URL helper for Mustache templates.
  */
-class Helper_Url
+class Url
 {
 	/**
 	 * Returns $url prefixed with WEBBASE, or WEBROOT if starting with /.
@@ -12,10 +14,14 @@ class Helper_Url
 	 * - foo => /base/foo
 	 * - /foo => http://host/base/foo
 	 */
-	public function __invoke($url = null)
+	public function __invoke($url = null, Mustache_LambdaHelper $render = null)
 	{
+		if($render)
+			$url = $render($url);
+		
 		return strpos($url, '/') === 0
 			? WEBROOT.ltrim($url, '/')
 			: WEBBASE.$url;
 	}
 }
+	

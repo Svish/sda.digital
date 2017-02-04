@@ -1,9 +1,12 @@
 <?php
 
+namespace Controller\User;
+use HTTP, Model;
+
 /**
  * Handles user logout.
  */
-class Controller_User_Logout extends Controller_Page
+class Logout extends \Controller\Page
 {
 	public function get($url = null, $context = [])
 	{

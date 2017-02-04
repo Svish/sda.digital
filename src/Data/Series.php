@@ -1,6 +1,8 @@
 <?php
 
-class Data_Series extends Data_Sluggish
+namespace Data;
+
+class Series extends Sluggish
 {
 	const SLUG_COLUMNS = ['title'];
 }

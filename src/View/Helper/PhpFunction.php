@@ -1,25 +1,29 @@
 <?php
 
+namespace View\Helper;
+use ReflectionFunction, Mustache_LambdaHelper;
+
 
 /**
  * PHP Function wrapper for Mustache templates.
  */
-class Helper_Function
+class PhpFunction
 {
 	private static $whitelist = [
 		'ucfirst', 
 		'strtolower',
 		'urlencode',
 		];
-	private $function;
 
+
+	private $function;
 	public function __construct($function)
 	{
 		$this->function = new ReflectionFunction($function);
 
 		// Check required parameter count
 		if(1 != $this->function->getNumberOfRequiredParameters())
-			throw new Exception("'$function' not usable via ".__CLASS__.". Has $rp required parameters, needs exactly 1.");
+			throw new \Exception("'$function' not usable via ".__CLASS__.". Has $rp required parameters, needs exactly 1.");
 	}
 
 

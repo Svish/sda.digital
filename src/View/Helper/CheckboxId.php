@@ -1,10 +1,11 @@
 <?php
 
+namespace View\Helper;
 
 /**
  * Makes sets of ids for checkboxes and labels
  */
-class Helper_CheckboxId
+class CheckboxId
 {
 	private $new = true;
 	private $n = 0;

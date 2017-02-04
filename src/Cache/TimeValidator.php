@@ -1,9 +1,10 @@
 <?php
+namespace Cache;
 
 /**
  * Checks if TTL has passed.
  */
-class Cache_TimeValidator
+class TimeValidator
 {
 	protected $ttl;
 

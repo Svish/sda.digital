@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Session helper.
  *
@@ -10,12 +9,28 @@ class Session
 {
 	const ID = 'session';
 
-	public static function get($key)
+
+	public static function append($key, $value)
 	{
 		if( ! session_id())
 			self::start();
 
-		return $_SESSION[$key] ?? null;
+		return $_SESSION[$key][] = $value;
+	}
+
+	public static function unget($key, $default = null)
+	{
+		$value = self::get($key, $default);
+		self::unset($key);
+		return $value;
+	}
+
+	public static function get($key, $default = null)
+	{
+		if( ! session_id())
+			self::start();
+
+		return $_SESSION[$key] ?? $default;
 	}
 
 	public static function set($key, $value)

@@ -1,6 +1,7 @@
 <?php
+namespace Data;
 
-class Data_User extends SqlData
+class User extends Sql
 {
 	protected $_rules = [
 			'email' => ['email', 'email_domain'],
@@ -12,19 +13,24 @@ class Data_User extends SqlData
 	{
 		parent::__set($key, $value);
 
-		switch($key)
-		{
-			// Hash password and token
-			case 'password':
-				// Add rule if setting password
-				if($value)
-					$this->_rules += ['password' => [['min_length', 12]]];
-				
-			case 'token':
-				$hash = password_hash($value, self::ALGO, self::ALGO_OPT);
-				parent::__set("{$key}_hash", $hash);
-				break;
-		}
+		$key = "{$key}_hash";
+
+		if($value)
+			switch($key)
+			{
+				// Hash password and token
+				case 'password':
+					// Add rule if setting password
+					$this->_rules += ['password' => [
+						['not_empty'],
+						['min_length', 12],
+						]];
+					
+				case 'token':
+					$hash = password_hash($value, self::ALGO, self::ALGO_OPT);
+					parent::__set($key, $hash);
+					break;
+			}
 	}
 
 	

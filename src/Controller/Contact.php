@@ -1,9 +1,13 @@
 <?php
 
+namespace Controller;
+use HTTP, HttpException, View, Message, Valid, Email;
+
+
 /**
  * Handles sending of contact emails.
  */
-class Controller_Contact extends Controller_Page
+class Contact extends Page
 {
 	private $_rules = [
 		'from' => ['not_empty', 'email', 'email_domain'],
@@ -14,11 +18,10 @@ class Controller_Contact extends Controller_Page
 	
 	public function get()
 	{
-		$context = isset($_GET['sent'])
-			? Msg::ok('email_sent')
-			: [];
+		if(isset($_GET['sent']))
+			Message::ok('email_sent');
 
-		return TemplateView::output($context);
+		return View::template()->output();;
 	}
 
 
