@@ -9,14 +9,16 @@ RewriteBase /sda.digital/
 SetEnv BASE /sda.digital/
 SetEnv ENV dev
 
+RewriteOptions AllowNoSlash
+DirectorySlash Off
+Options -Indexes
+
+# HACK: Fix for no slash in base root
+RewriteRule /sda.digital index.php?path_uri=/ [END,QSA]
 
 
-
-# Static files
+# Route everything to index.php
+RewriteCond $0 =index.php [OR]
+RewriteCond $0 ^(config|src|vendor)/ [OR]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
-
-# Route anything else through the app
-#RewriteRule .* index.php/$0 [L]
-RewriteRule .* index.php?path_uri=/$0 [PT,L,QSA]
+RewriteRule .* index.php?path_uri=/$0 [END,QSA]

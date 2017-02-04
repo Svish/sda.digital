@@ -11,7 +11,7 @@ class Helper_IsCurrent
 		$text = $render ? $render($text) : $text;
 
 		$item = explode('/', $text);
-		$path = explode('/', trim($_SERVER['PATH_INFO'], '/'));
+		$path = explode('/', trim(PATH, '/'));
 
 		if(reset($item) == reset($path))
 			return $text.'" class="current';

@@ -1,10 +1,4 @@
 <?php
-
-// Get path from .htaccess GET parameter
-$_SERVER['PATH_INFO'] = $_GET['path_uri'] ?? '/';
-unset($_GET['path_uri']);
-
-
 // Include autoloader and stuff
 require 'vendor/autoload.php';
 require 'constants.inc';

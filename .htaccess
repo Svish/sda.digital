@@ -12,31 +12,24 @@ ExpiresByType image/x-icon "access plus 1 week"
 ExpiresByType image/png "access plus 1 week"
 
 
+
 # Environment
 RewriteEngine on
 RewriteBase /
 SetEnv BASE /
 SetEnv ENV prod
 
+DirectorySlash Off
+Options -Indexes
+
 
 # Remove www.
 RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-RewriteRule ^(.*)$ %{REQUEST_SCHEME}://%1/$1 [R=301,L]
+RewriteRule .* http://%1/$0 [R=301,L]
 
 
-# Block hidden files
-<Files .*>
-	Order Deny,Allow
-	Deny From All
-</Files>
-
-
-
-
-# Static files
+# Everything, except certain files => index.php
+RewriteCond $0 =index.php [OR]
+RewriteCond $0 ^(config|src|vendor) [OR]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
-# Route anything else through the app
-#RewriteRule .* index.php/$0 [L]
-RewriteRule .* index.php?path_uri=/$0 [PT,L,QSA]
+RewriteRule .* index.php?path_uri=/$0 [L,PT,QSA]

@@ -2,14 +2,16 @@
 
 // Base paths
 define('DOCROOT', realpath(__DIR__).DIRECTORY_SEPARATOR);
-define('WEBBASE', $_SERVER['BASE']);
-define('WEBROOT', 'http://'.$_SERVER['HTTP_HOST'].WEBBASE);
+define('SCHEME', empty($_SERVER['HTTPS']) || $_SERVER['HTTPS']=='off' ? 'http' : 'https');
 define('HOST', $_SERVER['HTTP_HOST']);
-define('PATH', trim($_SERVER['PATH_INFO'], '/') ?: 'index');
-
+define('WEBBASE', $_SERVER['BASE']);
+define('WEBROOT', SCHEME.'://'.HOST.WEBBASE);
+define('PATH', trim($_GET['path_uri'] ?? '', '/') ?: 'index');
+unset($_GET['path_uri']);
 
 // Environment
 define('ENV', $_SERVER['ENV']);
+
 
 // Language, Encoding and Locales
 mb_internal_encoding("UTF-8");
