@@ -5,16 +5,23 @@
  */
 class Controller_User_Login extends Controller_Page
 {
+	public function get()
+	{
+		$_POST['url'] = $_GET['url'] ?? 'admin';
+		return parent::get();
+	}
+
 	public function post()
 	{
 		try
 		{
 			Model::users()->login($_POST);
-			$url = empty($_POST['url'])
-				? 'admin'
-				: $_POST['url'];
-				
-			HTTP::redirect($url);
+			$url = $_POST['url'] ?? 'admin';
+
+			if(HTTP::is_local($url))
+				HTTP::redirect($url);
+			else
+				throw new HttpException('Invalid redirect URL', 400);
 		}
 		catch(UnknownLoginException $e)
 		{

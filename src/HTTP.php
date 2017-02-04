@@ -2,19 +2,55 @@
 
 
 /**
- * Utility class for HTTP stuff
+ * Utility class for HTTP stuff.
  */
 class HTTP
 {
+
 	/**
-	 * Construct proper status header for given HTTP status code.
+	 * Check if URL is relative or to this site.
 	 */
-	public static function status($code)
+	public static function is_local($url)
 	{
-		return array_key_exists($code, self::$codes)
-			? self::$codes[$code]
-			: self::$codes[500];
+		extract(parse_url($url));
+
+		// Truly relative
+		if( ! isset($scheme))
+			return true;
+
+		// Absolute, but to this site
+		return ($scheme??'') == SCHEME
+			&& ($host??'') == HOST
+			&& strpos(($path??''), WEBBASE) === 0;
 	}
+
+	/**
+	 * Redirect to given target.
+	 *
+	 * @param code HTTP code to use
+	 * @param target URL to redirect to
+	 * @param prepend If target should be prepended with WEBROOT
+	 */
+	public static function redirect($target = NULL, $code = 302, $prepend = TRUE)
+	{
+		if($prepend)
+			$target = WEBROOT.$target;
+
+		Session::close();
+		header('Location: '.$target, true, $code);
+		exit;
+	}
+
+	/**
+	 * Redirect to self.
+	 *
+	 * @param append Optionally appended to URL (e.g. ?foo=bar).
+	 */
+	public static function redirect_self($append = '')
+	{
+		self::redirect(PATH.$append);
+	}
+
 
 
 	/**
@@ -36,6 +72,18 @@ class HTTP
 
 
 	/**
+	 * Returns HTTP status text for given code.
+	 *
+	 * NOTE: Uses 500 if code not in self::$codes.
+	 */
+	public static function status($code)
+	{
+		return self::$codes[$code] ?? self::$codes[500];
+	}
+
+
+
+	/**
 	 * Set HTTP response status.
 	 */
 	public static function set_status($code)
@@ -46,44 +94,28 @@ class HTTP
 
 
 	/**
-	 * Construct proper status header for given HTTP status code.
+	 * Exit with HTTP status and an optional plain text message.
+	 * 
+	 * @param code HTTP status code
+	 * @param message Optional plain text message to output.
 	 */
-	public static function exit_status($code, $message = null)
+	public static function plain_exit($code, $message = null)
 	{
-		$m = "$code ".self::$codes[$code];
-		if($message) $m .= ": $message";
-		
 		self::set_status($code);
 		header('Content-Type: text/plain; charset=utf-8');
-		exit($m);
-	}
-	
 
-
-	/**
-	 * Redirect to given target.
-	 *
-	 * @param code HTTP code to use
-	 * @param target URL to redirect to
-	 * @param prepend If target should be prepended with WEBROOT
-	 */
-	public static function redirect($target = NULL, $code = 302, $prepend = TRUE)
-	{
-		if($prepend)
-			$target = WEBROOT.$target;
-
-		Session::close();
-		header('Location: '.$target, true, $code);
+		echo "$code ".self::$codes[$code];
+		if($message)
+			echo "\r\n\r\n$message";
 		exit;
 	}
-
 
 
 	/**
 	 * Array of HTTP codes and messages.
 	 * @see http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
 	 */
-	public static $codes = [
+	protected static $codes = [
 		// 1xx: Informational - Request received, continuing process
 		100 => "Continue",
 		101 => "Switching Protocols",

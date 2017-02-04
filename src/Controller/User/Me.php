@@ -37,7 +37,7 @@ class Controller_User_Me extends Controller_Admin
 			$this->me
 				->set($_POST)
 				->save();
-			HTTP::redirect('user/me?saved');
+			HTTP::redirect_self('?saved');
 		}
 		catch(ValidationException $e)
 		{

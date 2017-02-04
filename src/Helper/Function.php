@@ -6,6 +6,11 @@
  */
 class Helper_Function
 {
+	private static $whitelist = [
+		'ucfirst', 
+		'strtolower',
+		'urlencode',
+		];
 	private $function;
 
 	public function __construct($function)
@@ -28,7 +33,6 @@ class Helper_Function
 	/**
 	 * Only use for certain whitelisted functions.
 	 */
-	private static $whitelist = ['ucfirst', 'strtolower'];
 	public static function exists($name)
 	{
 		return function_exists($name)

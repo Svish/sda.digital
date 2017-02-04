@@ -32,7 +32,7 @@ class Controller_Contact extends Controller_Page
 			Email::feedback($_POST['from'], $_POST['subject'], $_POST['message']);
 			
 			// Redirect
-			HTTP::redirect($url.'?sent');
+			HTTP::redirect_self('?sent');
 		}
 		catch(HttpException $e)
 		{

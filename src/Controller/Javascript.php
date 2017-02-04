@@ -33,7 +33,7 @@ class Controller_Javascript extends CachedController
 		$this->files = $this->config->bundles[$info['params'][1]] ?? null;
 
 		if( ! $this->files)
-			HTTP::exit_status(404, $info['path']);
+			HTTP::plain_exit(404, $info['path']);
 
 		parent::before($info);
 	}

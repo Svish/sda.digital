@@ -11,7 +11,7 @@ abstract class View
 	public function render($mime = 'text/plain')
 	{
 		$accept = implode(', ', $this->_accept) ?: 'none';
-		HTTP::exit_status(406, "Acceptable types: $accept");
+		HTTP::plain_exit(406, "Acceptable types: $accept");
 	}
 
 
