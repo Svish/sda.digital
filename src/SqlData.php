@@ -5,34 +5,34 @@
  */
 abstract class SqlData extends Data
 {
-	protected $table_name;
-	protected $rules;
+	protected $_table_name;
+	protected $_rules;
 
-	private $table_info;
-	private $dirty;
+	private $_table_info;
+	private $_dirty;
 
 	public function __construct()
 	{
 		// Clear dirt from PDO constructor
-		$this->dirty = [];
+		$this->_dirty = [];
 
 		// Get table name from classname, if not set already
-		$this->table_name = $this->table_name ?? strtolower(substr(get_class($this), 5));
+		$this->_table_name = $this->_table_name ?? strtolower(substr(get_class($this), 5));
 
 		// Get table info
-		$this->table_info = DB::getTableInfo($this->table_name);
+		$this->_table_info = DB::getTableInfo($this->_table_name);
 	}
 
 	
 	public function __set($key, $value)
 	{
-		$this->dirty[$key] = $value;
+		$this->_dirty[$key] = $value;
 		parent::__set($key, $value);
 	}
 	
 	public function __unset($key)
 	{
-		$this->dirty[$key] = null;
+		$this->_dirty[$key] = null;
 		parent::__unset($key);
 	}
 
@@ -40,7 +40,7 @@ abstract class SqlData extends Data
 
 	public function validate()
 	{
-		$rules = array_merge_recursive($this->table_info->rules, $this->rules);
+		$rules = array_merge_recursive($this->_table_info->rules, $this->_rules);
 		Valid::check($this, $rules);
 		return $this;
 	}
@@ -49,42 +49,46 @@ abstract class SqlData extends Data
 
 	public function save()
 	{
-		if( ! $this->dirty)
+		if( ! $this->_dirty)
 			return true;
 
 		// Validate
 		$this->validate();
 
 		// Make query
-		$data = Util::array_whitelist($this->dirty + $this->data, $this->table_info->column_names);
-		$columns = array_keys($data);
+		$data = Util::array_whitelist($this->_dirty + $this->data, $this->_table_info->column_names);
+		$column_names = array_keys($data);
 
 		$query = sprintf("INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s",
-			$this->table_name,
-			implode(', ', $columns),
-			implode(', ', self::cc($columns)),
-			implode(', ', self::cu($columns))
+			$this->_table_name,
+			implode(', ', $column_names),
+			implode(', ', self::cc($column_names)),
+			implode(', ', self::cu($column_names))
 			);
 
-		// TODO: Use bindValue with PARAM_ according to table_info?
+		// Prepare
+		$query = DB::prepare($query);
+		foreach($data as $column => $value)
+			$query->bindValue($column, $value, $this->_table_info->column_pdo_types[$column]);
 
 		// Run query
-		$x = DB::prepare($query)
-			->execute($data);
+		$query->execute($data);
 
-		// If inserted/updated, get auto_increment value
-		if($x->affectedRows() > 0 && $this->table_info->auto_increment)
-			$this->data[$this->table_info->auto_increment] = $x->lastInsertId();
+		// If inserted, get auto_increment value
+		if($query->affectedRows() == 1 && $this->_table_info->auto_increment)
+			$this->data[$this->_table_info->auto_increment] = $query->lastInsertId();
 
-		// Reset $dirty
-		$this->dirty = [];
+		// Reset $_dirty
+		$this->_dirty = [];
 
 		return $this;
 	}
 
 
 
-	// column => column = VALUES(column)
+	/**
+	 * "column" => "column = VALUES(column)"
+	 */
 	private static function cu(array $columns)
 	{
 		return array_map(function($c)
@@ -93,12 +97,14 @@ abstract class SqlData extends Data
 		}, $columns);
 	}
 
-	// column => :column
+	/**
+	 * "column" => ":column"
+	 */
 	private static function cc(array $columns)
 	{
 		return array_map(function($c)
 		{
-			return ':'.$c;
+			return ":$c";
 		}, $columns);
 	}
 }

@@ -6,18 +6,25 @@
  */
 class DB
 {
+	const MIGRATIONS_DIR = __DIR__.DIRECTORY_SEPARATOR.'_schema'.DIRECTORY_SEPARATOR;
+
+
+
 	public static function exec($statement)
 	{
 		return self::instance()->pdo->exec($statement);
 	}
+
 	public static function prepare($statement)
 	{
 		return new Query(self::instance()->pdo->prepare($statement), self::instance()->pdo);
 	}
+	
 	public static function query($statement)
 	{
 		return new Query(self::instance()->pdo->query($statement), self::instance()->pdo);
 	}
+	
 	public static function getTableInfo(string $table_name)
 	{
 		return self::instance()->cache->get($table_name, function()
@@ -35,8 +42,6 @@ class DB
 
 	protected static $instance;
 	protected static $migrated = false;
-
-
 
 
 
@@ -74,7 +79,6 @@ class DB
 
 
 
-	const DIR = __DIR__.DIRECTORY_SEPARATOR.'_schema'.DIRECTORY_SEPARATOR;
 
 	public function migrate()
 	{
@@ -95,13 +99,13 @@ class DB
 			$current = 0;
 		}
 
-		$files = glob(self::DIR.'*.sql', GLOB_NOSORT);
+		$files = glob(self::MIGRATIONS_DIR.'*.sql', GLOB_NOSORT);
 		natsort($files);
 
 		foreach($files as $m)
 		{
 			// Get version number from filename
-			$version = (int) str_replace(self::DIR, NULL, $m);
+			$version = (int) str_replace(self::MIGRATIONS_DIR, NULL, $m);
 
 			if($version > $current)
 			{
@@ -120,8 +124,8 @@ class DB
 						$this->pdo->exec($q);
 
 					// Run <version>.php if it exists
-					if(file_exists(self::DIR.$version.'.php'))
-						require self::DIR.$version.'.php';
+					if(file_exists(self::MIGRATIONS_DIR.$version.'.php'))
+						require self::MIGRATIONS_DIR.$version.'.php';
 
 					// Update version table
 					$this->pdo->exec('UPDATE version SET version = '.$version);
@@ -150,12 +154,12 @@ class DB
 		{
 			$columns = $this->pdo
 				->query("SHOW COLUMNS FROM $table")
-				->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
-			$columns = array_map('reset', $columns);
+				->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP|PDO::FETCH_UNIQUE);
 
 			$info = (object)[
 				'columns' => $columns,
 				'column_names' => array_keys($columns), 
+				'column_pdo_types' => [],
 				'primary_keys' => [],
 				'rules' => [],
 				'auto_increment' => false,
@@ -175,9 +179,28 @@ class DB
 
 				// Add db_type rule
 				$info->rules[$name][] = ['db_type', $column['Type']];
+
+				// Add pdo type
+				$info->column_pdo_types[$name] = self::pdo_type($column['Type']);
 			}
 
 			yield $table => $info;
+		}
+	}
+
+	private static function pdo_type($type)
+	{
+		switch(preg_replace('/\(.+/', null, $type))
+		{
+			case 'tinyint':
+			case 'smallint':
+			case 'mediumint':
+			case 'int':
+			case 'bigint':
+				return PDO::PARAM_INT;
+
+			default:
+				return PDO::PARAM_STR;
 		}
 	}
 }

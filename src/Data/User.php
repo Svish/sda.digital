@@ -2,7 +2,7 @@
 
 class Data_User extends SqlData
 {
-	protected $rules = [
+	protected $_rules = [
 			'email' => ['email', 'email_domain'],
 		];
 
@@ -18,7 +18,7 @@ class Data_User extends SqlData
 			case 'password':
 				// Add rule if setting password
 				if($value)
-					$this->rules += ['password' => [['min_length', 12]]];
+					$this->_rules += ['password' => [['min_length', 12]]];
 				
 			case 'token':
 				$hash = password_hash($value, self::ALGO, self::ALGO_OPT);
