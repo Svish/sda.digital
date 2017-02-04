@@ -3,7 +3,10 @@
 namespace View\Helper;
 
 /**
- * Makes sets of ids for checkboxes and labels
+ * Makes sets of ids for checkboxes and labels.
+ *
+ *     <input type="checkbox" name="item[]" value="{{value}}" id="{{checkboxId}}" />
+ *     <label for="{{checkboxId}}">{{name}}</label>
  */
 class CheckboxId
 {

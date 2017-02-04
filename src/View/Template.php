@@ -34,7 +34,15 @@ class Template extends View
 					'_post' => $_POST,
 					'_css' => (Config::less())->global,
 					'_js' => (Config::javascript())->global,
+
+					'url' => new Helper\Url,
+					'messages' => new Helper\Messages,
+					'svg' => new Helper\Svg,
+					'isCurrent' => new Helper\IsCurrent,
+					'clicky' => new Helper\Clicky,
+					'pathClasses' => new Helper\PathClasses,
 				];
+
 
 				// Return rendered template
 				try

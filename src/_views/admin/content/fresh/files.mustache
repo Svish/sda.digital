@@ -3,7 +3,7 @@
 <form action="{{PATH}}" method="post">
 
 	{{#files}}
-		<input type="checkbox" name="files[]" value="{{path}}" id="{{checkboxId}}" />
+		<input id="{{checkboxId}}" type="checkbox" name="files[]" value="{{path}}" />
 		<label for="{{checkboxId}}">{{basename}}</label>
 		<br>
 	{{/files}}
