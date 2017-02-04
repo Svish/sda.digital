@@ -93,17 +93,20 @@ class Model_Users extends Model
 		if($id === null)
 			return false;
 
-		// User (still) exists
-		$user = $this->get($id);
+		// User (still) exists?
+		$user = self::$_logged_in ?? $this->get($id);
 		if( ! $user)
 			return false;
 
-		// User (still) has login role
+		// User (still) has login role?
 		if( ! $user->has_roles(['login']))
 			return false;
 
+		// Store and return
+		self::$_logged_in = $user;
 		return $user;
 	}
+	private static $_logged_in;
 
 
 
