@@ -3,10 +3,11 @@
 /**
  * Global error handler.
  */
-class Controller_Error extends Controller_Page
+class ErrorHandler
 {
 	public function __invoke(Throwable $e = null)
 	{
+		// Wrap in HttpException if not already one
 		if( ! $e instanceof HttpException)
 			$e = new HttpException('Internal Server Error', 500, $e);
 

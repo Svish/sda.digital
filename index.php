@@ -11,7 +11,7 @@ if(ENV=='dev')
 
 // Set error handler
 error_reporting(E_ALL);
-set_exception_handler(new Controller_Error());
+set_exception_handler(new ErrorHandler());
 
 
 // Remove default headers like X-Powered-By
