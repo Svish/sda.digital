@@ -1,7 +1,5 @@
 <?php
 
-define('IS_WIN', strpos(strtolower(PHP_OS), 'win') === 0);
-
 
 /**
  * User model for handling logins, etc.

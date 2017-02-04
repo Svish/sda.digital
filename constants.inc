@@ -11,6 +11,7 @@ unset($_GET['path_uri']);
 
 // Environment
 define('ENV', $_SERVER['ENV']);
+define('IS_WIN', strpos(strtolower(PHP_OS), 'win') === 0);
 
 
 // Language, Encoding and Locales
