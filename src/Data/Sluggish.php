@@ -2,28 +2,25 @@
 
 abstract class Data_Sluggish extends SqlData
 {
-	const COLUMN = 'name';
+	const SLUG_COLUMNS = ['name'];
 
 	public function __set($key, $value)
 	{
 		parent::__set($key, $value);
-		switch($key)
-		{
-			case static::COLUMN:
-				parent::__set(static::COLUMN.'_slug', $this->slug($value));
-		}
+
+		// Also set _slug
+		if(in_array($key, static::SLUG_COLUMNS))
+			parent::__set("$key_slug", $this->slug($value));
 	}
 
 	
 	public function __unset($key)
 	{
 		parent::__unset($key);
-		switch($key)
-		{
-			case static::COLUMN:
-				parent::__unset(static::COLUMN.'_slug');
-				break;
-		}
+
+		// Also unset _slug
+		if(in_array($key, static::SLUG_COLUMNS))
+			parent::__unset("$key_slug");
 	}
 
 	protected function slug($value)
