@@ -1,4 +1,31 @@
 
+http://www.php.net/manual/en/reflectionclass.newinstancewithoutconstructor.php
+
+present on "working page"
+	- read out id3-tags (load via ajax on request?)
+	- auto-save data as json in session table?
+	- optionally add to existing or new series
+
+submit
+	- begin transaction
+	- insert rows
+	- move files
+	- commit transaction
+
+Exceptions
+===
+- (!) Get error messages from text.ini
+	- if($this->msg = $msg ?? Text::get(class_name))
+
+
+Tools
+===
+- Content
+	- Move to series
+	- Remove from series
+	- Add/Remove speakers
+	- Edit
+	
 
 Admin
 ===
@@ -11,8 +38,6 @@ Admin
 
 - Content
 	- Add new
-		- List all files in _new
-		- Group by directory?
 		- Get info via id3
 		- Info editable
 		- Option:
@@ -47,17 +72,21 @@ Public
 
 - Front
 	- Latest uploads
-		- By sermon date?
-		- By upload date?
-		- Both?
+		- By sermon datetime?
+		- By added datetime?
+		- Both? Cookie option?
 	- http://flexbox.help/
 
 - Speakers/Series/Places
 	- Browse lists
+	- Content editable?
 
-- Item
+- Content
 	- List files
 	- Link to speaker/series/place
+	- Embed codes?
+	- Share widget?
+	- Content editable?
 
 - RSS Feed
 	- Latest uploads
@@ -65,14 +94,14 @@ Public
 
 - Search?
 	- In titles and descriptions?
+	- Include speakers and series?
+		- Like iMDB: Speakers, Series, Content (hide empty sections)
 
-- Allow embedding?
-	- Yes!
 
 
 Tidbits
 ===
 
-- Always fetch user and check roles in Model_User::logged_in?
-- class_exists('namespace/namespace/handlerclass')?
+- "Move" messages to session['messages']?
+	- class_exists('namespace/namespace/handlerclass')?
 - Add foreign key constraints to tables
