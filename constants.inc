@@ -1,7 +1,7 @@
 <?php
 
-// Base paths
-define('DOCROOT', realpath(__DIR__).DIRECTORY_SEPARATOR);
+// Paths
+define('ROOT', realpath(__DIR__).DIRECTORY_SEPARATOR);
 define('SCHEME', empty($_SERVER['HTTPS']) || $_SERVER['HTTPS']=='off' ? 'http' : 'https');
 define('HOST', $_SERVER['HTTP_HOST']);
 define('WEBBASE', $_SERVER['BASE']);

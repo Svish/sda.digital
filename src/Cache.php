@@ -5,7 +5,7 @@
  */
 class Cache
 {	
-	const DIR = DOCROOT.'.cache'.DIRECTORY_SEPARATOR;
+	const DIR = ROOT.'.cache'.DIRECTORY_SEPARATOR;
 	
 	protected $dir;
 	protected $valid = [];

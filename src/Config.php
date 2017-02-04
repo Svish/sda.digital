@@ -5,7 +5,7 @@
  */
 class Config
 {
-	const DIR = DOCROOT.'config'.DIRECTORY_SEPARATOR;
+	const DIR = ROOT.'config'.DIRECTORY_SEPARATOR;
 
 	public static $loaded = [];
 	public static function __callStatic($name, $args)

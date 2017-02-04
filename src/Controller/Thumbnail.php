@@ -22,7 +22,7 @@ class Controller_Thumbnail extends CachedController
 
 	public function before(array &$info)
 	{
-		$this->file = $this->find_file($info['params'][3]) ?: DOCROOT.'_/blank.png';
+		$this->file = $this->find_file($info['params'][3]) ?: ROOT.'_/blank.png';
 		if( ! $this->file)
 			throw new HttpException('Image not found', 404);
 
@@ -56,7 +56,7 @@ class Controller_Thumbnail extends CachedController
 
 	private function find_file($path)
 	{
-		$files = glob(DOCROOT."{_,data}/$path", GLOB_BRACE);
+		$files = glob(ROOT."{_,data}/$path", GLOB_BRACE);
 		foreach($files as $file)
 			return $file;
 	}

@@ -8,7 +8,7 @@
  */
 class Controller_Javascript extends CachedController
 {
-	const DIR = DOCROOT.'src'.DIRECTORY_SEPARATOR.'_js'.DIRECTORY_SEPARATOR;
+	const DIR = ROOT.'src'.DIRECTORY_SEPARATOR.'_js'.DIRECTORY_SEPARATOR;
 	private $config;
 
 

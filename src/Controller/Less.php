@@ -5,7 +5,7 @@
  */
 class Controller_Less extends CachedController
 {
-	const DIR = DOCROOT.'src'.DIRECTORY_SEPARATOR.'_less'.DIRECTORY_SEPARATOR;
+	const DIR = ROOT.'src'.DIRECTORY_SEPARATOR.'_less'.DIRECTORY_SEPARATOR;
 	const EXT = '.less';
 	private $config;
 
