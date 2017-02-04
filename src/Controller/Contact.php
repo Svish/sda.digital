@@ -5,28 +5,29 @@
  */
 class Controller_Contact extends Controller_Page
 {
-	private $rules = [
+	private $_rules = [
 		'from' => ['not_empty', 'email', 'email_domain'],
 		'subject' => ['not_empty'],
 		'message' => ['not_empty'],
 		];
 	
 	
-	public function get($url = null, $context = [])
+	public function get()
 	{
-		if(isset($_GET['sent']))
-			$context += Msg::ok('email_sent');
+		$context = isset($_GET['sent'])
+			? Msg::ok('email_sent')
+			: [];
 
-		parent::get($url, $context);
+		return TemplateView::output($context);
 	}
 
 
-	public function post($url)
+	public function post()
 	{
 		try
 		{
 			// Check
-			Valid::check($_POST, $this->rules);
+			Valid::check($_POST, $this->_rules);
 
 			// Send
 			Email::feedback($_POST['from'], $_POST['subject'], $_POST['message']);
@@ -36,7 +37,7 @@ class Controller_Contact extends Controller_Page
 		}
 		catch(HttpException $e)
 		{
-			return parent::get($url, $this->error('email_fail', $e));
+			return parent::error($e);
 		}
 	}
 }
