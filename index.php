@@ -6,14 +6,9 @@ require 'functions.inc';
 require 'constants.inc';
 
 
-// Fail faster in dev...
-if(ENV=='dev')
-	set_time_limit(7);
-
-
 // Set error handler
 error_reporting(E_ALL);
-set_exception_handler(new ErrorHandler());
+set_exception_handler(new Error\Handler());
 
 
 // Remove default headers like X-Powered-By

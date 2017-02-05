@@ -9,11 +9,6 @@ class Message
 {
 	const SESSION_KEY = 'messages';
 
-	public static function exception(Exception $e)
-	{
-		return self::add('error', $e->getMessage());
-	}
-
 	public static function __callStatic($type, $args)
 	{
 		$key = array_shift($args);
@@ -23,5 +18,10 @@ class Message
 	private static function add($type, $text)
 	{
 		Session::append('messages', get_defined_vars());
+	}
+
+	public static function exception(Exception $e)
+	{
+		return self::add('error', $e->getMessage());
 	}
 }

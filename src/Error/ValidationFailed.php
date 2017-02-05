@@ -1,10 +1,11 @@
 <?php
 
+namespace Error;
 
 /**
- * Exceptions for Valid::class.
+ * 400 Validation failed
  */
-class ValidationException extends HttpException
+class ValidationFailed extends HttpException
 {
 	private $errors;
 
@@ -13,7 +14,6 @@ class ValidationException extends HttpException
 		$this->errors = $errors;
 		parent::__construct([count($errors)], 400);
 	}
-
 
 	public function getErrors()
 	{

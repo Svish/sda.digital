@@ -1,30 +1,30 @@
 <?php
 
+namespace Error;
+use View, HTTP, Message;
+
 /**
  * Global error handler.
  */
-class ErrorHandler
+class Handler
 {
-	public function __invoke(Throwable $e = null)
+	public function __invoke(\Throwable $e = null)
 	{
 		// Wrap in HttpException if not already one
 		if( ! $e instanceof HttpException)
-			$e = new HttpException('Internal Server Error', 500, $e);
+			$e = new Internal($e);
 
+		Message::exception($e);
 		HTTP::set_status($e);
 		View::template([
 			'status' => $e->getHttpStatus(),
 			'title' => $e->getHttpTitle(),
-			'message' => [
-				'type' => 'error',
-				'text' => $e->getMessage(),
-				],
 			'debug' => self::collect_xdebug($e),
 			], 'error')
 			->output();
 	}
 
-	private static function collect_xdebug(Throwable $e = null)
+	private static function collect_xdebug(\Throwable $e = null)
 	{
 		if( ! $e) return null;
 

@@ -37,7 +37,6 @@ class Template extends View
 
 					'url' => new Helper\Url,
 					'messages' => new Helper\Messages,
-					'svg' => new Helper\Svg,
 					'isCurrent' => new Helper\IsCurrent,
 					'clicky' => new Helper\Clicky,
 					'pathClasses' => new Helper\PathClasses,
@@ -55,7 +54,7 @@ class Template extends View
 				}
 				catch(\Mustache_Exception_UnknownTemplateException $e)
 				{
-					throw new HttpException('Page not found: '.PATH, 404, $e);
+					throw new \Error\PageNotFound(PATH, $e);
 				}
 
 			default:

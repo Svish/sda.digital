@@ -1,8 +1,9 @@
 <?php
 
 namespace Model;
-use Model,Session,DB;
+
 use Data\User;
+use Model, Session, DB, Valid;
 
 /**
  * User model for handling logins, etc.
@@ -22,15 +23,15 @@ class Users extends Model
 		// Check if user exists
 		$user = $this->get($email ?? null);
 		if( ! $user)
-			throw new UnknownLoginException();
+			throw new \Error\UnknownLogin();
 
 		// Check password
 		if( ! $user->verify_password($password ?? null))
-			throw new UnknownLoginException();
+			throw new \Error\UnknownLogin();
 
 		// Check role
 		if( ! $user->has_roles(['login']))
-			throw new UnknownLoginException();
+			throw new \Error\UnknownLogin();
 
 		// Login
 		return $this->_login($user);
@@ -44,7 +45,7 @@ class Users extends Model
 	public function login_token(array $data)
 	{
 		if( ! Valid::keys_exist($data, ['email', 'token']))
-			throw new UnknownTokenException();
+			throw new \Error\UnknownResetToken();
 
 		extract($data, EXTR_SKIP);
 
@@ -52,15 +53,15 @@ class Users extends Model
 		// Check if user exists
 		$user = $this->get($email);
 		if( ! $user)
-			throw new UnknownTokenException();
+			throw new \Error\UnknownResetToken();
 
 		// Check token
 		if( ! $user->verify_token($token))
-			throw new UnknownTokenException();
+			throw new \Error\UnknownResetToken();
 
 		// Check role
 		if( ! $user->has_roles(['login']))
-			throw new UnknownTokenException();
+			throw new \Error\UnknownResetToken();
 
 		// Login
 		return $this->_login($user);
@@ -119,7 +120,7 @@ class Users extends Model
 	public function get($id)
 	{
 		if(is_int($id))
-		return DB::prepare('SELECT * 
+		$user = DB::prepare('SELECT * 
 								FROM user 
 								WHERE id=:id')
 			->bindValue(':id', $id)
@@ -127,12 +128,17 @@ class Users extends Model
 			->fetchFirst(User::class);
 
 		else
-		return DB::prepare('SELECT * 
+		$user = DB::prepare('SELECT * 
 								FROM user 
 								WHERE email=:email')
 			->bindValue(':email', $id)
 			->execute()
 			->fetchFirst(User::class);
+
+		if( ! $user)
+			throw new \Error\NotFound($id, User::class);
+
+		return $user;
 	}
 
 }

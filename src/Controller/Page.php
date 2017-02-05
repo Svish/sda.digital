@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller;
-use HTTP, View, Message, HttpException, ValidationException;
+use HTTP, View, Message;
 
 /**
  * Handles normal pages.
@@ -14,12 +14,12 @@ class Page extends Secure
 	}
 
 
-	protected function error(HttpException $e, array $context = [])
+	protected function error(\Error\HttpException $e, array $context = [])
 	{
 		HTTP::set_status($e);
 		Message::exception($e);
 
-		if($e instanceof ValidationException)
+		if($e instanceof \Error\ValidationFailed)
 			$context += ['errors' => array_map('array_values', $e->getErrors())];
 
 		return View::template($context)->output();;

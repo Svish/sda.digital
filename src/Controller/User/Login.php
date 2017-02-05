@@ -2,7 +2,6 @@
 
 namespace Controller\User;
 use HTTP, Model;
-use HttpException;
 
 /**
  * Handles user login.
@@ -19,17 +18,24 @@ class Login extends \Controller\Page
 	{
 		try
 		{
-			Model::users()->login($_POST);
-			$url = $_POST['url'] ?? 'admin';
+			try
+			{
+				Model::users()->login($_POST);
+			}
+			catch(\Error\NotFound $e)
+			{
+				throw new \Error\UnknownLogin($e);
+			}
 
+			$url = $_POST['url'] ?? 'admin';
 			if(HTTP::is_local($url))
 				HTTP::redirect($url);
 			else
 				HTTP::redirect('admin');
 		}
-		catch(HttpException $e)
+		catch(\Error\HttpException $e)
 		{
-			return $this->error($e);
+			return parent::error($e);
 		}
 	}
 }

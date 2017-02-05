@@ -47,7 +47,7 @@ class Website
 		}
 		catch(HttpException $e)
 		{
-			throw new HttpException("Page '{$request['path']}' not found", 404, $e);
+			throw new Error\HttpException("Page '{$request['path']}' not found", 404, $e);
 		}
 
 		// Call handler::before
@@ -71,7 +71,7 @@ class Website
 	protected function create_handler($handler)
     {
         if( ! class_exists($handler))
-            throw new HttpException("Handler class '$handler' does not exist.");
+            throw new Error\HttpException("Handler class '$handler' does not exist.");
         return new $handler;
     }
 
@@ -82,7 +82,7 @@ class Website
 		$route = $this->parse_path($path);
 		
 		if($route['handler'] === NULL)
-			throw new HttpException("No page found for '$path'", 404);
+			throw new Error\HttpException("No page found for '$path'", 404);
 
 		return $route;
 	}

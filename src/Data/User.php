@@ -13,14 +13,12 @@ class User extends Sql
 	{
 		parent::__set($key, $value);
 
-		$key = "{$key}_hash";
-
 		if($value)
 			switch($key)
 			{
 				// Hash password and token
 				case 'password':
-					// Add rule if setting password
+					// Add rules if setting password
 					$this->_rules += ['password' => [
 						['not_empty'],
 						['min_length', 12],
@@ -28,10 +26,11 @@ class User extends Sql
 					
 				case 'token':
 					$hash = password_hash($value, self::ALGO, self::ALGO_OPT);
-					parent::__set($key, $hash);
+					parent::__set("{$key}_hash", $hash);
 					break;
 			}
 	}
+
 
 	
 	public function __unset($key)

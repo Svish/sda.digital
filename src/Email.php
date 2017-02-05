@@ -5,6 +5,27 @@
  */
 class Email
 {
+	public function send_reset(\Data\User $user)
+	{
+		// Make token
+		$user->make_token();
+
+		// Create email (using first line as subject)
+		$text = Mustache::engine()->render('user/reset-email',
+			[
+				'user' => $user,
+				'host' => HOST,
+				'url' => new \View\Helper\Url,
+			]);
+		$text = preg_split('/\R/', $text);
+
+		$to = [$user->email => $user->name];
+		$subject = array_shift($text);
+		$message = trim(implode("\r\n", $text));
+
+		$this->send_info($to, $subject, $message);
+	}
+
 	/**
 	 * Send info $to someone.
 	 */
@@ -77,7 +98,7 @@ class Email
 		catch(Swift_SwiftException $e)
 		{
 			error_log("Failed to send '$name' email: " . $e->getMessage());
-			throw new HttpException(Text::error('email_fail'), 500, $e);
+			throw new \Exception('Failed to send email.', $e);
 		}
 	}
 }

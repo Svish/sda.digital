@@ -30,6 +30,6 @@ abstract class Secure extends Session
 		// Check roles
 		$this->required_roles[] = 'login';
 		if( ! $this->user->has_roles($this->required_roles))
-			throw new NoAccessException();
+			throw new \Error\NoAccess();
 	}
 }

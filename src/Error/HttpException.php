@@ -1,19 +1,22 @@
 <?php
 
+namespace Error;
+use HTTP, Text;
+
 /**
  * Exception with HTTP status and title.
  */
-class HttpException extends Exception
+class HttpException extends \Exception
 {
 	protected $httpStatus;
 	protected $httpTitle;
 
-	public function __construct($message, $httpStatus = 500, Throwable $cause = null, $code = E_USER_ERROR)
+	public function __construct($message, $httpStatus = 500, \Throwable $cause = null, $code = E_USER_ERROR)
 	{
 		if(is_array($message))
 		{
 			$class = get_class($this);
-			$class = preg_replace('/Exception$/', '', $class);
+			$class = str_replace('Error\\', '', $class);
 			$message = Text::exception($class, $message);
 		}
 

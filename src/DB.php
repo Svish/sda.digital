@@ -136,7 +136,7 @@ class DB
 				}
 				catch(PDOException $e)
 				{
-					throw new HttpException('DB Migration failed.', 500, $e);
+					throw new Error\HttpException('DB Migration failed.', 500, $e);
 				}
 			}
 		}

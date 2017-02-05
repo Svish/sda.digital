@@ -56,7 +56,7 @@ class Valid
 			}
 		}
 		if($errors)
-			throw new ValidationException($errors);
+			throw new Error\ValidationFailed($errors);
 		
 		return true;
 	}

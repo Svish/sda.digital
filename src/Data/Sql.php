@@ -1,7 +1,7 @@
 <?php
 
 namespace Data;
-use DB, Util, Data, Valid;
+use DB, Data, Valid;
 
 
 /**

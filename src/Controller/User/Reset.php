@@ -1,13 +1,12 @@
 <?php
 
 namespace Controller\User;
-use HTTP, Model, Mustache, Email;
-use Model\UnknownTokenException;
+use HTTP, Model, View, Email, Message;
 
 /**
  * Handles user account.
  */
-class Reset extends Controller\Page
+class Reset extends \Controller\Page
 {
 	public function get()
 	{
@@ -19,14 +18,11 @@ class Reset extends Controller\Page
 				Message::ok('reset_done');
 				HTTP::redirect('user/me');
 			}
-			catch(UnknownTokenException $e)
+			catch(\Error\UnknownResetToken $e)
 			{
 				return parent::error($e);
 			}
 		}
-
-		if(isset($_GET['sent']))
-			Message::ok('reset_sent');
 
 		return View::template()->output();
 	}
@@ -35,35 +31,25 @@ class Reset extends Controller\Page
 	public function post()
 	{
 		// Look for user
-		$user = Model::users()->get($_POST['email']);
-		if( ! $user)
+		try
 		{
-			HTTP::set_status(422);
-			Message::error('unknown_user');
-			return View::template()->output();
+			try
+			{
+				$user = Model::users()->get($_POST['email']);
+			}
+			catch(\Error\NotFound $e)
+			{
+				throw new \Error\UnknownLogin($e);
+			}
+		}
+		catch(\Error\UnknownLogin $e)
+		{
+			return parent::error($e);
 		}
 
-
-		// Make token
-		$user->make_token();
-
-
-		// Create email (using first line as subject)
-		$text = Mustache::engine()->render('user/reset-email',
-			[
-				'user' => $user,
-				'host' => HOST,
-				'url' => new Helper_Url,
-			]);
-		$text = preg_split('/\R/', $text);
-
-		$subject = array_shift($text);
-		$message = trim(implode("\r\n", $text));
-
-
 		// Send email
-		$to = [$user->email => $user->name];
-		Email::info($to, $subject, $message);
-		HTTP::redirect('user/reset?sent');
+		Email::reset($user);
+		Message::ok('reset_sent');
+		HTTP::redirect_self();
 	}
 }

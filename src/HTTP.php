@@ -87,7 +87,7 @@ class HTTP
 	 */
 	public static function set_status($code)
 	{
-		if($code instanceof HttpException)
+		if($code instanceof Error\HttpException)
 			$code = $code->getHttpStatus();
 		http_response_code($code);
 	}
