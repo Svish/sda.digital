@@ -4,7 +4,7 @@ namespace Controller\Admin\Content;
 use HTTP, Session, View, Model;
 
 /**
- * View and select new content to add.
+ * View and select new, fresh content to add.
  */
 class Fresh extends \Controller\Admin
 {
@@ -12,7 +12,7 @@ class Fresh extends \Controller\Admin
 
 	public function post()
 	{
-		Session::set('adding', $_POST['files'] ?? []);
-		HTTP::redirect_self('/../add');
+		Model::freshness()->store_adding($_POST['files'] ?? []);
+		HTTP::redirect_self('/../fill');
 	}
 }

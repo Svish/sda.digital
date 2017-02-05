@@ -1,4 +1,3 @@
-// http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
 
 var FileModel = function(data)
 {
@@ -16,8 +15,6 @@ var ViewModel = function(data)
 				}
 		}}, this);
 }
-
-
 
 $(function()
 {

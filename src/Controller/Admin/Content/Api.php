@@ -4,22 +4,19 @@ namespace Controller\Admin\Content;
 use Session, View, Model;
 
 /**
- * JSON API methods for content adding.
+ * Methods for content adding.
  */
-class Api extends \Controller\Admin
+class Api extends \Controller\Api
 {
 	protected $required_roles = ['editor'];
 
-	public function get($what = null)
+	public function get_fresh()
 	{
-		$func = "get_$what";
-		$data = $this->$func();
-		View::json($data)->output();
+		return Model::freshness()->get_fresh();
 	}
 
-
-	private function get_fresh()
+	public function get_adding()
 	{
-		return Model::freshFiles()->find();
+		return Model::freshness()->get_adding();
 	}
 }
