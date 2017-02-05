@@ -5,8 +5,26 @@ $(function()
 	// Global ajax progress
 	$(document)
 		.ajaxStart(NProgress.start)
-		.ajaxStop(NProgress.done);
+		.ajaxStop(NProgress.done)
+		.ajaxError(errorHandler);
 });
+
+
+function errorHandler(event, jqxhr, settings, thrownError)
+{
+	var body = /<body.*>([\s\S]+)<\/body>/
+		.exec(jqxhr.responseText);
+
+	if( ! body)
+		return;
+
+	var html = $('<output>')
+		.append($.parseHTML(body[1]))
+		.find('#message,#content');
+
+	$('#content')
+		.replaceWith(html);
+}
 
 
 /**
