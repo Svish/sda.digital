@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller\Admin\Content;
-use HTTP, Session, View, Mime;
+use HTTP, Session, View, Mime, ID3;
 
 /**
  * Adding new content.
@@ -17,19 +17,10 @@ class Add extends \Controller\Admin
 		if( ! $files)
 			HTTP::redirect('admin/content/fresh');
 
-		$files = array_map(function($path)
-		{
-			return pathinfo($path) + [
-			'path' => $path,
-			'mime' => Mime::get(self::pathfix($path)),
-			];
-		}, $files);
+		$files = array_map([$this, 'enrich'], $files);
+		$files = array_group_by('filename', $files);
+		var_dump($files);return;
 
-
-		var_dump($files);
-
-
-		// TODO: Json view how? 
 		View::template(['adding' => $files])
 			->output();
 	}
@@ -37,12 +28,33 @@ class Add extends \Controller\Admin
 	public function post()
 	{
 		Model::content()->add($_POST);
-		parent::get(null);
+		parent::get();
 	}
 
 
-	private static function pathfix($path)
+	private function enrich($path)
 	{
-		return IS_WIN ? utf8_decode($path) : $path;
+		$path = self::to_win($path);
+
+		$info['mime'] = Mime::get($path);
+
+		// NOTE: Works for video, but seems to be suuuper slow...
+		if(starts_with('audio/', $info['mime']['type']))
+			$info += ID3::read($path);
+
+		$info += [
+			'path' => self::from_win($path),
+			'title' => self::pathinfo($path, PATHINFO_FILENAME),
+			'filename' => self::pathinfo($path, PATHINFO_FILENAME),
+			'fileext' => self::pathinfo($path, PATHINFO_EXTENSION),
+			];
+
+		return $info;
+	}
+
+	use \WinPathFix;
+	private static function pathinfo($path, $options)
+	{
+		return self::from_win(pathinfo($path, $options));
 	}
 }

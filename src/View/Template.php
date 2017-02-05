@@ -22,7 +22,7 @@ class Template extends View
 
 	
 
-	public function render($mime = 'text/html')
+	public function render($mime)
 	{
 		switch($mime)
 		{

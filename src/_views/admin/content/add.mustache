@@ -1,17 +1,18 @@
 {{% BLOCKS }}
 {{< layout }}
-{{$ title }}Legg til{{/ title }}
+{{$ title }}Fyll ut{{/ title }}
 
 {{$ content}}
 
-<h1>Legg til</h1>
+<h1>Fyll ut</h1>
 
-<p><i><b>TODO:</b> Forms for adding these files...</i>
-
-{{> adding}}
+<form action="{{PATH}}" method="post">
 
 
-<script src="js/admin-add.js"></script>
+	<button type="submit">→</button>
+</form>
+
+<script src="js/admin-content-add.js"></script>
 
 {{/ content}}
 {{/ layout }}

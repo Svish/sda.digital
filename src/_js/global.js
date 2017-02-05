@@ -1,25 +1,12 @@
 
-
-// Configure NProgress
-NProgress.configure({
-	//parent: '#content',
-	showSpinner: true,
-});
-
-
-// End progress when everything loaded
-$(window).on('load', NProgress.done);
+// Hook up global ajax listeners
 $(function()
 {
-	// Start progress when DOM loaded
-	NProgress.start();
-
 	// Global ajax progress
 	$(document)
 		.ajaxStart(NProgress.start)
 		.ajaxStop(NProgress.done);
 });
-
 
 
 /**

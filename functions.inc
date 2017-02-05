@@ -26,13 +26,33 @@ function array_sort_by($key, array &$array)
 	});
 }
 
-function starts_with($haystack, $needle)
+function array_group_by($key, $array, $keep_key = false, $group_key = 'items')
+{
+	$groups = [];
+	foreach($array as $value)
+	{
+		$group = $value[$key] ?? '';
+
+		if( ! $keep_key)
+			unset($value[$key]);
+
+		if( ! isset($groups[$group]))
+			$groups[$group][$key] = $group;
+
+		$groups[$group][$group_key][] = $value;
+	}
+
+	return array_values($groups);
+}
+
+
+function starts_with($needle, $haystack)
 {
 	return $needle === "" 
 		|| strpos($haystack, $needle) === 0;
 }
 
-function ends_with($haystack, $needle)
+function ends_with($needle, $haystack)
 {
 	return $needle === "" 
 		|| substr($haystack, -strlen($needle)) === $needle;

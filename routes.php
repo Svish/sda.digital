@@ -20,12 +20,20 @@ return [
 		return $handler;
 	},
 
+	'.+/api/:alpha:' => function (array $request)
+	{
+		$h = explode('/', trim($request['path'], '/'));
+		array_pop($h);
+		$h = 'Controller\\'.implode('\\', array_map('ucfirst', $h));
+
+		return $h;
+	},
 
 	# Any other pages
 	0 => function (array $request)
 	{
-		$h = explode('/', trim($request['path'], '/'));
-		$h = 'Controller\\'.implode('\\', array_map('ucfirst', $h));
+		$h = explode('/', 'controller/'.trim($request['path'], '/'));
+		$h = implode('\\', array_map('ucfirst', $h));
 		return class_exists($h)
 			? $h
 			: 'Controller\\Page';

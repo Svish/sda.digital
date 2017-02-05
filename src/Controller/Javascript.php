@@ -71,7 +71,7 @@ class Javascript extends Cached
 			CURLOPT_POSTFIELDS => http_build_query([
 				'language' => 'ECMASCRIPT6_STRICT',
 				'language_out' => 'ECMASCRIPT5',
-				'output_info' => 'compiled_code',
+				'output_info' => 'compiled_code', // 'errors'
 				'output_format' => 'text',
 				'compilation_level' => 'SIMPLE_OPTIMIZATIONS',
 				'js_code' => $js,
