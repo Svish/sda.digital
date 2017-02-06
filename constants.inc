@@ -1,18 +1,23 @@
 <?php
 
-// Paths
+// System paths
 define('ROOT', realpath(__DIR__).DIRECTORY_SEPARATOR);
 define('SRC', ROOT.'src'.DIRECTORY_SEPARATOR);
+
+// Web paths
 define('SCHEME', empty($_SERVER['HTTPS']) || $_SERVER['HTTPS']=='off' ? 'http' : 'https');
 define('HOST', $_SERVER['HTTP_HOST']);
 define('WEBBASE', $_SERVER['BASE']);
 define('WEBROOT', SCHEME.'://'.HOST.WEBBASE);
-define('PATH', trim($_GET['path_uri'] ?? '', '/') ?: 'index');
+
+// Current path
+$path = $_GET['path_uri'] ?? '';
+$path = trim($path, '/');
+define('PATH', $path ?: 'index');
 unset($_GET['path_uri']);
 
 // Environment
 define('ENV', $_SERVER['ENV']);
-
 
 // Language, Encoding and Locales
 mb_internal_encoding("UTF-8");

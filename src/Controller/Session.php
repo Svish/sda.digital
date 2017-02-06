@@ -8,9 +8,9 @@ use Session as S;
  */
 abstract class Session extends Controller
 {
-	public function before(array &$info)
+	public function __construct()
 	{
-		parent::before($info);
+		parent::__construct();
 		S::start();
 	}
 }

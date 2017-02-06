@@ -54,7 +54,7 @@ class Template extends View
 				}
 				catch(\Mustache_Exception_UnknownTemplateException $e)
 				{
-					throw new \Error\PageNotFound(PATH, $e);
+					throw new \Error\PageNotFound(null, $e);
 				}
 
 			default:

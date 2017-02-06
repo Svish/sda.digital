@@ -7,8 +7,8 @@ namespace Error;
  */
 class PageNotFound extends HttpException
 {
-	public function __construct($path, \Throwable $reason = null)
+	public function __construct($path = null, \Throwable $reason = null)
 	{
-		parent::__construct([$path], 404, $reason);
+		parent::__construct([$path ?? PATH], 404, $reason);
 	}
 }

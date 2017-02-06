@@ -1,7 +1,8 @@
 <?php
 
 namespace Controller;
-use Config, Cache, lessc;
+use Config, Cache;
+use lessc;
 
 /**
  * Handles compilation and serving of LESS files as CSS.
@@ -10,11 +11,14 @@ class Less extends Cached
 {
 	const DIR = SRC.'_less'.DIRECTORY_SEPARATOR;
 	const EXT = '.less';
-	private $config;
 
+	private $config;
+	private $file;
 
 	public function __construct()
 	{
+		parent::__construct();
+
 		$this->config = Config::less();
 		$this->config->valid = array_map('basename', glob(self::DIR.'*'.self::EXT));
 	}
@@ -22,22 +26,23 @@ class Less extends Cached
 
 	public function before(array &$info)
 	{
-		if( ! in_array($info['params'][2].self::EXT, $this->config->valid))
-			HTTP::plain_exit(404, $info['path']);
+		$file = $info['params'][2].self::EXT;
+		if( ! in_array($file, $this->config->valid))
+			throw new \Error\PageNotFound();
 
-		$this->path = self::DIR.$info['params'][2].self::EXT;
-		$this->data = self::compile($this->path);
+		$this->file = self::DIR.$file;
+		$this->data = self::compile($this->file);
 
 		parent::before($info);
 	}
 
 
 
-	public function get($path)
+	public function get()
 	{
 		header('Content-Type: text/css; charset=utf-8');
 		$time = date('Y-m-d H:i:s', $this->data['updated']);
-		echo "/* $time */ {$this->data['compiled']}";
+		echo "/* Compiled: $time */\r\n{$this->data['compiled']}";
 	}
 
 
@@ -49,13 +54,13 @@ class Less extends Cached
 	}
 
 
-	private static function compile($path)
+	private static function compile($file)
 	{
 		$cache = new Cache(__CLASS__);
-		$cache_key = basename($path).'c';
+		$cache_key = basename($file).'c';
 
 		// Get cached if exists
-		$old = $cache->get($cache_key, ['root' => $path, 'updated' => 0]);
+		$old = $cache->get($cache_key, ['root' => $file, 'updated' => 0]);
 
 		// Do a cached compile
 		$less = new lessc;

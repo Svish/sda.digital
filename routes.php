@@ -3,39 +3,40 @@
 return [
 	
 	# Resources
-	'js/(:alpha:.js)' => '\Controller\\Javascript',
-	'theme/(:alpha:.css)' => '\Controller\\Less',
+	'js/(:any:.js)$' => '\Controller\\Javascript',
+	'theme/(:any:.css)$' => '\Controller\\Less',
 
 
-	# Slugs
+	# Content slugs
 	':alpha:/:digit:/:alpha:' => function (array &$request)
 	{
 		// TODO: Does this work?
-		$params = explode('/', trim($request['path'], '/'));
+		$params = explode('/', $request['path']);
 		$handler = array_shift($params);
 		$request['params'] = $params;
 
-		var_dump(get_defined_vars());
+		var_dump(get_defined_vars()); exit('did it?');
 		
 		return $handler;
 	},
 
+	# APIs
 	'.+/api/:alpha:' => function (array $request)
 	{
-		$h = explode('/', trim($request['path'], '/'));
-		array_pop($h);
-		$h = 'Controller\\'.implode('\\', array_map('ucfirst', $h));
-
-		return $h;
+		$path = ucwords($request['path'], '/-');
+		$path = str_replace('/', '\\', $path);
+		$handler = substr($path, 0, strrpos($path, '\\'));
+		return "Controller\\$handler";
 	},
 
 	# Any other pages
 	0 => function (array $request)
 	{
-		$h = explode('/', 'controller/'.trim($request['path'], '/'));
-		$h = implode('\\', array_map('ucfirst', $h));
-		return class_exists($h)
-			? $h
-			: 'Controller\\Page';
+		$path = ucwords($request['path'], '/-');
+		$path = str_replace(['-', '/'], ['', '\\'], $path);
+		$handler = "Controller\\$path";
+		return class_exists($handler)
+			? $handler
+			: $handler; //'Controller\\Page';
 	},
 ];

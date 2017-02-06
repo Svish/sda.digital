@@ -9,24 +9,25 @@ class Website
 			':alphanum:'  => '([\p{L}\p{Nd}\p{Pd}_]+)',
 		];
 	protected $routes;
+	protected $path;
 
 
-
-	public function __construct(array $routes)
+	public function __construct(array $routes, string $path)
 	{
 		$this->routes = $routes;
+		$this->path = $path;
 	}
 
 
 
-	public function serve($path)
+	public function serve()
 	{
 		// Find route
-		$route = $this->find_route($path);
+		$route = $this->find_route($this->path);
 
 		// Execute request
 		$this->execute($route + [
-			'path' => $path,
+			'path' => $this->path,
 			'method' => strtolower($_SERVER['REQUEST_METHOD']),
 			'handler' => null,
 			'params' => [],
@@ -37,43 +38,40 @@ class Website
 
 	protected function execute($request)
 	{
-		// Try create handler
-		try
-		{
-			if(is_callable($request['handler']))
-				$request['handler'] = $request['handler']($request);
+		// If callable, get handler from it
+		if(is_callable($request['handler']))
+			$request['handler'] = $request['handler']($request);
 
-			$handler = self::create_handler($request['handler']);
-		}
-		catch(HttpException $e)
-		{
-			throw new Error\HttpException("Page '{$request['path']}' not found", 404, $e);
-		}
+		// Try create the handler
+		$handler = self::create_handler($request['handler'], $request['path']);
 
 		// Call handler::before
 		if( method_exists($handler, 'before'))
-			call_user_func_array([$handler, 'before'], [&$request]);
-
-		// Default to handler::get if actual method does not exist
-		if( ! method_exists($request['handler'], $request['method']))
-			$request['method'] = 'get';
+			$handler->before($request);
 
 		// Call handler::method
 		call_user_func_array([$handler, $request['method']], $request['params']);
 
 		// Call handler::after
 		if( method_exists($handler, 'after'))
-			call_user_func_array([$handler, 'after'], [&$request]);
+			$handler->after($request);
 	}
 
 
 
 	protected function create_handler($handler)
-    {
-        if( ! class_exists($handler))
-            throw new Error\HttpException("Handler class '$handler' does not exist.");
-        return new $handler;
-    }
+	{
+		try
+		{
+			if( ! class_exists($handler))
+				 throw new Exception("Handler class '$handler' does not exist.");
+		}
+		catch(Exception $e)
+		{
+			throw new Error\PageNotFound($this->path, $e);
+		}
+		return new $handler;
+	}
 
 
 

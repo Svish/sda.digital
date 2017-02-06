@@ -20,4 +20,5 @@ ini_set('zlib.output_compression', 'On');
 
 
 // Handle request
-(new Website(require 'routes.php'))->serve(PATH);
+(new Website(require 'routes.php', PATH))
+	->serve();

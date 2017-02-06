@@ -11,15 +11,12 @@ class Me extends \Controller\Admin
 {
 	private $me;
 
-	public function before(array &$info)
+	public function __construct()
 	{
-		parent::before($info);
-
-		//TODO: Allow Admin edit other users.
-		// $_GET['email'] ?? current user?
-
-		$this->me = $this->user;
+		parent::__construct();
+		$this->me = Model::users()->logged_in();
 	}
+	
 
 	public function get()
 	{

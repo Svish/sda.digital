@@ -12,7 +12,7 @@ class Api extends Secure
 	{
 		$method = "get_$what";
 		if( ! method_exists($this, $method))
-			throw new \Error\PageNotFound(PATH);
+			throw new \Error\PageNotFound();
 
 		$data = $this->$method();
 		View::json($data)->output();

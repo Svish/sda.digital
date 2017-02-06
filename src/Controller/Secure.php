@@ -5,30 +5,35 @@ use HTTP,Model;
 
 /**
  * Base for secure controllers.
+ *
+ * $required_roles = false => Open to everyone
+ * $required_roles = [] => Require login
+ * $required_roles = ['foo', 'bar'] => Require foo, bar and login
  */
 abstract class Secure extends Session
 {
-	protected $user;
 	protected $required_roles = false;
+	private $user;
 
-	public function before(array &$info)
+	public function __construct()
 	{
-		parent::before($info);
+		parent::__construct();
 
-		// Get logged in user (if any)
-		$this->user = Model::users()->logged_in();
-
-		// Open to anyone if empty required_roles
+		// Open to anyone if required_roles is false
 		if($this->required_roles === false)
 			return;
 
-		// Check if logged in
+		// Get logged in user
+		$this->user = Model::users()->logged_in();
+
+		// Redirect if not logged in
 		if( ! $this->user)
-			// Redirect to login
-			HTTP::redirect('user/login?url='.urlencode(ltrim($info['path'], '/')));
+			HTTP::redirect('user/login?url='.urlencode(PATH));
+
+		// Always require login role
+		$this->required_roles[] = 'login';
 
 		// Check roles
-		$this->required_roles[] = 'login';
 		if( ! $this->user->has_roles($this->required_roles))
 			throw new \Error\NoAccess();
 	}
