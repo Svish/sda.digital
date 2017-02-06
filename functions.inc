@@ -57,37 +57,3 @@ function ends_with($needle, $haystack)
 	return $needle === "" 
 		|| substr($haystack, -strlen($needle)) === $needle;
 }
-
-
-/**
- * #rrggbb or #rgb to [r, g, b]
- */
-function hex2rgb($hex)
-{
-	$hex = ltrim($hex, '#');
-
-	if(strlen($hex) == 3)
-		return [
-			hexdec($hex[0].$hex[0]),
-			hexdec($hex[1].$hex[1]),
-			hexdec($hex[2].$hex[2]),
-		];
-	else
-		return [
-			hexdec($hex[0].$hex[1]),
-			hexdec($hex[2].$hex[3]),
-			hexdec($hex[4].$hex[5]),
-		];
-}
-
-
-/**
- * [r, g, b] to #rrggbb
- */
-function rgb2hex(array $rgb)
-{
-	return '#'
-		. sprintf('%02x', $rgb[0])
-		. sprintf('%02x', $rgb[1])
-		. sprintf('%02x', $rgb[2]);
-}
