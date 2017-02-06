@@ -29,9 +29,9 @@ class Login extends \Controller\Page
 
 			$url = $_POST['url'] ?? 'admin';
 			if(HTTP::is_local($url))
-				HTTP::redirect($url);
+				HTTP::redirect($url, 303);
 			else
-				HTTP::redirect('admin');
+				HTTP::redirect('admin', 303);
 		}
 		catch(\Error\HttpException $e)
 		{

@@ -46,7 +46,7 @@ class HTTP
 	 */
 	public static function redirect_self(string $append = null)
 	{
-		self::redirect(PATH.$append);
+		self::redirect(PATH.$append, 303);
 	}
 
 

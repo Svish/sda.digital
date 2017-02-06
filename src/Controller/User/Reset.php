@@ -16,7 +16,7 @@ class Reset extends \Controller\Page
 			{
 				Model::users()->login_token($_GET);
 				Message::ok('reset_done');
-				HTTP::redirect('user/me');
+				HTTP::redirect('user/me', 303);
 			}
 			catch(\Error\UnknownResetToken $e)
 			{
