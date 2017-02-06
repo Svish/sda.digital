@@ -11,8 +11,12 @@ error_reporting(E_ALL);
 set_exception_handler(new Error\Handler());
 
 
-// Remove default headers like X-Powered-By
+// Remove any default headers, like X-Powered-By
 header_remove();
+
+
+// Enable gzip/deflate
+ini_set('zlib.output_compression', 'On');
 
 
 // Handle request
