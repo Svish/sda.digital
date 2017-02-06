@@ -31,13 +31,15 @@ abstract class Sql extends Data
 	
 	public function __set($key, $value)
 	{
-		$this->_dirty[$key] = $value;
+		if($this->$key != $value)
+			$this->_dirty[$key] = $value;
 		parent::__set($key, $value);
 	}
 	
 	public function __unset($key)
 	{
-		$this->_dirty[$key] = null;
+		if(isset($this->$key))
+			$this->_dirty[$key] = null;
 		parent::__unset($key);
 	}
 
@@ -51,11 +53,13 @@ abstract class Sql extends Data
 	}
 
 
-
+	/**
+	 * @return false if no changes; otherwise true
+	 */
 	public function save()
 	{
 		if( ! $this->_dirty)
-			return true;
+			return false;
 
 		// Validate
 		$this->validate();
@@ -86,7 +90,7 @@ abstract class Sql extends Data
 		// Reset $_dirty
 		$this->_dirty = [];
 
-		return $this;
+		return true;
 	}
 
 

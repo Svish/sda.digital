@@ -15,7 +15,7 @@ class Reset extends \Controller\Page
 			try
 			{
 				Model::users()->login_token($_GET);
-				Message::ok('reset_done');
+				Message::ok('reset-done');
 				HTTP::redirect('user/me', 303);
 			}
 			catch(\Error\UnknownResetToken $e)
@@ -49,7 +49,7 @@ class Reset extends \Controller\Page
 
 		// Send email
 		Email::reset($user);
-		Message::ok('reset_sent');
+		Message::ok('reset-sent');
 		HTTP::redirect_self();
 	}
 }

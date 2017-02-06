@@ -19,7 +19,7 @@ class Contact extends Page
 	public function get()
 	{
 		if(isset($_GET['sent']))
-			Message::ok('email_sent');
+			Message::ok('email-sent');
 
 		return View::template()->output();;
 	}
@@ -36,7 +36,7 @@ class Contact extends Page
 			Email::feedback($_POST['from'], $_POST['subject'], $_POST['message']);
 			
 			// Redirect
-			HTTP::redirect_self('?sent');
+			HTTP::redirect_self();
 		}
 		catch(HttpException $e)
 		{

@@ -1,8 +1,7 @@
 <?php
 
 namespace Controller\User;
-use HTTP, View, Message;
-use HttpException;
+use HTTP, Model, View, Message;
 
 /**
  * Handles user account.
@@ -29,13 +28,13 @@ class Me extends \Controller\Admin
 	{
 		try
 		{
-			$this->me
+			$x = $this->me
 				->set($_POST)
 				->save();
-			Message::ok('saved');
+			Message::ok($x ? 'saved' : 'no-changes');
 			HTTP::redirect_self();
 		}
-		catch(HttpException $e)
+		catch(\Error\HttpException $e)
 		{
 			return parent::error($e, ['me' => $this->me]);
 		}
