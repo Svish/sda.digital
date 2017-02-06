@@ -5,11 +5,10 @@
  */
 class HTTP
 {
-
 	/**
 	 * Check if URL is relative or to this site.
 	 */
-	public static function is_local($url)
+	public static function is_local(string $url): bool
 	{
 		extract(parse_url($url));
 
@@ -24,13 +23,13 @@ class HTTP
 	}
 
 	/**
-	 * Redirect to given target.
+	 * Redirect to given target, and exit.
 	 *
 	 * @param code HTTP code to use
 	 * @param target URL to redirect to
 	 * @param prepend If target should be prepended with WEBROOT
 	 */
-	public static function redirect($target = NULL, $code = 302, $prepend = TRUE)
+	public static function redirect(string $target = null, int $code = 302, bool $prepend = true)
 	{
 		if($prepend)
 			$target = WEBROOT.$target;
@@ -41,11 +40,11 @@ class HTTP
 	}
 
 	/**
-	 * Redirect to self.
+	 * Redirect to self, and exit.
 	 *
 	 * @param append Optionally appended to URL (e.g. ?foo=bar).
 	 */
-	public static function redirect_self($append = '')
+	public static function redirect_self(string $append = null)
 	{
 		self::redirect(PATH.$append);
 	}
@@ -53,20 +52,39 @@ class HTTP
 
 
 	/**
-	 * Performs a HEAD request.
+	 * Get headers through a HEAD request.
 	 */
-	public static function get_headers($url, $opts = [])
+public static function get_headers(string $url, array $opts = [])
+{
+	// Get headers
+	$prev = stream_context_get_options(stream_context_get_default());
+	stream_context_set_default(['http' => $opts + 
+		[
+			'method' => 'HEAD',
+			'timeout' => 2,
+		]]);
+	$req = @get_headers($url, true);
+	if( ! $req)
+		return false;
+
+	// Make more sane response
+	foreach($req as $h => $v)
 	{
-		$prev = stream_context_get_options(stream_context_get_default());
-		stream_context_set_default(['http' => $opts + 
-			[
-				'method' => 'HEAD',
-				'timeout' => 2,
-			]]);
-		$headers = get_headers($url, true);
-		stream_context_set_default($prev);
-		return $headers;
+		if(is_int($h))
+			$headers[$h]['Status'] = $v;
+		else
+		{
+			if(is_string($v))
+				$headers[0][$h] = $v;
+			else
+				foreach($v as $x => $y)
+					$headers[$x][$h] = $y;
+		}
+
 	}
+	stream_context_set_default($prev);
+	return $headers;
+}
 
 
 

@@ -78,6 +78,7 @@ abstract class Cached extends Controller
 		// Otherwise resend cached headers and content
 		foreach($this->cached['headers'] as $h)
 			header($h);
+		header('X-Cache: Hit');
 
 		echo $this->cached['content'];
 	}
