@@ -37,6 +37,6 @@ return [
 		$handler = "Controller\\$path";
 		return class_exists($handler)
 			? $handler
-			: $handler; //'Controller\\Page';
+			: 'Controller\\Page';
 	},
 ];
