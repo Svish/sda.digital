@@ -26,10 +26,10 @@ function array_sort_by($key, array &$array)
 	});
 }
 
-function array_group_by($key, $array, $keep_key = false, $group_key = 'items')
+function group_by(string $key, $list, bool $keep_key = false, string $key_name = null, string $group_name = 'items'): array
 {
 	$groups = [];
-	foreach($array as $value)
+	foreach($list as $value)
 	{
 		$group = $value[$key] ?? '';
 
@@ -37,9 +37,9 @@ function array_group_by($key, $array, $keep_key = false, $group_key = 'items')
 			unset($value[$key]);
 
 		if( ! isset($groups[$group]))
-			$groups[$group][$key] = $group;
+			$groups[$group][$key_name ?? $key] = $group;
 
-		$groups[$group][$group_key][] = $value;
+		$groups[$group][$group_name][] = $value;
 	}
 
 	return array_values($groups);

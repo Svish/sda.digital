@@ -5,7 +5,7 @@ var FileModel = function(data)
 	this.selected = ko.observable(false);
 }
 
-var ViewModel = function(data)
+var GroupModel = function(data)
 {
 	ko.mapping.fromJS(data, {
 			'files': {
@@ -18,15 +18,14 @@ var ViewModel = function(data)
 
 $(function()
 {
-	$.getJSON('admin/content/api/fresh', function(data)
+	$.getJSON('admin/content/api/fresh-files', function(data)
 		{
 			view = ko.mapping.fromJS(data, {
 					create: function(options)
 					{
-						return new ViewModel(options.data);
+						return new GroupModel(options.data);
 					}
 				});
-
 			ko.applyBindings(view);
 		});
 });

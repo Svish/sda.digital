@@ -1,0 +1,41 @@
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}Fyll ut{{/ title }}
+
+{{$ content}}
+
+<h1>Fyll ut</h1>
+
+<form action="{{PATH}}" method="post">
+
+	<fieldset class="content" data-bind="foreach: view">
+		<legend data-bind="text: name"></legend>
+
+		<div class="file"
+			data-bind="foreach: files"
+			data-name="{{filename}}"
+			data-ext="{{fileext}}"
+			data-time="{{time}}"
+			data-type="{{mime.type}}"
+			data-encoding="{{mime.encoding}}">{{path}}</div>
+		
+
+	</fieldset>
+
+	<hr>
+	<p>
+		<button type="reset" data-bind="click: resetForm">Reset</button>
+		<button type="submit" data-bind="click: submitForm">➡</button>
+	</p>
+	
+</form>
+
+<hr>
+
+{{>kodebug}}
+
+
+<script src="js/admin-content-fill-out.js"></script>
+
+{{/ content}}
+{{/ layout }}

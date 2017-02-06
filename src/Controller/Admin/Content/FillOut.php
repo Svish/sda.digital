@@ -6,7 +6,7 @@ use HTTP, Session, View, Mime, ID3;
 /**
  * Fill out and organize.
  */
-class Fill extends \Controller\Admin
+class FillOut extends \Controller\Admin
 {
 	protected $required_roles = ['editor'];
 

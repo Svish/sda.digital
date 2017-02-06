@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller;
-use Session, View, Model;
+use View;
 
 /**
  * Simple base for JSON API controllers.
@@ -10,11 +10,13 @@ class Api extends Secure
 {
 	public function get($what = null)
 	{
+		$what = str_replace('-', '_', $what);
 		$method = "get_$what";
+
 		if( ! method_exists($this, $method))
 			throw new \Error\PageNotFound();
 
-		$data = $this->$method();
-		View::json($data)->output();
+		View::json($this->$method())
+			->output();
 	}
 }

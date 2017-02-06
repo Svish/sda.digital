@@ -19,14 +19,15 @@ class Freshness extends Model
 	/**
 	 * Get list of selected files to add, enriched with info from file.
 	 */
-	public function get_adding()
+	public function get_selected()
 	{
 		$list = Session::get('adding', []);
-		$list = array_map([$this, 'enrich'], $list);
-		$list = array_group_by('filename', $list);
+		$list = array_map([$this, 'enrich_selected'], $list);
+		$list = group_by('filename', $list, false, 'name', 'files');
+
 		return $list;
 	}
-	private function enrich($path)
+	private function enrich_selected($path)
 	{
 		$path = self::to_win($path);
 

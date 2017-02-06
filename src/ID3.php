@@ -29,6 +29,6 @@ class ID3
 
 	private static function c(array $tags, $comment)
 	{
-		return implode(';', $tags['comments'][$comment] ?? []);
+		return implode('; ', $tags['comments'][$comment] ?? []);
 	}
 }
