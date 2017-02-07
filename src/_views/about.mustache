@@ -38,10 +38,20 @@
 
 <h2>#rgb</h2>
 
-<p class="accent accent1">
-<p class="accent accent2">
+<!-- ko foreach: $data -->
+<div class="color" data-bind="style: {background: color}">
+	<span data-bind="text: name"></span>
+	<span data-bind="text: color"></span>
+</div>
+<!-- /ko -->
 
-
+<script>
+$.getJSON('about/api/colors', function(data)
+	{
+		var view = ko.mapping.fromJS(data);
+		ko.applyBindings(view);
+	});
+</script>
 
 {{/ content}}
 

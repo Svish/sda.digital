@@ -19,7 +19,7 @@ table
 
 	thead
 	{
-		background: fade(@accent-color, 40%);
+		background: fade(@accent1-color, 40%);
 		border-bottom: 2px solid black;
 		th
 		{
@@ -35,13 +35,13 @@ table
 		{
 			tr:nth-child(odd)
 			{
-				//td,th{&:nth-child(odd){background: fade(@accent-color, 5%);}}
-				td,th{&:nth-child(even){background: fade(@accent-color, 10%);}}
+				//td,th{&:nth-child(odd){background: fade(@accent1-color, 5%);}}
+				td,th{&:nth-child(even){background: fade(@accent1-color, 10%);}}
 			}
 			tr:nth-child(even)
 			{
-				td,th{&:nth-child(odd){background: fade(@accent-color, 10%);}}
-				//td,th{&:nth-child(even){background: fade(@accent-color, 5%);}}
+				td,th{&:nth-child(odd){background: fade(@accent1-color, 10%);}}
+				//td,th{&:nth-child(even){background: fade(@accent1-color, 5%);}}
 			}
 		}
 
@@ -49,11 +49,11 @@ table
 		{
 			tr:nth-child(odd)
 			{
-				td,th{background: fade(@accent-color, 5%);}
+				td,th{background: fade(@accent1-color, 5%);}
 			}
 			tr:nth-child(even)
 			{
-				td,th{background: fade(@accent-color, 10%);}
+				td,th{background: fade(@accent1-color, 10%);}
 			}
 		}
 	}
@@ -103,7 +103,7 @@ table.xdebug-error
 				{
 					content: attr(data-key);
 					float: right;
-					background: fade(@accent-color, 50%);
+					background: fade(@accent1-color, 50%);
 					margin: -.3rem -.5rem;
 					padding: .3rem .5rem;
 					font-weight: bold;

@@ -6,8 +6,14 @@
 @shadow-color: #1c1c1c;
 @text-color: #f0f0f0;
 
-@accent-color: #ed782a;
+@accent1-color: #ed782a;
 @accent2-color: #3b53cf;
+
+@input-border-color: lighten(@background-color, 15%);
+@input-background-color: darken(@background-color, 10%);
+@error-color: #b40000;
+
+
 
 
 // Base stuff
@@ -58,7 +64,7 @@ h1,h2,h3,h4
 {
 	font-family: 'Open Sans Condensed', sans-serif;
 	font-weight: 300;
-	color: @accent-color;
+	color: @accent1-color;
 
 	a
 	{
@@ -159,8 +165,8 @@ blockquote
 
 	color: #666;
 	
-	border-left: 15px solid @accent-color;
-	border-right: 2px solid @accent-color;
+	border-left: 15px solid @accent1-color;
+	border-right: 2px solid @accent1-color;
 }
 blockquote::before{
   content: "\201C"; /*Unicode for Left Double Quote*/

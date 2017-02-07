@@ -13,15 +13,28 @@ body.about #content
 	}
 
 
-	.accent
+	.color
 	{
-		border: 1px solid black;
-		padding: .5em 1.5em;
-		color: #fff;
+		position: relative;
+		overflow: hidden;
+		margin-bottom: 2em;
+		padding: .75em 1.5em;
+		border: 2px solid @background-color;
+		outline: 1px solid @text-color;
+		color: @text-color;
+		text-shadow:
+			 2px  0px 1px @background-color,
+			-2px  0px 1px @background-color,
+			 0px  2px 1px @background-color,
+			 0px -2px 1px @background-color,
+			 2px  0px 1px @background-color,
+			-2px  0px 1px @background-color,
+			 0px  2px 1px @background-color,
+			 0px -2px 1px @background-color;
+	 	span+span
+	 	{
+	 		float: right;
+	 	}
 	}
-
-	.accent1 {border-color: @accent-color; background: fade(@accent-color, 75%); &:before {content: "#58129F"} }
-	.accent2 {border-color: @accent2-color; background: fade(@accent2-color, 75%); &:before {content: "#281CA4"} }
-
 
 }
