@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller;
-use Config, Cache;
+use Config, Cache, HTTP;
 use lessc;
 
 /**
@@ -31,7 +31,7 @@ class Less extends Cached
 			throw new \Error\PageNotFound();
 
 		$this->file = self::DIR.$file;
-		$this->data = self::compile($this->file);
+		$this->compile();
 
 		parent::before($info);
 	}
@@ -41,8 +41,15 @@ class Less extends Cached
 	public function get()
 	{
 		header('Content-Type: text/css; charset=utf-8');
-		$time = date('Y-m-d H:i:s', $this->data['updated']);
-		echo "/* Compiled: $time */\r\n{$this->data['compiled']}";
+		echo implode("\r\n", [
+			"/**",
+			" * Compiled: ".date('Y-m-d H:i:s', $new['updated'] ?? time()),
+			" * By: ".__CLASS__,
+			" * Using: http://leafo.net/lessphp",
+			" * Took: " . number_format(microtime(TRUE) - $this->time, 3),
+			" */",
+			$this->data['compiled'],
+		]);
 	}
 
 
@@ -54,20 +61,29 @@ class Less extends Cached
 	}
 
 
-	private static function compile($file)
+	private function compile()
 	{
 		$cache = new Cache(__CLASS__);
-		$cache_key = basename($file).'c';
+		$cache_key = basename($this->file).'c';
 
 		// Get cached if exists
-		$old = $cache->get($cache_key, ['root' => $file, 'updated' => 0]);
+		$old = $cache->get($cache_key, ['root' => $this->file, 'updated' => 0]);
 
 		// Do a cached compile
-		$less = new lessc;
-		$less->setFormatter('compressed');
-		$new = $less->cachedCompile($old);
+		try
+		{
+			$this->time = microtime(TRUE);
+			$less = new lessc;
+			$less->setFormatter('compressed');
+			$new = $less->cachedCompile($old);
+		}
+		catch(\Exception $e)
+		{
+			HTTP::plain_exit(500, $e->getMessage());
+		}
 
-		return $new["updated"] > $old["updated"]
+		// Set if updated
+		$this->data = $new['updated'] > $old['updated']
 			? $cache->set($cache_key, $new)
 			: $new;
 	}

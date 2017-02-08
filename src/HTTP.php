@@ -129,9 +129,9 @@ public static function get_headers(string $url, array $opts = [])
 	 *
 	 * NOTE: Uses 500 if code not in self::$codes.
 	 */
-	public static function status($code)
+	public static function status(int $code)
 	{
-		return self::$codes[$code] ?? self::$codes[500];
+		return self::$codes[$code] ?? 'Unknown Error';
 	}
 
 
@@ -154,14 +154,17 @@ public static function get_headers(string $url, array $opts = [])
 	 * @param code HTTP status code
 	 * @param message Optional plain text message to output.
 	 */
-	public static function plain_exit($code, $message = null)
+	public static function plain_exit(int $code, string $message = null)
 	{
+		header_remove();
+
 		self::set_status($code);
 		header('Content-Type: text/plain; charset=utf-8');
 
-		echo "$code ".self::$codes[$code];
+		echo "$code " . self::$codes[$code];
 		if($message)
 			echo "\r\n\r\n$message";
+		
 		exit;
 	}
 
