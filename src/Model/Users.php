@@ -16,7 +16,7 @@ class Users extends Model
 	/**
 	 * Try login user.
 	 */
-	public function login(array $data)
+	public function login(array $data): User
 	{		
 		extract($_POST, EXTR_SKIP);
 
@@ -29,10 +29,6 @@ class Users extends Model
 		if( ! $user->verify_password($password ?? null))
 			throw new \Error\UnknownLogin();
 
-		// Check role
-		if( ! $user->has_roles(['login']))
-			throw new \Error\UnknownLogin();
-
 		// Login
 		return $this->_login($user);
 	}
@@ -42,7 +38,7 @@ class Users extends Model
 	/**
 	 * Login via link.
 	 */
-	public function login_token(array $data)
+	public function login_token(array $data): User
 	{
 		if( ! Valid::keys_exist($data, ['email', 'token']))
 			throw new \Error\UnknownResetToken();
@@ -59,20 +55,16 @@ class Users extends Model
 		if( ! $user->verify_token($token))
 			throw new \Error\UnknownResetToken();
 
-		// Check role
-		if( ! $user->has_roles(['login']))
-			throw new \Error\UnknownResetToken();
-
 		// Login
 		return $this->_login($user);
 	}
 
 
 
-	private function _login(User $user)
+	private function _login(User $user): User
 	{
 		Session::set(self::SESSION_KEY, (int) $user->id);
-		return true;
+		return $user;
 	}
 
 
@@ -102,11 +94,7 @@ class Users extends Model
 		if( ! $user)
 			return false;
 
-		// User (still) has login role?
-		if( ! $user->has_roles(['login']))
-			return false;
-
-		// Store and return
+		// Only get user once per request
 		self::$_logged_in = $user;
 		return $user;
 	}
@@ -117,7 +105,7 @@ class Users extends Model
 	/**
 	 * Get user by id or email.
 	 */
-	public function get($id)
+	public function get($id): User
 	{
 		if(is_int($id))
 		$user = DB::prepare('SELECT * 

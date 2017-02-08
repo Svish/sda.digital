@@ -7,6 +7,10 @@ class User extends Sql
 			'email' => ['email', 'email_domain'],
 		];
 
+	protected $_password_rules = [
+			'password' => ['not_empty', ['min_length', 12]],
+		];
+
 
 
 	public function __set($key, $value)
@@ -14,21 +18,16 @@ class User extends Sql
 		parent::__set($key, $value);
 
 		if($value)
-			switch($key)
-			{
-				// Hash password and token
+		switch($key)
+		{
 				case 'password':
-					// Add rules if setting password
-					$this->_rules += ['password' => [
-						['not_empty'],
-						['min_length', 12],
-						]];
+					$this->_rules += $this->_password_rules;
 					
 				case 'token':
 					$hash = password_hash($value, self::ALGO, self::ALGO_OPT);
 					parent::__set("{$key}_hash", $hash);
 					break;
-			}
+		}
 	}
 
 
@@ -36,9 +35,10 @@ class User extends Sql
 	public function __unset($key)
 	{
 		parent::__unset($key);
+
+		// Also unset hash
 		switch($key)
 		{
-			// Also unset hash
 			case 'password':
 			case 'token':
 				parent::__unset("{$key}_hash");
@@ -48,7 +48,7 @@ class User extends Sql
 
 
 
-	public function has_roles(array $roles)
+	public function has_roles(array $roles): bool
 	{
 		$has = explode(',', $this->roles);
 
@@ -61,7 +61,7 @@ class User extends Sql
 
 
 
-	public function verify_password($password)
+	public function verify_password(string $password): bool
 	{
 		// Verify password
 		if( ! password_verify($password, $this->password_hash))
@@ -79,20 +79,25 @@ class User extends Sql
 
 
 
-	public function make_token()
+	public function make_token(): self
 	{
 		$this->token = bin2hex(random_bytes(16));
 		$this->save();
+		return $this;
 	}
 
 	
 
-	public function verify_token($token)
+	public function verify_token(string $token): bool
 	{
 		$result = password_verify($token, $this->token_hash);
 
-		unset($this->token);
-		$this->save();
+		// TODO: Add a TTL for valid tokens
+		if($result)
+		{
+			unset($this->token);
+			$this->save();
+		}
 
 		return $result;
 	}

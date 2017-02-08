@@ -21,8 +21,7 @@ abstract class Sql extends Data
 		$this->_dirty = [];
 
 		// Get table name from classname, if not set already
-		$this->_table_name = $this->_table_name 
-			?? strtolower(get_class_name($this));
+		$this->_table_name = $this->_table_name ?? $this->get_table_name();
 
 		// Get table info
 		$this->_table_info = DB::getTableInfo($this->_table_name);
@@ -115,5 +114,15 @@ abstract class Sql extends Data
 		{
 			return ":$c";
 		}, $columns);
+	}
+
+	/**
+	 * Get table name from class name.
+	 */
+	protected function get_table_name()
+	{
+		$name = get_class_name($this);
+		$name = preg_replace('/(?<=[[:lower:]])([[:upper:]])/', '_$1', $name);
+		return strtolower($name);
 	}
 }

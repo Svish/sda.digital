@@ -7,7 +7,12 @@ CREATE TABLE `file`
 	`sha256` VARCHAR(255) NOT NULL,
 	`original_filename` VARCHAR(255) NOT NULL,
 	`content_id` INT UNSIGNED NOT NULL,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	CONSTRAINT `fk_file_content` 
+		FOREIGN KEY (`content_id`) 
+		REFERENCES `content` (`id`) 
+		ON UPDATE CASCADE 
+		ON DELETE CASCADE
 )
 COMMENT='A content file on disk'
 ENGINE=InnoDB;
@@ -31,7 +36,17 @@ CREATE TABLE `content_speaker`
 (
 	`content_id` INT UNSIGNED NOT NULL,
 	`speaker_id` INT UNSIGNED NOT NULL,
-	PRIMARY KEY (`content_id`, `speaker_id`)
+	PRIMARY KEY (`content_id`, `speaker_id`),
+	CONSTRAINT `fk.content_speaker.content` 
+		FOREIGN KEY (`content_id`) 
+		REFERENCES `content` (`id`) 
+		ON UPDATE CASCADE 
+		ON DELETE CASCADE,
+	CONSTRAINT `fk.content_speaker.speaker` 
+		FOREIGN KEY (`speaker_id`) 
+		REFERENCES `speaker` (`id`) 
+		ON UPDATE CASCADE 
+		ON DELETE CASCADE
 )
 COMMENT='The speaker(s) of content'
 ENGINE=InnoDB;

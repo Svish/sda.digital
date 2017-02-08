@@ -1,5 +1,7 @@
 <?php
 
+use Cache\PreCheckedCache;
+
 /**
  * PDO helper
  *
@@ -68,7 +70,7 @@ class DB
 		$this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
 
 		// Get cache
-		$this->cache = new Cache(__CLASS__);
+		$this->cache = new PreCheckedCache(__CLASS__, [$this, 'loadTableInfo']);
 
 		// Migrate if we haven't
 		if(self::$migrate)
@@ -76,9 +78,6 @@ class DB
 			$this->migrate();
 			self::$migrate = false;
 		}
-
-		// Preload cache
-		$this->cache->preload([$this, 'loadTableInfo']);
 	}
 
 
@@ -152,9 +151,6 @@ class DB
 
 					// Update version table
 					$this->pdo->exec('UPDATE version SET version = '.$version);
-
-					// Clear DB cache
-					$this->cache->clear();
 				}
 				catch(PDOException $e)
 				{
@@ -164,6 +160,11 @@ class DB
 
 			// Re-enable key checks
 			$this->pdo->exec("SET foreign_key_checks = 1");
+
+			// Reload DB cache
+			$this->cache->reload();
+
+			Message::ok('db-migrated', $version);
 		}
 	}
 

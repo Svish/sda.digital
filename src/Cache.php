@@ -47,31 +47,17 @@ class Cache
 	}
 
 	/**
-	 * Preloads cache using callable if cache is empty or *any* keys are invalid.
-	 * 
-	 * Callable should return/yield $key => $value pairs.
-	 */
-	public function preload(callable $loader)
-	{
-		if( ! $this->_all_valid())
-			foreach($loader() as $key => $value)
-				$this->set($key, $value);
-
-		return $this;
-	}
-
-	/**
 	 * Reads and unserializes data from the cache file identified by $key.
 	 */
 	public function get(string $key, $default = NULL)
 	{
-		$path = $this->path($key);
+		$file = $this->path($key);
 
 		// Try get data
-		$data = $this->_get($path);
+		$data = $this->_get($file);
 
 		// Return if existing and valid
-        if($data !== NULL && $this->_valid(filemtime($path), $key))
+        if($data !== NULL && $this->is_valid(filemtime($file), $key))
 			return unserialize($data);
 
 		// Call and store default if callable
@@ -79,18 +65,18 @@ class Cache
 		{
 			// TODO: Fallback to $data if throws and $data is not empty?
 			$default = $default($key);
-			return $this->_set($path, $default);
+			return $this->_set($file, $default);
 		}
 
 		// Otherwise, return $default
 		return $default;
 	}
-	private function _get(string $path)
+	private function _get(string $file)
 	{
-		return File::get($path);
+		return File::get($file);
 	}
 
-	private function _valid(int $mtime, string $key): bool
+	protected function is_valid(int $mtime, string $key): bool
 	{
 		// False if any validators fails
 		foreach($this->valid as $valid)
@@ -101,25 +87,6 @@ class Cache
 		return true;
 	}
 
-	private function _all_valid(): bool
-	{
-		$files = glob($this->dir.'*');
-
-		// Empty cache
-		if( ! $files)
-			return false;
-
-		// Check each file
-		foreach($files as $file)
-		{
-			$mtime = filemtime($file);
-			$key = str_replace($this->dir, '', $file);
-			if( ! $this->_valid($mtime, $key))
-				return false;
-		}
-		return true;
-	}
-
 
 
 	/**
@@ -127,14 +94,14 @@ class Cache
 	 */
 	public function set(string $key, $data)
 	{
-		return $this->_set( $this->path($key) , $data);
+		return $this->_set($this->path($key), $data);
 	}
-	private function _set(string $path, $data)
+	private function _set(string $file, $data)
 	{
 		if($data instanceof Generator)
 			$data = iterator_to_array($data);
 		
-		File::put($path, serialize($data));
+		File::put($file, serialize($data));
 		return $data;
 	}
 
@@ -142,7 +109,7 @@ class Cache
 	/**
 	 * Return sanitized file path for $key.
 	 */
-	private function path(string $key): string
+	protected function path(string $key): string
 	{
 		return $this->dir.self::sanitize($key);
 	}
@@ -152,7 +119,7 @@ class Cache
 	/**
 	 * Make the key filename-friendly.
 	 */
-	private static function sanitize(string $key): string
+	protected static function sanitize(string $key): string
 	{
 		return preg_replace('/[^.a-z0-9_-]+/i', '-', $key);
 	}
