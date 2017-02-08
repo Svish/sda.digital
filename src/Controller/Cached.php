@@ -75,11 +75,13 @@ abstract class Cached extends Controller
 			return;
 		}
 
-		// Otherwise resend cached headers and content
+		// Otherwise resend cached
+		http_response_code($this->cached['code']);
+		
 		foreach($this->cached['headers'] as $h)
-			header($h);
-		header('X-Cache: Hit');
+			header($h, false);
 
+		header('X-Cache: Hit');
 		echo $this->cached['content'];
 	}
 
@@ -90,6 +92,7 @@ abstract class Cached extends Controller
 		// Cache get requests
 		if( ! $this->cached && $info['method'] == 'get')
 		{
+
 			$content = ob_get_clean();
 			$time = time() - 2;
 			$lmod = gmdate('D, d M Y H:i:s T', $time);
@@ -102,6 +105,7 @@ abstract class Cached extends Controller
 
 			$data = [
 				'headers' => headers_list(),
+				'code' => http_response_code(),
 				'time' => $time,
 				'lmod' => $lmod,
 				'etag' => $etag,
@@ -109,8 +113,8 @@ abstract class Cached extends Controller
 				'content' => $content,
 			];
 
+			header('X-Cache: Set');
 			$this->cache->set($this->cache_key, $data);
-
 			echo $content;
 		}
 
