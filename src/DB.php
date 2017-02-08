@@ -1,6 +1,8 @@
 <?php
 
+use DB\Query;
 use Cache\PreCheckedCache;
+
 
 /**
  * PDO helper
@@ -70,6 +72,8 @@ class DB
 		$this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
 
 		// Get cache
+		class_exists('DB\\Query');
+		class_exists('DB\\Valid');
 		$this->cache = new PreCheckedCache(__CLASS__, [$this, 'loadTableInfo']);
 
 		// Migrate if we haven't
@@ -228,8 +232,8 @@ class DB
 					// Add not_empty rule
 					$info->rules[$name][] = 'not_empty';
 
-				// Add db_type rule
-				$info->rules[$name][] = ['db_type', $column['Type']];
+				// Add db type rule
+				$info->rules[$name][] = [['DB\\Valid', 'type'], $column['Type']];
 
 				// TODO: Add unique rule
 				//if($column['Key'] == 'UNI')

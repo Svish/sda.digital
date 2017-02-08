@@ -1,5 +1,8 @@
 <?php
 
+namespace DB;
+use PDOStatement, PDO;
+
 /**
  * PDOStatement wrapper with common defaults
  * and method chaining.

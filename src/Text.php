@@ -17,8 +17,10 @@ class Text
 			self::$t = Config::text();
 
 		$key = array_shift($args);
-		$text = self::$t[$header][''.$key] ?? "$header.$key";
+		$key = is_array($key) ? 'Array' : strval($key);
 		$args = array_shift($args);
+
+		$text = self::$t[$header][$key] ?? "$header.$key";
 
 		return $args
 			? vsprintf($text, $args)

@@ -11,7 +11,7 @@ class PreCheckedCache extends \Cache
 
 	public function __construct(string $id, callable $loader, ...$cache_validators)
 	{
-		parent::__construct($id, null, ...$cache_validators);
+		parent::__construct($id, [], ...$cache_validators);
 		$this->loader = $loader;
 
 		// Do a preload if anything is invalid

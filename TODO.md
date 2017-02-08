@@ -102,6 +102,4 @@ Public
 Tidbits
 ===
 
-- "Move" messages to session['messages']?
-	- class_exists('namespace/namespace/handlerclass')?
 - Add foreign key constraints to tables
