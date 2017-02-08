@@ -17,14 +17,22 @@ abstract class Cached extends Controller
 	private $cache_key;
 	private $cached;
 
+	private $on;
+
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->on = 'get' == strtolower($_SERVER['REQUEST_METHOD']);
+	}
+
 
 
 	public function before(array &$info)
 	{
 		parent::before($info);
 
-		// Only cache get requests
-		if($info['method'] != 'get')
+		if( ! $this->on)
 			return;
 
 		// Init our cache
@@ -89,8 +97,7 @@ abstract class Cached extends Controller
 
 	public function after(array &$info)
 	{
-		// Cache get requests
-		if( ! $this->cached && $info['method'] == 'get')
+		if( ! $this->cached && $this->on)
 		{
 
 			$content = ob_get_clean();
@@ -117,7 +124,7 @@ abstract class Cached extends Controller
 			$this->cache->set($this->cache_key, $data);
 			echo $content;
 		}
-
+		
 		parent::after($info);
 	}
 
