@@ -5,7 +5,7 @@ namespace Error;
 /**
  * 400 Unknown Login
  */
-class NotFound extends HttpException
+class NotFound extends UserError
 {
 	public function __construct($id, $what)
 	{

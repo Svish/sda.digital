@@ -5,7 +5,7 @@ namespace Error;
 /**
  * 404 Page Not Found
  */
-class PageNotFound extends HttpException
+class PageNotFound extends UserError
 {
 	public function __construct($path = null, \Throwable $reason = null)
 	{

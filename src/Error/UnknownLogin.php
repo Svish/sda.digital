@@ -5,7 +5,7 @@ namespace Error;
 /**
  * 400 Unknown Login
  */
-class UnknownLogin extends HttpException
+class UnknownLogin extends UserError
 {
 	public function __construct(\Throwable $e = null)
 	{

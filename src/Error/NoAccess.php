@@ -5,7 +5,7 @@ namespace Error;
 /**
  * 403 No Access
  */
-class NoAccess extends HttpException
+class NoAccess extends UserError
 {
 	public function __construct()
 	{

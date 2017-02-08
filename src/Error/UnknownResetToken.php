@@ -5,7 +5,7 @@ namespace Error;
 /**
  * 400 Unknown Reset Token
  */
-class UnknownResetToken extends HttpException
+class UnknownResetToken extends UserError
 {
 	public function __construct()
 	{

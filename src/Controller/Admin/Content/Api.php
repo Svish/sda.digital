@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller\Admin\Content;
-use Session, View, Model;
+use View, Model;
 
 /**
  * Methods for content adding.

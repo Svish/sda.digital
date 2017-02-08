@@ -1,6 +1,6 @@
 <?php
 namespace View;
-use Config,Model,View,Mustache,HttpException;
+use Config, Model, View, Mustache;
 
 /**
  * Views using Mustache templates.

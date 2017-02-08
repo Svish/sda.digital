@@ -79,8 +79,8 @@ class Website
 	{
 		$route = $this->parse_path($path);
 		
-		if($route['handler'] === NULL)
-			throw new Error\HttpException("No page found for '$path'", 404);
+		if($route['handler'] === null)
+			throw new Error\PageNotFound($path);
 
 		return $route;
 	}

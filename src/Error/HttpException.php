@@ -11,18 +11,11 @@ class HttpException extends \Exception
 	protected $httpStatus;
 	protected $httpTitle;
 
-	public function __construct($message, $httpStatus = 500, \Throwable $cause = null, $code = E_USER_ERROR)
+	public function __construct(int $httpStatus = 500, string $message = null, \Throwable $cause = null, $code = E_USER_ERROR)
 	{
-		if(is_array($message))
-		{
-			$class = get_class($this);
-			$class = str_replace('Error\\', '', $class);
-			$message = Text::exception($class, $message);
-		}
-
 		$this->httpStatus = $httpStatus;
 		$this->httpTitle = HTTP::status($httpStatus);
-		parent::__construct($message, $code, $cause);
+		parent::__construct($message ?? $this->httpTitle, $code, $cause);
 	}
 
 	public function getHttpStatus()

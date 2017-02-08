@@ -10,8 +10,8 @@ class Handler
 {
 	public function __invoke(\Throwable $e = null)
 	{
-		// Wrap in HttpException if not already one
-		if( ! $e instanceof HttpException)
+		// Wrap in Internal if not UserError
+		if( ! $e instanceof UserError)
 			$e = new Internal($e);
 
 		Message::exception($e);
@@ -22,6 +22,7 @@ class Handler
 			'debug' => self::collect_xdebug($e),
 			], 'error')
 			->output();
+		exit;
 	}
 
 	private static function collect_xdebug(\Throwable $e = null)
