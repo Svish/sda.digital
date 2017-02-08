@@ -9,6 +9,6 @@ class UnknownLogin extends UserError
 {
 	public function __construct(\Throwable $e = null)
 	{
-		parent::__construct([], 400, $e);
+		parent::__construct(400, [], $e);
 	}
 }

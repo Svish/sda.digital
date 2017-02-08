@@ -1,7 +1,7 @@
 <?php
 
 namespace Error;
-use HTTP, Text;
+use HTTP;
 
 /**
  * Exception with HTTP status and title.

@@ -12,7 +12,7 @@ class ValidationFailed extends UserError
 	public function __construct(array $errors)
 	{
 		$this->errors = $errors;
-		parent::__construct([count($errors)], 400);
+		parent::__construct(400, [count($errors)]);
 	}
 
 	public function getErrors()

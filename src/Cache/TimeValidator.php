@@ -19,7 +19,7 @@ class TimeValidator
 	/**
 	 * @return FALSE if $time is older than TTL.
 	 */
-	public function __invoke($time, $key)
+	public function __invoke($time)
 	{
 		return (time() - $time) <= $this->ttl;
 	}

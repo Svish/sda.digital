@@ -1,13 +1,14 @@
 <?php
 
 namespace Error;
+use Text;
 
 /**
  * 4xx User errors.
  */
 abstract class UserError extends HttpException
 {
-	public function __construct($code, $message, \Throwable $reason = null)
+	public function __construct(int $code, $message, \Throwable $reason = null)
 	{
 		// If array, use as parameters and format $message
 		if(is_array($message))

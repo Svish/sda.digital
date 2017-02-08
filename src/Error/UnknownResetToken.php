@@ -9,6 +9,6 @@ class UnknownResetToken extends UserError
 {
 	public function __construct()
 	{
-		parent::__construct([], 400);
+		parent::__construct(400, []);
 	}
 }

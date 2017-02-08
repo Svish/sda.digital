@@ -9,6 +9,6 @@ class NotFound extends UserError
 {
 	public function __construct($id, $what)
 	{
-		parent::__construct([$id, $what], 400);
+		parent::__construct(400, [$id, $what]);
 	}
 }
