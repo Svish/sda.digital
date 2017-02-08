@@ -2,6 +2,13 @@
 
 # Simple utility functions
 
+function preg_match_all_callback(string $pattern, string $subject, callable $callback)
+{
+	$r = preg_match_all($pattern, $subject, $matches, PREG_SET_ORDER);
+	foreach($matches ?? [] as $match)
+		$callback($match);
+	return $r;
+}
 
 function get_class_name($obj)
 {

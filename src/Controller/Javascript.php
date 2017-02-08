@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller;
-use Config;
+use Config, HTTP;
 
 /**
  * Handles compression and serving of javascript files.
@@ -11,6 +11,7 @@ use Config;
  */
 class Javascript extends Cached
 {
+	const URL = 'https://closure-compiler.appspot.com/compile';
 	const DIR = SRC.'_js'.DIRECTORY_SEPARATOR;
 	private $config;
 
@@ -55,45 +56,54 @@ class Javascript extends Cached
 	public function get()
 	{
 		header('Content-Type: text/javascript; charset=utf-8');
-		
+
+
 		// Gather contents of all input files into one string
 		$js = array_map('file_get_contents', $this->files);
 		$js = implode(PHP_EOL.PHP_EOL, $js);
 
-		// Setup curl request
-		$c = curl_init();
-		curl_setopt_array($c, array
-		(
-			CURLOPT_URL => 'https://closure-compiler.appspot.com/compile',
-			CURLOPT_POST => TRUE,
-			CURLOPT_CONNECTTIMEOUT => 5,
-			CURLOPT_RETURNTRANSFER => TRUE,
-			CURLOPT_POSTFIELDS => http_build_query([
-				'language' => 'ECMASCRIPT6_STRICT',
-				'language_out' => 'ECMASCRIPT5',
-				'output_info' => 'compiled_code', // 'errors'
-				'output_format' => 'text',
-				'compilation_level' => 'SIMPLE_OPTIMIZATIONS',
-				'js_code' => $js,
-			]),
-		));
 
-		$resp = curl_exec($c);
-		$info = curl_getinfo($c);
+		// Try compile
+		$params = [
+			'language' => 'ECMASCRIPT6_STRICT',
+			'language_out' => 'ECMASCRIPT5',
+			'compilation_level' => 'SIMPLE_OPTIMIZATIONS',
+			'output_format' => 'text',
+			'output_info' => 'compiled_code',
+			'js_code' => $js,
+		];
+		$compiled = HTTP::post(self::URL, $params);
 
-		if($resp === FALSE
-			|| $info['http_code'] != 200 
-			|| $info['download_content_length'] <= 1)
+
+		// Output if we got something
+		if($compiled->header['Content-Length'] > 1)
 		{
-			http_response_code(500);
-			echo "// ERROR: ".curl_error($c)."\r\n";
-			echo $js;
-		}
-		else
-		{
-			echo $resp;
+			$time = date('Y-m-d H:i:s');
+			echo implode("\r\n", [
+				"/**",
+				" * Compiled: $time",
+				" * By: ".__CLASS__,
+				" * Using: ".self::URL,
+				" * Took: {$compiled->info['total_time']}",
+				" */",
+				$compiled->content,
+				]);
+			return;
 		}
 
-		curl_close($c);
+
+		// Otherwise, get hopefully helpful error
+		$error = HTTP::post(self::URL, ['output_info' => 'errors'] + $params);
+		http_response_code(500);
+		echo implode("\r\n", [
+			"/**",
+			" * Javascript error",
+			" * Using: ".self::URL,
+			" * Took: {$compiled->info['total_time']} + {$error->info['total_time']}",
+			" **",
+			"",
+			trim($error->content),
+			" */",
+			]);
 	}
 }

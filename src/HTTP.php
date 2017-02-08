@@ -5,6 +5,42 @@
  */
 class HTTP
 {
+
+	public static function get(string $url, array $opts = [])
+	{
+		$c = curl_init();
+		curl_setopt_array($c, [
+				CURLOPT_URL => $url,
+				CURLOPT_HEADER => true,
+			] + $opts);
+
+		try
+		{
+
+			ob_start();
+			curl_exec($c);
+			$response = ob_get_clean();
+
+			if(curl_errno($c))
+				throw new \Error\CurlError($c);
+
+			return new CurlResponse($c, $response);
+		}
+		finally
+		{
+			curl_close($c);	
+		}
+	}
+
+	public static function post(string $url, array $post, array $opts = [])
+	{
+		return self::get($url, $opts + [
+			CURLOPT_POST => true,
+			CURLOPT_POSTFIELDS => http_build_query($post),
+		]);
+	}
+
+
 	/**
 	 * Check if URL is relative or to this site.
 	 */
