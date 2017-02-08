@@ -1,5 +1,12 @@
 
-http://www.php.net/manual/en/reflectionclass.newinstancewithoutconstructor.php
+foreign key getting and setting?
+	- group by?
+	- key:foo?
+	- stream with yield and manual pdo "fetcher"?
+	- http://www.php.net/manual/en/reflectionclass.newinstancewithoutconstructor.php
+	- Analyze relations to find connections 
+		- loadTableInfo()
+		- one-many, many-many, many-one, many-many-through)
 
 present on "working page"
 	- read out id3-tags (load via ajax on request?)

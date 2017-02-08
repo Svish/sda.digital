@@ -3,7 +3,7 @@
 /**
  * Base class for data objects.
  */
-abstract class Data implements ArrayAccess
+abstract class Data implements ArrayAccess, JsonSerializable
 {
 	/**
 	 * Returns a new Data_$name.
@@ -74,5 +74,15 @@ abstract class Data implements ArrayAccess
 	public function offsetGet($offset)
 	{
 		return $this->$offset;
+	}
+
+
+	/**
+	 * Serialize only whitelisted properties, from $this->data.
+	 */
+	const SERIALIZE = [];
+	public function jsonSerialize()
+	{
+		return array_whitelist($this->data, static::SERIALIZE);
 	}
 }
