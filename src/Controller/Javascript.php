@@ -18,6 +18,7 @@ class Javascript extends Cached
 
 	public function __construct()
 	{
+		parent::__construct();
 		$this->config = Config::javascript();
 		
 		// Add full path to bundle files
