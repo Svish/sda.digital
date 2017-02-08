@@ -16,11 +16,11 @@ class Cache
 	 *
 	 * @param id Identifier for this cache
 	 * @param cache_validators 
-	 *			Int for TTL seconds
-	 *			Array for files to check mtime on
-	 *			Callable($mtime, $key) for custom;
+	 *			TTL seconds => int
+	 *			Files to check modified => array
+	 *			Custom => callable(int $mtime, string $key): bool
 	 */
-	public function __construct($id, ...$cache_validators)
+	public function __construct(string $id, ...$cache_validators)
 	{
 		// Set cache directory
 		$this->dir = self::DIR.$id.DIRECTORY_SEPARATOR;
@@ -47,13 +47,13 @@ class Cache
 	}
 
 	/**
-	 * Preloads cache using callable if cache does not exist.
+	 * Preloads cache using callable if cache is empty or *any* keys are invalid.
 	 * 
 	 * Callable should return/yield $key => $value pairs.
 	 */
 	public function preload(callable $loader)
 	{
-		if( ! file_exists($this->dir))
+		if( ! $this->_all_valid())
 			foreach($loader() as $key => $value)
 				$this->set($key, $value);
 
@@ -63,7 +63,7 @@ class Cache
 	/**
 	 * Reads and unserializes data from the cache file identified by $key.
 	 */
-	public function get($key, $default = NULL)
+	public function get(string $key, $default = NULL)
 	{
 		$path = $this->path($key);
 
@@ -85,12 +85,12 @@ class Cache
 		// Otherwise, return $default
 		return $default;
 	}
-	private function _get($path)
+	private function _get(string $path)
 	{
 		return File::get($path);
 	}
 
-	private function _valid($mtime, $key)
+	private function _valid(int $mtime, string $key): bool
 	{
 		// False if any validators fails
 		foreach($this->valid as $valid)
@@ -101,16 +101,35 @@ class Cache
 		return true;
 	}
 
+	private function _all_valid(): bool
+	{
+		$files = glob($this->dir.'*');
+
+		// Empty cache
+		if( ! $files)
+			return false;
+
+		// Check each file
+		foreach($files as $file)
+		{
+			$mtime = filemtime($file);
+			$key = str_replace($this->dir, '', $file);
+			if( ! $this->_valid($mtime, $key))
+				return false;
+		}
+		return true;
+	}
+
 
 
 	/**
 	 * Serializes and stores the $data in a cache file identified by $key.
 	 */
-	public function set($key, $data)
+	public function set(string $key, $data)
 	{
 		return $this->_set( $this->path($key) , $data);
 	}
-	private function _set($path, $data)
+	private function _set(string $path, $data)
 	{
 		if($data instanceof Generator)
 			$data = iterator_to_array($data);
@@ -123,7 +142,7 @@ class Cache
 	/**
 	 * Return sanitized file path for $key.
 	 */
-	private function path($key)
+	private function path(string $key): string
 	{
 		return $this->dir.self::sanitize($key);
 	}
@@ -133,7 +152,7 @@ class Cache
 	/**
 	 * Make the key filename-friendly.
 	 */
-	private static function sanitize($key)
+	private static function sanitize(string $key): string
 	{
 		return preg_replace('/[^.a-z0-9_-]+/i', '-', $key);
 	}
