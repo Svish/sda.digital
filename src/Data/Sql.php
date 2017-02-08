@@ -84,8 +84,8 @@ abstract class Sql extends Data
 		$query->execute($data);
 
 		// If inserted, get auto_increment value
-		if($query->affectedRows() == 1 && $this->_table_info->auto_increment)
-			$this->data[$this->_table_info->auto_increment] = $query->lastInsertId();
+		if($query->affectedRows() == 1 && $this->_table_info->auto_inc_column)
+			$this->data[$this->_table_info->auto_inc_column] = $query->lastInsertId();
 
 		// Reset $_dirty
 		$this->_dirty = [];

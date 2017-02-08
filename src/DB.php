@@ -30,7 +30,7 @@ class DB
 	{
 		return self::instance()->cache->get($table_name, function($key)
 			{
-				throw new Exception("DB::getTableInfo('$key') called without preloading?");
+				throw new Exception("DB::getTableInfo('$key') missing");
 			});
 	}
 
@@ -42,7 +42,7 @@ class DB
 	}
 
 	protected static $instance;
-	protected static $migrated = false;
+	protected static $migrate = true;
 
 
 
@@ -68,11 +68,14 @@ class DB
 		$this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
 
 		// Get cache
-		$this->cache = new Cache(__CLASS__, null);
+		$this->cache = new Cache(__CLASS__);
 
 		// Migrate if we haven't
-		if( ! self::$migrated)
+		if(self::$migrate)
+		{
 			$this->migrate();
+			self::$migrate = false;
+		}
 
 		// Preload cache
 		$this->cache->preload([$this, 'loadTableInfo']);
@@ -100,20 +103,39 @@ class DB
 			$current = 0;
 		}
 
+		// Get migration files
 		$files = glob(self::MIGRATIONS_DIR.'*.sql', GLOB_NOSORT);
 		natsort($files);
 
-		foreach($files as $m)
+		// Sort out any not needed
+		foreach($files as $key => &$f)
 		{
-			// Get version number from filename
-			$version = (int) str_replace(self::MIGRATIONS_DIR, NULL, $m);
-
-			if($version > $current)
+			$version = (int) str_replace(self::MIGRATIONS_DIR, NULL, $f);
+			if($version <= $current)
 			{
+				unset($files[$key]);
+				continue;	
+			}
+
+			$f = [
+				'file' => $f,
+				'version' => $version,
+				];
+		}
+
+		if($files)
+		{
+			// Disable key checks while migrating
+			$this->pdo->exec("SET foreign_key_checks = 0");
+
+			// Process each file
+			foreach($files as $file)
+			{
+				extract($file);
 				try
 				{
 					// Get SQL script, without # comments
-					$script = preg_replace('/#.++/', NULL, file_get_contents($m));
+					$script = preg_replace('/#.++/', NULL, file_get_contents($file));
 
 					// Split into queries
 					$queries = preg_split('/;\s*$/m', $script, -1, PREG_SPLIT_NO_EMPTY);
@@ -136,23 +158,50 @@ class DB
 				}
 				catch(PDOException $e)
 				{
-					throw new Error\HttpException('DB Migration failed.', 500, $e);
+					throw new Exception('DB Migration failed.', 0, $e);
 				}
 			}
-		}
 
-		self::$migrated = true;
+			// Re-enable key checks
+			$this->pdo->exec("SET foreign_key_checks = 1");
+		}
 	}
 
 
 	public function loadTableInfo()
 	{
+		// Get database name
+		$db_name = $this->pdo
+			->query("SELECT database()")
+			->fetchColumn(0);
+
+		// Get table names
 		$tables = $this->pdo
 			->query('SHOW TABLES')
 			->fetchAll(PDO::FETCH_COLUMN, 0);
 
+		// Get relations
+		$relations = $this->pdo
+			->query("SELECT 
+						table_name,
+						column_name,
+						referenced_table_schema,
+						referenced_table_name,
+						referenced_column_name
+					FROM
+						information_schema.key_column_usage
+					WHERE
+  							table_schema = '$db_name'
+						AND referenced_table_name IS NOT NULL
+					")
+			->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
+
+		// TODO: Analyze relations
+
+		// Gather table info
 		foreach($tables as $table)
 		{
+			// Fetch column info
 			$columns = $this->pdo
 				->query("SHOW COLUMNS FROM $table")
 				->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP|PDO::FETCH_UNIQUE);
@@ -161,17 +210,17 @@ class DB
 				'columns' => $columns,
 				'column_names' => array_keys($columns), 
 				'column_pdo_types' => [],
-				'primary_keys' => [],
 				'rules' => [],
-				'auto_increment' => false,
+				'auto_inc_column' => false,
 				];
 
+			// Add more info
 			foreach ($columns as $name => $column)
 			{
 				// If auto_increment
 				if($column['Extra'] == 'auto_increment')
 					// Remember name for lastInsertId on save
-					$info->auto_increment = $name;
+					$info->auto_inc_column = $name;
 
 				// If not, and not nullable
 				elseif($column['Null'] == 'NO')
@@ -180,6 +229,10 @@ class DB
 
 				// Add db_type rule
 				$info->rules[$name][] = ['db_type', $column['Type']];
+
+				// TODO: Add unique rule
+				//if($column['Key'] == 'UNI')
+					//$info->rules[$name][]
 
 				// Add pdo type
 				$info->column_pdo_types[$name] = self::pdo_type($column['Type']);
