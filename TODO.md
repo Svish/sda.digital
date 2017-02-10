@@ -78,10 +78,10 @@ Public
 ===
 
 - Front
-	- Latest uploads
-		- By sermon datetime?
-		- By added datetime?
-		- Both? Cookie option?
+	- Latest content
+		- By added
+	- Searchbar on top
+		- Result replaces latest content
 	- http://flexbox.help/
 
 - Speakers/Series/Places

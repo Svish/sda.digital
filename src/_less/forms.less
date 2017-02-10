@@ -47,22 +47,53 @@ form
 		resize: vertical;
 		min-height: 200px;
 	}
+
+
+	// Fancy checkboxes
 	input[type=checkbox]
 	{
 		display: none;
-		& + label
+		& + label:before
 		{
-			padding-left: 1.5em;
+			display: inline-block;
+			content: "";
+			height: 1em;
+			width: 2em;
+			background-size: 1em 1em;
+			background-position: .75em center;
+			background-repeat: no-repeat;
 			background-image: 
 				radial-gradient(darken(@text-color, 75%) 50%, transparent 50%);
-			background-size: 1em 1em;
-			background-position: left center;
-			background-repeat: no-repeat
 		}
-		&:checked + label
+		&:checked + label:before
 		{
 			background-image: 
 				radial-gradient(@text-color 50%, transparent 50%);
+		}
+	}
+	.checkbox-list
+	{
+		padding-left: 0;
+		li
+		{
+			list-style: none;
+		}
+	}
+
+
+	// Fieldset
+	fieldset
+	{
+		margin-bottom: 1em;
+		&, legend
+		{
+			background: @input-background-color;
+			border: 1px solid @input-border-color;	
+		}
+		legend
+		{	
+			display: block;
+			padding: .25em .5em;
 		}
 	}
 
@@ -116,17 +147,22 @@ form
 		&:hover,
 		&:active
 		{
-			background: lighten(@background-color, 15%);
 			border: 1px outset fade(@background-color,50%);
 			color: inherit;
+			&:not(:disabled)
+			{
+				background: lighten(@background-color, 15%);
+			}
 		}
-		&:active
+		&:active:not(:disabled)
 		{
 			border: 1px inset fade(@background-color,50%);
 		}
 
-		svg
+		&:disabled
 		{
+			opacity: .5;
+			cursor: default;
 		}
 	}
 

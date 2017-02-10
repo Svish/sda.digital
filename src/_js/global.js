@@ -27,6 +27,11 @@ function errorHandler(event, jqxhr, settings, thrownError)
 }
 
 
+function confirmedReset()
+{
+	return confirm('Sikker? 🤔');
+}
+
 /**
  * PolyFill: String.contains
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes#Polyfill
