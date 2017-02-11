@@ -13,7 +13,6 @@ use HTTP,Model;
 abstract class Secure extends Session
 {
 	protected $required_roles = false;
-	private $user;
 
 	public function __construct()
 	{
@@ -23,18 +22,26 @@ abstract class Secure extends Session
 		if($this->required_roles === false)
 			return;
 
+		self::access($this->required_roles);
+	}
+
+	/**
+	 * Checks if logged in and has required roles.
+	 */
+	public static function access(array $roles)
+	{
 		// Get logged in user
-		$this->user = Model::users()->logged_in();
+		$user = Model::users()->logged_in();
 
 		// Redirect if not logged in
-		if( ! $this->user)
-			HTTP::redirect('user/login?url='.urlencode(PATH));
+		if( ! $user)
+			throw new \Error\Unauthorized();
 
 		// Always require login role
-		$this->required_roles[] = 'login';
+		$roles[] = 'login';
 
 		// Check roles
-		if( ! $this->user->has_roles($this->required_roles))
+		if( ! $user->has_roles($roles))
 			throw new \Error\NoAccess();
 	}
 }

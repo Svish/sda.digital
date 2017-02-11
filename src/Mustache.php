@@ -12,8 +12,8 @@ class Mustache extends Mustache_Engine
 		if($template && is_dir(self::DIR.$template))
 			$options += ['partials_loader'
 				=> new Mustache_Loader_CascadingLoader([
-					new Mustache_Loader_FilesystemLoader(self::DIR.$template),
-					new Mustache_Loader_FilesystemLoader(self::DIR),
+					new Mustache\FilesystemLoader(self::DIR.$template),
+					new Mustache\FilesystemLoader(self::DIR),
 				])];
 
 		return new self($options + [
@@ -22,7 +22,7 @@ class Mustache extends Mustache_Engine
 			'strict_callables' => true,
 			'logger' => new NoWarningsPls,
 			'loader' => 
-				new Mustache_Loader_FilesystemLoader(self::DIR),
+				new Mustache\FilesystemLoader(self::DIR),
 			]);
 	}
 }

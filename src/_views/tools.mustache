@@ -1,3 +1,4 @@
+{{% ACCESS login }}
 {{% BLOCKS }}
 {{< layout }}
 {{$ title }}Admin{{/ title }}
@@ -6,29 +7,38 @@
 
 <div class="menu no-select">
 
+	{{#role.editor}}
 	<section>
-		<a class="frame" href="admin/content/select-fresh">
+		<a class="frame" href="manage/content/fresh">
 			{{#svg}}add{{/svg}}<br>
 			Nytt innhold
 		</a>
 	</section>
 
 	<section>
-		<a class="frame" href="admin/speaker/index">
-			{{#svg}}people{{/svg}}<br>
+		<a class="frame" href="manage/series">
+			{{#svg}}list{{/svg}}<br>
+			Serier
+		</a>
+		<a class="frame" href="manage/speakers">
+			{{#svg}}speakers{{/svg}}<br>
 			Talere
 		</a>
-		<a class="frame" href="admin/series/index">
-			{{#svg}}list{{/svg}}<br>
-			Møteserier
-		</a>
-		<a class="frame" href="admin/place/index">
+		<a class="frame" href="manage/places">
 			{{#svg}}place{{/svg}}<br>
 			Steder
 		</a>
-	</section>	
+	</section>
+	{{/role.editor}}
 
 	<section>
+		{{#role.admin}}
+		<a class="frame" href="admin/users">
+			{{#svg}}people{{/svg}}<br>
+			Alle
+		</a>
+		{{/role.admin}}
+		{{#role.login}}
 		<a class="frame" href="user/me">
 			{{#svg}}person{{/svg}}<br>
 			Meg
@@ -37,6 +47,7 @@
 			{{#svg}}logout{{/svg}}<br>
 			Logg ut
 		</a>
+		{{/role.login}}
 	</section>
 
 </div>

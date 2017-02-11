@@ -6,8 +6,10 @@ use HTTP, Model, View, Message;
 /**
  * Handles user account.
  */
-class Me extends \Controller\Admin
+class Me extends \Controller\Page
 {
+	protected $required_roles = [];
+	
 	private $me;
 
 	public function __construct()

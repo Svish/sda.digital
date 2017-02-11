@@ -14,7 +14,14 @@ class Handler
 		if( ! $e instanceof UserError)
 			$e = new Internal($e);
 
+		// Add message
 		Message::exception($e);
+
+		// Redirect to login if unauthorized
+		if($e instanceof Unauthorized)
+			HTTP::redirect('user/login?url='.urlencode(PATH));
+
+		// Render error page
 		HTTP::set_status($e);
 		View::template([
 			'status' => $e->getHttpStatus(),
