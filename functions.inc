@@ -15,6 +15,14 @@ function get_class_name($obj)
 	return substr(strrchr('\\'.get_class($obj), '\\'), 1);
 }
 
+function array_multimap(array $callbacks, array $array): array
+{
+	foreach($callbacks as $callback)
+		$array = array_map($callback, $array);
+
+	return $array;
+}
+
 function array_whitelist(array $array, array $whitelist)
 {
 	return array_intersect_key($array, array_flip($whitelist));
@@ -33,7 +41,7 @@ function array_sort_by($key, array &$array)
 	});
 }
 
-function group_by(string $key, $list, bool $keep_key = false, string $key_name = null, string $group_name = 'items'): array
+function array_group_by(string $key, $list, bool $keep_key = false, string $key_name = null, string $group_name = 'items'): array
 {
 	$groups = [];
 	foreach($list as $value)

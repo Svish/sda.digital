@@ -47,12 +47,23 @@ ko.bindingHandlers.editableValue = {
 };
 ko.bindingHandlers.editable = {
 
-	init: function (element, valueAccessor, allBindingsAccessor)
+	init: function (element, valueAccessor, allBindings, view, context)
 	{
 		var value = ko.unwrap(valueAccessor());
-		var editableValue = allBindingsAccessor().editableValue;
+		var editableValue = allBindings().editableValue;
 		
-		$(element).on('keydown', e => e.which != 13);
+		$(element).on('keydown', function(e)
+		{
+			switch(e.which)
+			{
+				case 13:
+					context.$data.save();
+				 	return false;
+				 case 27:
+					context.$data.cancel();
+				 	return false;
+			}
+		});
 		$(element).on('input', function()
 		{
 			if(this.isContentEditable && ko.isWriteableObservable(editableValue))

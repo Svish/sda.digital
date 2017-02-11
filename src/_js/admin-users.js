@@ -68,24 +68,24 @@ var ViewModel = function(data)
 // Single file
 var UserModel = function(data)
 {
-	this.original = data;
-
 	ko.mapping.fromJS(data, {}, this);
 
+	this.original = data;
 	this.editing = ko.observable(false);
-
-	this.canEdit = ko.computed(() => ! this.editing(), this);
-	this.canRemove = ko.computed(() => ! this.editing() || ! this.id(), this);
-	this.canSave = ko.computed(()=> this.editing(), this);
-	this.canCancel = ko.computed(() => this.editing() && this.id(), this);
-
 	this.edit = user => user.editing(true);
+
+	this.canEdit = ko.pureComputed(() => ! this.editing(), this);
+	this.canRemove = ko.pureComputed(() => ! this.editing() || ! this.id(), this);
+	this.canSave = ko.pureComputed(()=> this.editing(), this);
+	this.canCancel = ko.pureComputed(() => this.editing() && this.id(), this);
 
 	this.cancel = function()
 	{
 		this.editing(false);
 		ko.mapping.fromJS(this.original, {}, this);
 	};
+
+	this.errors = ko.observableArray();
 
 	this.save = function()
 	{
@@ -99,6 +99,14 @@ var UserModel = function(data)
 			{
 				this.editing(false);
 				ko.mapping.fromJS(data, {}, this);
+			},
+			error: function(jqxhr, status, error)
+			{
+				if(jqxhr.responseJSON.errors)
+				{
+					// TODO: Hmm...
+					this.errors(jqxhr.responseJSON.errors);
+				}
 			},
 		});
 	};

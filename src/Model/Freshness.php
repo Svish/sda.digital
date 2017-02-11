@@ -23,7 +23,7 @@ class Freshness extends Model
 	{
 		$list = Session::get('adding', []);
 		$list = array_map([$this, 'enrich_selected'], $list);
-		$list = group_by('filename', $list, false, 'name', 'files');
+		$list = array_group_by('filename', $list, false, 'name', 'files');
 
 		return $list;
 	}
