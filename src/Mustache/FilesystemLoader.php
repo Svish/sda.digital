@@ -13,7 +13,7 @@ class FilesystemLoader extends \Mustache_Loader_FilesystemLoader
 
 
 	/**
-	 * Load the given file, and look for our custom pragmas.
+	 * Load the given file, and process our custom pragma.
 	 */
 	protected function loadFile($name)
 	{
