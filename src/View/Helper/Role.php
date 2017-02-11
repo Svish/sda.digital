@@ -1,7 +1,7 @@
 <?php
 
 namespace View\Helper;
-use Model;
+use Model, Security;
 
 
 /**
@@ -27,13 +27,14 @@ class Role
 
 	public function __invoke($text, \Mustache_LambdaHelper $render = null)
 	{
-		$user = Model::users()->logged_in();
-		if( ! $user)
+		try
+		{
+			Security::require([$this->role]);
+			return $render ? $render($text) : $text;
+		}
+		catch(\Error\NoAccess $e)
+		{
 			return null;
-
-		if( ! $user->has_roles([$this->role]))
-			return null;
-
-		return $render ? $render($text) : $text;
+		}
 	}
 }

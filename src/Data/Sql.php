@@ -1,7 +1,7 @@
 <?php
 
 namespace Data;
-use DB, Data, Valid;
+use DB, Data, Valid, Security;
 
 
 /**
@@ -9,6 +9,8 @@ use DB, Data, Valid;
  */
 abstract class Sql extends Data
 {
+	const RESTRICTED = [];
+
 	protected $_table_name;
 	protected $_rules;
 
@@ -24,30 +26,38 @@ abstract class Sql extends Data
 		// Get table info
 		$this->_table_info = DB::getTableInfo($this->_table_name);
 
-		// If dirty now, we've been fed by PDO
-		$this->_loaded = ! empty($this->_dirty);
-
 		// Make sure columns exists in $data for serialization
 		foreach($this->_table_info->column_names as $column)
 			if( ! isset($this->$column))
 				$this->$column = null;
 
-		// Clean dirt
+		// Clean dirt and done loading from PDO or wherever
 		$this->_dirty = [];
+		$this->_loaded = true;
 	}
+
 
 	
 	public function __set($key, $value)
 	{
+		// Check if restricted property
+		$roles = static::RESTRICTED[$key] ?? [];
+		if($this->_loaded && $roles)
+			Security::require($roles);
+
+		// Add to dirty if different
 		if($this->$key != $value)
 			$this->_dirty[$key] = $value;
+
 		parent::__set($key, $value);
 	}
 	
 	public function __unset($key)
 	{
+		// "Remove" by setting dirty value to null
 		if(isset($this->$key))
 			$this->_dirty[$key] = null;
+
 		parent::__unset($key);
 	}
 
@@ -73,7 +83,8 @@ abstract class Sql extends Data
 		$this->validate();
 
 		// Make query
-		$data = array_whitelist($this->_dirty + $this->data, $this->_table_info->column_names);
+		$data = array_whitelist($this->_dirty + $this->data,
+								$this->_table_info->column_names);
 		$column_names = array_keys($data);
 
 		$query = sprintf("INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s",

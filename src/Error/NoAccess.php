@@ -7,8 +7,8 @@ namespace Error;
  */
 class NoAccess extends UserError
 {
-	public function __construct()
+	public function __construct(array $required_roles)
 	{
-		parent::__construct(403);
+		parent::__construct(403, [implode(', ', $required_roles)]);
 	}
 }

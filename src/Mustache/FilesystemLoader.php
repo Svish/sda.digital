@@ -1,8 +1,8 @@
 <?php
 
 namespace Mustache;
+use Security;
 
-use Controller\Secure;
 
 /**
  * Adjusted filesystem loader.
@@ -29,7 +29,7 @@ class FilesystemLoader extends \Mustache_Loader_FilesystemLoader
 		$roles = array_multimap(['trim', 'strtolower'], $roles);
 
 		// Secure access (throws if no access)
-		Secure::access($roles);
+		Security::require($roles);
 
 		// Remove pragma tag
 		return null;

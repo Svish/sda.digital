@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller;
-use HTTP,Model;
+use HTTP, Model, Security;
 
 /**
  * Base for secure controllers.
@@ -22,26 +22,6 @@ abstract class Secure extends Session
 		if($this->required_roles === false)
 			return;
 
-		self::access($this->required_roles);
-	}
-
-	/**
-	 * Checks if logged in and has required roles.
-	 */
-	public static function access(array $roles)
-	{
-		// Get logged in user
-		$user = Model::users()->logged_in();
-
-		// Redirect if not logged in
-		if( ! $user)
-			throw new \Error\Unauthorized();
-
-		// Always require login role
-		$roles[] = 'login';
-
-		// Check roles
-		if( ! $user->has_roles($roles))
-			throw new \Error\NoAccess();
+		Security::require($this->required_roles);
 	}
 }
