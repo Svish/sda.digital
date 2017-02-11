@@ -1,6 +1,6 @@
 <?php
 namespace View;
-use View, Generator;
+use HTTP, View, Generator;
 
 /**
  * Json data.
@@ -8,9 +8,9 @@ use View, Generator;
 class Json extends View
 {
 	protected $_accept = [
-		'text/json',
-		'application/json',
-		'application/javascript',
+		'application/json',			// JSON
+		'text/json',				// JSON
+		'application/javascript',	// JSONP
 		];
 
 
@@ -26,15 +26,27 @@ class Json extends View
 
 	public function render($mime)
 	{
+		// JSON not acceptable
 		if( ! in_array($mime, $this->_accept))
 			return parent::render($mime);
 
+		// Set mime if jsonp
+		if(isset($_GET['callback']))
+			$mime = $_accept[2];
+
+		// Set content-type
 		if( ! headers_sent($file, $line))
 			header("content-type: $mime; charset=utf-8");
 
+		// If no data
+		if($this->_data === null)
+			HTTP::exit();
+
+		// Output
 		$json = json_encode($this->_data, 
 			JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
 
+		// TODO: Validate callback (see blog)
 		echo isset($_GET['callback'])
 			? "{$_GET['callback']}($json)"
 			: $json;

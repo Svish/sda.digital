@@ -3,6 +3,8 @@ namespace Data;
 
 class User extends Sql
 {
+	const SERIALIZE = ['id', 'email', 'name', 'roles'];
+
 	protected $_rules = [
 			'email' => ['email', 'email_domain'],
 		];

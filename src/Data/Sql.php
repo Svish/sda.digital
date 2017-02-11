@@ -14,17 +14,26 @@ abstract class Sql extends Data
 
 	private $_table_info;
 	private $_dirty;
+	private $_loaded;
 
 	public function __construct()
 	{
-		// Clear dirt from PDO constructor
-		$this->_dirty = [];
-
 		// Get table name from classname, if not set already
 		$this->_table_name = $this->_table_name ?? $this->get_table_name();
 
 		// Get table info
 		$this->_table_info = DB::getTableInfo($this->_table_name);
+
+		// If dirty now, we've been fed by PDO
+		$this->_loaded = ! empty($this->_dirty);
+
+		// Make sure columns exists in $data for serialization
+		foreach($this->_table_info->column_names as $column)
+			if( ! isset($this->$column))
+				$this->$column = null;
+
+		// Clean dirt
+		$this->_dirty = [];
 	}
 
 	

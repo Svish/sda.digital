@@ -1,3 +1,22 @@
+
+*[contenteditable=true]
+{
+	cursor: text;
+	font-style: italic;
+
+	&:empty
+	{
+		display: block;
+		min-height: 1em;
+		&:before
+		{
+			content: attr(data-key) "…";
+			opacity: .25;
+		}
+	}
+}
+
+
 form
 {
 	label

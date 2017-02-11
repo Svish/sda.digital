@@ -107,6 +107,9 @@ class Users extends Model
 	 */
 	public function get($id): User
 	{
+		if($id === null)
+			return new User;
+
 		if(is_int($id))
 		$user = DB::prepare('SELECT * 
 								FROM user 
@@ -127,6 +130,28 @@ class Users extends Model
 			throw new \Error\NotFound($id, User::class);
 
 		return $user;
+	}
+
+
+	/**
+	 * Delete user by id.
+	 */
+	public function delete(int $id): int
+	{
+		return DB::prepare('DELETE FROM user WHERE id=:id')
+			->bindValue(':id', $id)
+			->exec();
+	}
+
+
+	/**
+	 * Get all users.
+	 */
+	public function all(): array
+	{
+		return DB::query('SELECT * FROM user')
+			->execute()
+			->fetchAll(User::class);
 	}
 
 }

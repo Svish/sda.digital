@@ -1,0 +1,62 @@
+{{% ACCESS admin }}
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}Brukere{{/ title }}
+
+{{$ content}}
+
+
+<h1>Brukere</h1>
+
+<table class="collapsing full-width">
+	<thead>
+		<tr>
+			<th style="width: 32%">Name</th>
+			<th style="width: 32%">Email</th>
+			<th style="width: 32%">Roles</th>
+			<th style="width: 2.5em"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<!-- ko template: {name: 'user-row', foreach: users, afterAdd: afterAdd} -->
+		<!-- /ko -->
+	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="3">
+			<td>
+				<a href="javascript:void(0)" data-bind="click: add">{{#svg}}add{{/svg}}</a>
+			</td>
+		</td>
+	</tfoot>
+</table>
+
+
+{{!> kodebug}}
+
+<script type="text/html" id="user-row">
+	<tr spellcheck="false">
+		<td>
+			<div data-key="Name" data-bind="editable: editing, editableValue: name"></div>
+		</td>
+		<td>
+			<div data-key="Email" data-bind="editable: editing, editableValue: email"></div>
+		</td>
+		<td>
+			<div data-key="Roles" data-bind="editable: editing, editableValue: roles"></div>
+		</td>
+		<td>
+			<a href="javascript:void(0)" data-bind="click: edit, visible: canEdit">{{#svg}}edit{{/svg}}</a>
+			<a href="javascript:void(0)" data-bind="click: $parent.remove.bind($parent, $data), visible: canRemove">{{#svg}}remove{{/svg}}</a>
+			<a href="javascript:void(0)" data-bind="click: cancel, visible: canCancel">{{#svg}}close{{/svg}}</a>
+			<a href="javascript:void(0)" data-bind="click: save, visible: canSave">{{#svg}}save{{/svg}}</a>
+		</td>
+	</tr>
+</script>
+
+
+<script defer src="js/admin-users.js"></script>
+
+
+{{/ content}}
+{{/ layout }}

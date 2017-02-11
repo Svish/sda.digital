@@ -78,11 +78,26 @@ abstract class Data implements ArrayAccess, JsonSerializable
 
 
 	/**
-	 * Serialize only whitelisted properties, from $this->data.
+	 * JSON serialization.
 	 */
-	const SERIALIZE = [];
+	const SERIALIZE = false;
 	public function jsonSerialize()
 	{
+		$keys = static::SERIALIZE;
+
+		// Sanity check...
+		if( ! is_bool($keys) && ! is_array($keys))
+			throw new \Exception(get_class($this).'::SERIALIZE must be array of keys to serialize, or boolean (true=all, false=none)');
+		
+		// None (default)
+		if($keys === false)
+			return [];
+
+		// All
+		if($keys === true || $keys == [])
+			return $this->data;
+
+		// Only whitelisted
 		return array_whitelist($this->data, static::SERIALIZE);
 	}
 }

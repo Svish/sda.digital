@@ -25,7 +25,7 @@ class Query
 	 *
 	 * @return $this
 	 */
-	public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR)
+	public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR): self
 	{
 		$this->statement->bindParam($parameter, $variable, $data_type);
 		return $this;
@@ -36,7 +36,7 @@ class Query
 	 *
 	 * @return $this
 	 */
-	public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR)
+	public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR): self
 	{
 		$this->statement->bindParam($parameter, $value, $data_type);
 		return $this;
@@ -49,7 +49,7 @@ class Query
 	 *
 	 * @return $this.
 	 */
-	public function execute($input_parameters = NULL)
+	public function execute($input_parameters = null): self
 	{
 		$this->statement->execute($input_parameters);
 		return $this;
@@ -58,13 +58,13 @@ class Query
 	/**
 	 * Executes the query and closes the cursor.
 	 *
-	 * @return true on success; false otherwise.
+	 * @return number of affected rows.
 	 */
-	public function exec($input_parameters = NULL)
+	public function exec($input_parameters = null): int
 	{
-		$result = $this->statement->execute($input_parameters);
+		$this->statement->execute($input_parameters);
 		$this->close();
-		return $result;
+		return $this->affectedRows();
 	}
 
 
@@ -72,9 +72,10 @@ class Query
 	/**
 	 * Closes the cursor.
 	 */
-	public function close()
+	public function close(): self
 	{
 		$this->statement->closeCursor();
+		return $this;
 	}
 
 
@@ -90,7 +91,7 @@ class Query
 	/**
 	 * @return Row count query.
 	 */
-	public function affectedRows()
+	public function affectedRows(): int
 	{
 		return $this->statement->rowCount();
 	}
@@ -98,19 +99,9 @@ class Query
 
 
 	/**
-	 * Fetches the first row, and closes the cursor.
-	 */
-	public function fetchFirst($class_name = NULL, array $ctor_arguments = [])
-	{
-		$result = $this->fetch($class_name, $ctor_arguments);
-		$this->close();
-		return $result;
-	}
-
-	/**
 	 * Fetches the first row.
 	 */
-	public function fetch($class_name = NULL, array $ctor_arguments = [])
+	public function fetch($class_name = null, array $ctor_arguments = [])
 	{
 		$result = $class_name
 			? $this->statement->fetchObject($class_name, $ctor_arguments)
@@ -132,7 +123,7 @@ class Query
 	/**
 	 * Fetches all rows.
 	 */
-	public function fetchAll($fetch_argument = 'stdClass', $ctor_arguments = NULL, $fetch_style = PDO::FETCH_CLASS)
+	public function fetchAll($fetch_argument = 'stdClass', $ctor_arguments = null, $fetch_style = PDO::FETCH_CLASS)
 	{
 		return $this->statement->fetchAll($fetch_style, $fetch_argument, $ctor_arguments);
 	}
@@ -145,10 +136,22 @@ class Query
 		return $this->statement->fetchAll(PDO::FETCH_COLUMN, $column);
 	}
 
+
+
+	/**
+	 * Fetches the first row, and closes the cursor.
+	 */
+	public function fetchFirst($class_name = null, array $ctor_arguments = [])
+	{
+		$result = $this->fetch($class_name, $ctor_arguments);
+		$this->close();
+		return $result;
+	}
+
 	/**
 	 * Fetches given column from first row and closes the cursor.
 	 */
-	public function fetchColumn($column = 0)
+	public function fetchFirstColumn($column = 0)
 	{
 		$result = $this->statement->fetchColumn($column);
 		$this->close();

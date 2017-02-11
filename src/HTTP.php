@@ -149,6 +149,19 @@ public static function get_headers(string $url, array $opts = [])
 
 
 	/**
+	 * Exit with no content.
+	 */
+	public static function exit(bool $remove_headers = true)
+	{
+		if($remove_headers)
+			header_remove();
+		http_response_code(204);
+		exit;
+	}
+
+
+
+	/**
 	 * Exit with HTTP status and an optional plain text message.
 	 * 
 	 * @param code HTTP status code

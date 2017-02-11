@@ -1,10 +1,31 @@
+@table-header-background: lighten(@background-color, 15%);
+@table-header-color: @accent1-color;
+
+@table-border-color: @background-color;
+@table-background: lighten(@background-color, 5%);
+@table-color: @text-color;
+
+@table-footer-background: lighten(@background-color, 2%);
+
 table
 {
 	margin-bottom: 1.5em;
+	
 	border-collapse: collapse;
-	empty-cells: hide;
-	font-size: small;
+	border-style: hidden;
 
+	empty-cells: hide;
+	table-layout: fixed;
+	
+	font-size: small;
+	color: @table-color;
+
+	&.full-width
+	{
+		width: 100%;
+	}
+
+	// Cells
 	th,td
 	{
 		text-align: left;
@@ -13,14 +34,16 @@ table
 
 		&:not(.empty)
 		{
-			border: 1px solid black;
+			//border: 1px solid @table-border-color;
 		}
 	}
 
+	// Header
 	thead
 	{
-		background: fade(@accent1-color, 40%);
-		border-bottom: 2px solid black;
+		background: @table-header-background;
+		color: @table-header-color;
+		border-bottom: 3px solid @table-border-color;
 		th
 		{
 			overflow: hidden;
@@ -29,8 +52,27 @@ table
 		}
 	}
 
+	// Body
 	tbody
 	{
+		td,th
+		{
+			background: @table-background;
+			color: @table-color;
+		}
+	}
+
+	// Footer
+	tfoot
+	{
+		background: @table-footer-background;
+		border-top: 3px solid @table-border-color;
+	}
+
+	// Fancy body
+	tbody
+	{
+
 		&.checkered
 		{
 			tr:nth-child(odd)
@@ -62,15 +104,22 @@ table
 table.xdebug,
 table.xdebug-error
 {
-	color: #000;
 	max-width: 100%;
-	th span:first-child
+	tr
 	{
-		display: none;
+		border-bottom: 1px solid @table-border-color;
+	}
+	th
+	{
+		background: mix(@table-header-background, @error-color, 75%);
+		span:first-child
+		{
+			display: none;
+		}
 	}
 }
 
-@media only screen and (max-width : 700px)
+@media only screen and (max-width : 500px)
 {
 	#content table.collapsing
 	{
@@ -88,27 +137,26 @@ table.xdebug-error
 		{
 			tr
 			{
-				border: 1px solid black;
-				margin: .5em 0;
+				margin: 1em 0;
 				td
 				{
 					border: none;
-					border-top: 1px solid black;
+					margin-bottom: .25em;
 				}
-				td:first-child
+				td:last-child
 				{
-					border-top: none;
+					border-bottom: none;
 				}
 				td[data-key]:before
 				{
 					content: attr(data-key);
-					float: right;
-					background: fade(@accent1-color, 50%);
-					margin: -.3rem -.5rem;
-					padding: .3rem .5rem;
-					font-weight: bold;
-					border-left: 1px solid black;
-					border-bottom: 1px solid black;
+					position: absolute;
+					top: 0;
+					right: 0;
+					background: @table-header-background;
+					color: @table-header-color;
+					padding: 0 .4em;
+					font-size: x-small;
 				}
 			}
 		}
