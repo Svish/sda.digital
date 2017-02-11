@@ -5,7 +5,7 @@
 		<title>{{$title}}{{/title}} - SDA.digital</title>
 
 		<base href="{{#url}}/{{/url}}" />
-		<link rel="canonical" href="{{#url}}/{{PATH}}{{/url}}">
+		<link rel="canonical" href="{{#url}}/{{_path}}{{/url}}">
 
 		{{!>favicons}}
 
@@ -18,7 +18,7 @@
 		<script type="text/javascript" src="{{.}}"></script>
 		{{/_js}}
 		<script>
-			var Site = {Url: {Base: '{{url}}', Current: '{{PATH}}'}};
+			var Site = {Url: {Base: '{{url}}', Current: '{{_path}}'}};
 		</script>
 
 	</head>

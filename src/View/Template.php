@@ -30,6 +30,7 @@ class Template extends View
 
 				// Common context
 				$this->_context += [
+					'_path' => PATH,
 					'_user' => Model::users()->logged_in(),
 					'_post' => $_POST,
 					'_css' => (Config::less())->global,
