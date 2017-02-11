@@ -11,17 +11,18 @@ abstract class Sql extends Data
 {
 	const RESTRICTED = [];
 
-	protected $_table_name;
-	protected $_rules;
+	protected $rules;
+	
+	protected $loaded;
 
+	private $_table_name;
 	private $_table_info;
 	private $_dirty;
-	private $_loaded;
 
 	public function __construct()
 	{
-		// Get table name from classname, if not set already
-		$this->_table_name = $this->_table_name ?? $this->get_table_name();
+		// Get table name
+		$this->_table_name = $this->get_table_name();
 
 		// Get table info
 		$this->_table_info = DB::getTableInfo($this->_table_name);
@@ -33,7 +34,7 @@ abstract class Sql extends Data
 
 		// Clean dirt and done loading from PDO or wherever
 		$this->_dirty = [];
-		$this->_loaded = true;
+		$this->loaded = true;
 	}
 
 
@@ -42,7 +43,7 @@ abstract class Sql extends Data
 	{
 		// Check if restricted property
 		$roles = static::RESTRICTED[$key] ?? [];
-		if($this->_loaded && $roles)
+		if($this->loaded && $roles)
 			Security::require($roles);
 
 		// Add to dirty if different
@@ -65,7 +66,7 @@ abstract class Sql extends Data
 
 	public function validate()
 	{
-		$rules = array_merge_recursive($this->_table_info->rules, $this->_rules);
+		$rules = array_merge_recursive($this->_table_info->rules, $this->rules);
 		Valid::check($this, $rules);
 		return $this;
 	}

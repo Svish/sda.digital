@@ -6,11 +6,11 @@ class User extends Sql
 	const SERIALIZE = ['id', 'email', 'name', 'roles'];
 	const RESTRICTED = ['roles' => ['admin']];
 
-	protected $_rules = [
+	protected $rules = [
 			'email' => ['email', 'email_domain'],
 		];
 
-	protected $_password_rules = [
+	private $password_rules = [
 			'password' => ['not_empty', ['min_length', 12]],
 		];
 
@@ -24,7 +24,7 @@ class User extends Sql
 		switch($key)
 		{
 				case 'password':
-					$this->_rules += $this->_password_rules;
+					$this->_rules += $this->password_rules;
 					
 				case 'token':
 					$hash = password_hash($value, self::ALGO, self::ALGO_OPT);

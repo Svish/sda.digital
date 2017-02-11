@@ -6,7 +6,7 @@
 abstract class Data implements ArrayAccess, JsonSerializable
 {
 	/**
-	 * Returns a new Data_$name.
+	 * Returns a new Data\$name.
 	 */
 	public static function __callStatic($name, $args)
 	{
