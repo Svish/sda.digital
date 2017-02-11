@@ -37,9 +37,6 @@ class Valid
 				if(is_string($method) && ! is_callable($method))
 					$method = [Valid::class, $method];
 
-
-				// TODO: Use callbacks instead (is_string => [self, $rule])
-
 				// Call validation method
 				if( ! $method(...$params))
 				{
