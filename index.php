@@ -8,7 +8,9 @@ require 'constants.inc';
 
 // Set error handler
 error_reporting(E_ALL);
-set_exception_handler(new Error\Handler());
+$eh = new Error\Handler();
+set_exception_handler($eh);
+set_error_handler([$eh, 'error']);
 
 
 // Remove any default headers, like X-Powered-By
