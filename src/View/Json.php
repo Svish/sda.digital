@@ -17,8 +17,7 @@ class Json extends View
 
 	public function __construct($data)
 	{
-		if($data instanceof Generator)
-			$data = iterator_to_array($data, false);
+        unroll_generators($data, false);
 		
 		$this->_data = $data;
 	}

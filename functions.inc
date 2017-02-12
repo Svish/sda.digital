@@ -2,6 +2,18 @@
 
 # Simple utility functions
 
+function unroll_generators(&$data, bool $use_keys = true)
+{
+	// First self
+	if($data instanceof Generator)
+		$data = iterator_to_array($data);
+
+	// Then children, if we are an array
+	if(is_array($data) || $data instanceof Traversable)
+		foreach($data as &$data)
+			unroll_generators($data, $use_keys);
+}
+
 function preg_match_all_callback(string $pattern, string $subject, callable $callback)
 {
 	$r = preg_match_all($pattern, $subject, $matches, PREG_SET_ORDER);

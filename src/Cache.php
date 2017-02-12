@@ -97,24 +97,12 @@ class Cache
 	}
 	private function _set(string $file, $data)
 	{
-		self::generator_fix($data);
+		unroll_generators($data);
 		
 		File::put($file, serialize($data));
 		return $data;
 	}
 
-
-	protected function generator_fix(&$data)
-	{
-		// First self
-		if($data instanceof Generator)
-			$data = iterator_to_array($data);
-
-		// Then children, if we are an array
-		if(is_array($data))
-			foreach($data as &$data)
-				self::generator_fix($data);
-	}
 
 
 	/**
@@ -124,8 +112,6 @@ class Cache
 	{
 		return $this->dir.self::sanitize($key);
 	}
-
-
 
 	/**
 	 * Make the key filename-friendly.
@@ -144,7 +130,6 @@ class Cache
 	{
 		File::rdelete($this->dir);
 	}
-	
 
 	/**
 	 * Delete the whole cache.
