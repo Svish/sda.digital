@@ -2,21 +2,26 @@
 
 namespace Data;
 
-class File extends Sql
+class File extends RelationalSql
 {
 	const SERIALIZE = true;
 
 	const DIR = ROOT.'_'.DIRECTORY_SEPARATOR;
 
+	public function __construct()
+	{
+		parent::__construct();
 
-	/**
-	 * @return false if no changes; otherwise true
-	 */
-	public function save()
+		$this->computed( new FileInfo('path') );
+	}
+
+	public function move()
 	{
 		throw new Exception('Implement: '.__METHOD__);
-		// If path is already DIR
-		return parent::save();
+
+		if( ! $this->loaded)
+			// Simply move the file
+
 
 		// Begin transaction
 		// $old = $this->path;

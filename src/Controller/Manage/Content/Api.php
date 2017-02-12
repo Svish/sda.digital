@@ -14,8 +14,7 @@ class Api extends \Controller\Api
 
 	public function get_fresh()
 	{
-		$list = Model::fresh()->list();
-		return $list;
+		return Model::fresh()->list();
 	}
 
 	public function post_file(string $path): File

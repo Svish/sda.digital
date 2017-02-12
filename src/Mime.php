@@ -42,7 +42,7 @@ class Mime
 		return [
 			'type' => $type,
 			'encoding' => $this->finfo->file($path, FILEINFO_MIME_ENCODING),
-			'desc' => $this->finfo->file($path, FILEINFO_NONE),
+			'description' => $this->finfo->file($path, FILEINFO_NONE),
 		];
 	}
 
