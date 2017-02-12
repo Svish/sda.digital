@@ -64,7 +64,10 @@ class DB
 			$config['username'],
 			$config['password'],
 			[
-				PDO::MYSQL_ATTR_INIT_COMMAND => "SET SQL_MODE='TRADITIONAL', TIME_ZONE='{$timezone}';",
+				PDO::MYSQL_ATTR_INIT_COMMAND => "SET
+					SQL_MODE='TRADITIONAL',
+					TIME_ZONE='{$timezone}'
+					;",
 			]
 		);
 		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

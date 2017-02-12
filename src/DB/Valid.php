@@ -11,11 +11,14 @@ class Valid
 	public static function type($value, string $column_type): bool
 	{
 		// Ignore unmatching types
-		if( ! preg_match('/(?<type>\w+)\((?<m>[^)]+)\)/m', $column_type, $column_type))
+		if( ! preg_match('/(?<type>\w+)(?:\((?<m>[^)]+)\))?/m', $column_type, $column_type))
 			return true;
+
+
 
 		// Check
 		extract($column_type);
+
 		switch($type)
 		{
 			// varchar(max_length)
@@ -27,6 +30,16 @@ class Valid
 				$value = explode(',', $value);
 				$allowed = explode(',', str_replace('\'', '', $m));
 				return $value == array_intersect($value, $allowed);
+
+			case 'datetime':
+			case 'timestamp':
+				return preg_match('/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/', $value);
+			case 'time':
+				return preg_match('/\d{2}:\d{2}:\d{2}/', $value);
+
+			case 'date':
+				return preg_match('/\d{4}-\d{2}-\d{2}/', $value);
+
 
 			default:
 				return true;

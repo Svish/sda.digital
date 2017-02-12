@@ -66,7 +66,8 @@ abstract class Sql extends Data
 
 	public function validate()
 	{
-		$rules = array_merge_recursive($this->_table_info->rules, $this->rules);
+		$rules = array_merge_recursive($this->_table_info->rules, 
+										$this->rules ?? []);
 		Valid::check($this, $rules);
 		return $this;
 	}
