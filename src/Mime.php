@@ -9,20 +9,17 @@
  */
 class Mime
 {
-	const MIME_TYPES = 'http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types';
+	use Instance;
 
-	private static $instance;
 	public static function get($path)
 	{
-		if(!self::$instance)
-			self::$instance = new self;
-		return self::$instance->file($path);
+		return self::instance()->file($path);
 	}
 	
 
 	private $finfo;
 	private $map;
-	public function __construct()
+	private function __construct()
 	{
 		$this->finfo = new finfo();
 		$this->cache = new Cache\PreCheckedCache(__CLASS__, [__CLASS__, 'load_map']);
@@ -40,7 +37,7 @@ class Mime
 
 		// HACK: Try use extension via map if finfo "fails"
 		if($type == 'application/octet-stream')
-			$type = $this->cache->get(pathinfo($path, PATHINFO_EXTENSION), $type);
+			$type = $this->cache->get('map')[pathinfo($path, PATHINFO_EXTENSION)] ?? $type;
 
 		return [
 			'type' => $type,
@@ -50,12 +47,19 @@ class Mime
 	}
 
 
+
+	const SOURCE = 'http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types';
+
 	/**
-	 * Loads, parses and yields ext => mime-type map.
+	 * Load map of ext => mime/type
 	 */
 	public static function load_map()
 	{
-		$source = file_get_contents(self::MIME_TYPES);
+		yield 'map' => self::mime_types();
+	}
+	private static function mime_types()
+	{
+		$source = file_get_contents(self::SOURCE);
 		preg_match_all('/^([^#\s]+)\s+(.+)/m', $source, $result, PREG_SET_ORDER);
 
 		foreach($result as $match)

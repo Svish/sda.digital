@@ -24,6 +24,11 @@ class PreCheckedCache extends \Cache
 
 	public function reload()
 	{
+		// Clear first
+		$this->clear();
+
+
+		// Then reload
 		$x = $this->loader;
 		foreach($x() as $key => $value)
 			$this->set($key, $value);
