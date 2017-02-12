@@ -1,13 +1,14 @@
+{{% ACCESS editor }}
 {{% BLOCKS }}
 {{< layout }}
-{{$ title }}Velg filer{{/ title }}
+{{$ title }}Nye filer{{/ title }}
 
 {{$ content}}
 
 
-<h1>Velg filer</h1>
+<h1>Nye filer</h1>
 
-<form action="{{PATH}}" method="post">
+<form action="{{PATH}}" method="post" data-bind="submit: submit">
 
 	<!-- ko template: {name: 'group-template', foreach: groups} -->
 	<!-- /ko -->
@@ -15,7 +16,7 @@
 	<hr>
 
 	<p>
-		<button type="reset" data-bind="click: confirmedReset">Reset</button>
+		<button type="reset" data-bind="click: doConfirm">Reset</button>
 		<button type="submit" data-bind="text: submitLabel, enable: selectedFiles().length > 0">→</button>
 	</p>
 
@@ -42,14 +43,14 @@
 
 <script type="text/html" id="file-template">
 	<li>
-		<input data-bind="attr:{id:$parentContext.$index()+'-'+$index()}, checkedValue: path, checked: selected" type="checkbox" name="files[]" />
+		<input data-bind="attr:{id:$parentContext.$index()+'-'+$index()}, checked: selected" type="checkbox" name="files[]" />
 		<label data-bind="attr:{for:$parentContext.$index()+'-'+$index()}, text: name"></label>
 	</li>
 </script>
 
 {{!>kodebug-raw}}
 
-<script defer src="js/admin-content-select-fresh.js"></script>
+<script defer src="js/manage-content-fresh.js"></script>
 
 {{/ content}}
 {{/ layout }}

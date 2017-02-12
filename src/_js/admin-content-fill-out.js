@@ -16,26 +16,13 @@ var ContentModel = function(data)
 
 }
 
-$(function()
-{
-	$.getJSON('admin/content/api/selected-files', function(data)
-		{
-			view = ko.mapping.fromJS(data, {
-					create: function(options)
-					{
-						return new ContentModel(options.data);
-					}
-				});
-			ko.applyBindings(view);
-		});
-});
-
-function submitForm()
-{
-	return confirm('Sikker?');
-}
-
-function resetForm()
-{
-	return confirm('Sikker?');
-}
+$.getJSON('admin/content/api/selected-files', function(data)
+	{
+		view = ko.mapping.fromJS(data, {
+				create: function(options)
+				{
+					return new ContentModel(options.data);
+				}
+			});
+		ko.applyBindings(view);
+	});

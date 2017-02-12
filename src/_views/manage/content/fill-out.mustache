@@ -1,0 +1,50 @@
+{{% ACCESS editor }}
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}Fyll ut{{/ title }}
+
+{{$ content}}
+
+
+<h1>Fyll ut</h1>
+
+<form action="{{PATH}}" method="post">
+
+	<div data-bind="template: {name: 'content-template', foreach: view}"></div>
+
+	<hr>
+	<p>
+		<button type="reset" data-bind="click: resetForm">Reset</button>
+		<button type="submit" data-bind="click: submitForm">➡</button>
+	</p>
+	
+</form>
+
+
+{{>kodebug}}
+
+
+
+<!-- Template: Content -->
+<script type="text/html" id="content-template">
+	<content class="content">
+		<input type="text" data-bind="value: name" placeholder="Tittel">
+
+		<div clas="file" data-bind="template: {name: 'file-template', foreach: files}"></div>
+
+	</content>
+</script>
+
+
+
+<!-- Template: File -->
+<script type="text/html" id="file-template">
+	<div class="file" data-bind="text: path">{{path}}</div>
+</script>
+
+
+
+<script defer src="js/admin-content-fill-out.js"></script>
+
+{{/ content}}
+{{/ layout }}

@@ -2,8 +2,9 @@
 // CSS animate fade in from left?
 // bind a delay to $index * x ms?
 
+var API = 'manage/content/api/fresh';
 
-$.getJSON('admin/content/api/fresh-files', function(data)
+$.getJSON(API, function(data)
 	{
 		var view = new ViewModel(data);
 		ko.applyBindings(view);
@@ -42,6 +43,24 @@ var ViewModel = function(data)
 	{
 		return this.selectedFiles().length + ' / ' + this.totalFiles() + ' →';
 	}, this);
+
+	this.submit = function()
+	{
+		var data = ko.mapping.toJSON(this.selectedPaths());
+
+		$.ajax({
+			type: 'POST',
+			url: API,
+			data: data,
+			contentType: 'application/json',
+			success: function()
+			{
+				//window.location(Site.Url.Current+'/../fill-out');
+			},
+		});
+
+		return false;
+	}
 }
 
 
@@ -77,6 +96,5 @@ var GroupModel = function(data)
 var FileModel = function(data)
 {
 	ko.mapping.fromJS(data, {}, this);
-
 	this.selected = ko.observable(false);
 }

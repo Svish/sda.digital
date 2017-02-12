@@ -52,7 +52,7 @@ class Freshness extends Model
 	/**
 	 * Store list of selected files to add.
 	 */
-	public function store_adding(array $list)
+	public function store_adding($list)
 	{
 		Session::set('adding', $list);
 	}
@@ -90,18 +90,19 @@ class Freshness extends Model
 
 		// Sort
 		array_sort_by('name', $files);
+		$files = array_group_by('name', $files, false, 'name', 'files');
 
 		// Yield as group
 		yield [
-			'group' => self::from_win(basename($it->getSubPath())) ?: '/',
-			'files' => $files,
+			'directory' => self::from_win($it->getSubPath()) ?: '/',
+			'content' => $files,
 			];
 	}
 	private function fresh_file($file)
 	{
 		return
 		[
-			'name' => self::pathinfo($file->getPathname(), PATHINFO_BASENAME),
+			'name' => self::pathinfo($file->getPathname(), PATHINFO_FILENAME),
 			'path' => self::from_win($file->getPathname()),
 		];
 	}
