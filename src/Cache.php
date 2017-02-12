@@ -62,11 +62,7 @@ class Cache
 
 		// Call and store default if callable
 		if(is_callable($default))
-		{
-			// TODO: Fallback to $data if throws and $data is not empty?
-			$default = $default($key);
 			return $this->_set($file, $default);
-		}
 
 		// Otherwise, return $default
 		return $default;
@@ -94,15 +90,30 @@ class Cache
 	 */
 	public function set(string $key, $data)
 	{
+		if(is_callable($data))
+			$data = $data($key);
+
 		return $this->_set($this->path($key), $data);
 	}
 	private function _set(string $file, $data)
 	{
-		if($data instanceof Generator)
-			$data = iterator_to_array($data);
+		self::generator_fix($data);
 		
 		File::put($file, serialize($data));
 		return $data;
+	}
+
+
+	protected function generator_fix(&$data)
+	{
+		// First self
+		if($data instanceof Generator)
+			$data = iterator_to_array($data);
+
+		// Then children, if we are an array
+		if(is_array($data))
+			foreach($data as &$data)
+				self::generator_fix($data);
 	}
 
 
