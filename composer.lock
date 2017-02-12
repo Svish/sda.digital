@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9c1276b1a3c48946cd6f70b04de2512e",
     "content-hash": "87cb94054cf8555de02a595227477bd6",
     "packages": [
         {
@@ -61,7 +60,7 @@
                 "http",
                 "mime"
             ],
-            "time": "2016-02-09 18:45:00"
+            "time": "2016-02-09T18:45:00+00:00"
         },
         {
             "name": "james-heinrich/getid3",
@@ -97,7 +96,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2016-12-14 14:29:29"
+            "time": "2016-12-14T14:29:29+00:00"
         },
         {
             "name": "leafo/lessphp",
@@ -138,7 +137,7 @@
             ],
             "description": "lessphp is a compiler for LESS written in PHP.",
             "homepage": "http://leafo.net/lessphp/",
-            "time": "2014-11-24 18:39:20"
+            "time": "2014-11-24T18:39:20+00:00"
         },
         {
             "name": "league/commonmark",
@@ -207,7 +206,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2016-06-14 14:49:29"
+            "time": "2016-06-14T14:49:29+00:00"
         },
         {
             "name": "mustache/mustache",
@@ -253,7 +252,7 @@
                 "mustache",
                 "templating"
             ],
-            "time": "2016-07-31 06:18:27"
+            "time": "2016-07-31T06:18:27+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -307,7 +306,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2016-12-29 10:02:40"
+            "time": "2016-12-29T10:02:40+00:00"
         },
         {
             "name": "webuni/commonmark-attributes-extension",
@@ -362,7 +361,7 @@
                 "commonmark",
                 "markdown"
             ],
-            "time": "2016-01-14 23:00:32"
+            "time": "2016-01-14T23:00:32+00:00"
         },
         {
             "name": "webuni/commonmark-table-extension",
@@ -416,7 +415,7 @@
                 "markdown",
                 "table"
             ],
-            "time": "2016-01-14 22:54:18"
+            "time": "2016-01-14T22:54:18+00:00"
         }
     ],
     "packages-dev": [],
