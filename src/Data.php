@@ -5,18 +5,8 @@
  */
 abstract class Data implements ArrayAccess, JsonSerializable
 {
-	/**
-	 * Returns a new Data\$name.
-	 */
-	public static function __callStatic($name, $args)
-	{
-		$name = __CLASS__.'\\'.ucfirst($name);
-		return new $name(...$args);
-	}
+	private $data = [];
 
-
-
-	protected $data = [];
 
 
 	public function __get($key)
@@ -28,6 +18,7 @@ abstract class Data implements ArrayAccess, JsonSerializable
 	{
 		$this->data[$key] = $value;
 	}
+
 
 	public function set(array $data)
 	{

@@ -1,13 +1,13 @@
 <?php
 
 namespace Data;
-use DB, Data, Valid, Security;
+use DB, Valid, Security;
 
 
 /**
  * Base class for data from SQL tables.
  */
-abstract class Sql extends Data
+abstract class Sql extends \Data
 {
 	const RESTRICTED = [];
 
@@ -22,10 +22,10 @@ abstract class Sql extends Data
 	public function __construct()
 	{
 		// Get table name
-		$this->_table_name = $this->get_table_name();
+		$this->_table_name = $this->table_name();
 
 		// Get table info
-		$this->_table_info = DB::getTableInfo($this->_table_name);
+		$this->_table_info = DB::table_info($this->_table_name);
 
 		// Make sure columns exists in $data for serialization
 		foreach($this->_table_info->column_names as $column)
@@ -141,7 +141,7 @@ abstract class Sql extends Data
 	/**
 	 * Get table name from class name.
 	 */
-	protected function get_table_name()
+	protected function table_name()
 	{
 		$name = get_class_name($this);
 		$name = preg_replace('/(?<=[[:lower:]])([[:upper:]])/', '_$1', $name);

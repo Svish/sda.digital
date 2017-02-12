@@ -2,7 +2,14 @@
 
 namespace Data;
 
-class Series extends Sluggish
+class Series extends RelationalSql
 {
-	const SLUG_COLUMNS = ['title'];
+	const SERIALIZE = true;
+
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->computed( new Slug('title') );
+	}
 }

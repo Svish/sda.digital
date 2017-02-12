@@ -1,10 +1,18 @@
 <?php
 namespace Data;
 
-class User extends Sql
+class User extends RelationalSql
 {
 	const SERIALIZE = ['id', 'email', 'name', 'roles'];
 	const RESTRICTED = ['roles' => ['admin']];
+
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->computed( new Hash('password', 'token') );
+	}
+
 
 	protected $rules = [
 			'email' => ['email', 'email_domain'],
@@ -16,40 +24,17 @@ class User extends Sql
 
 
 
+
 	public function __set($key, $value)
 	{
 		parent::__set($key, $value);
 
-		if($value)
-		switch($key)
-		{
-				case 'password':
-					$this->_rules += $this->password_rules;
-					
-				case 'token':
-					$hash = password_hash($value, self::ALGO, self::ALGO_OPT);
-					parent::__set("{$key}_hash", $hash);
-					break;
-		}
+		// Add rule when password set
+		if($value && $key == 'password')
+			$this->rules += $this->password_rules;
 	}
-
 
 	
-	public function __unset($key)
-	{
-		parent::__unset($key);
-
-		// Also unset hash
-		switch($key)
-		{
-			case 'password':
-			case 'token':
-				parent::__unset("{$key}_hash");
-				break;
-		}
-	}
-
-
 
 	public function has_roles(array $roles): bool
 	{
@@ -71,7 +56,7 @@ class User extends Sql
 			return false;
 
 		// Rehash if necessary
-		if(password_needs_rehash($this->password_hash, self::ALGO, self::ALGO_OPT))
+		if(password_needs_rehash($this->password_hash, Hash::ALGO, Hash::ALGO_OPT))
 		{
 			$this->password = $password;
 			$this->save();
@@ -104,9 +89,4 @@ class User extends Sql
 
 		return $result;
 	}
-
-
-
-	const ALGO = PASSWORD_DEFAULT;
-	const ALGO_OPT = [];
 }

@@ -1,6 +1,15 @@
 <?php
+
 namespace Data;
-class Content extends Sluggish
+
+class Content extends RelationalSql
 {
-	const SLUG_COLUMNS = ['title'];
+	const SERIALIZE = true;
+
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->computed( new Slug('title') );
+	}
 }

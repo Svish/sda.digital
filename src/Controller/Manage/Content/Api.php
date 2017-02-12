@@ -14,12 +14,13 @@ class Api extends \Controller\Api
 
 	public function get_fresh()
 	{
-		return Model::files()->fresh();
+		$list = Model::fresh()->list();
+		return $list;
 	}
 
 	public function post_file(string $path): File
 	{
-		return Model::files()->file($path);
+		return Model::fresh()->file($path);
 	}
 
 	public function put_content(array $data): File
