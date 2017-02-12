@@ -11,23 +11,18 @@ class Api extends Secure
 	
 	public final function get($what = null)
 	{
-		$method = self::method($what);
-		View::json($this->$method())
-			->output();
+		return $this->process($what);
 	}
-
 
 	public final function delete($what = null)
 	{
 		return $this->process($what);
 	}
 
-
 	public final function put($what = null)
 	{
 		return $this->process($what);
 	}
-
 
 	public final function post($what = null)
 	{
@@ -35,13 +30,15 @@ class Api extends Secure
 	}
 
 
+
 	private final function process($what = null)
 	{
 		$method = self::method($what);
 
-		$data = file_get_contents('php://input');
-		$data = json_decode($data, true);
-		$data = $this->$method($data);
+		$input = file_get_contents('php://input');
+		
+		$data = json_decode($input, true);
+		$data = $this->$method($data === null ? $input : $data);
 
 		View::json($data)
 			->output();

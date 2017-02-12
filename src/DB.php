@@ -1,6 +1,6 @@
 <?php
 
-use DB\Query;
+use DB\Query, DB\PDO;
 use Cache\PreCheckedCache;
 
 
@@ -236,7 +236,7 @@ class DB
 					$info->rules[$name][] = 'not_empty';
 
 				// Add db type rule
-				$info->rules[$name][] = [['DB\\Valid', 'type'], $column['Type']];
+				$info->rules[$name][] = [['DB\\Valid', 'type'], str_replace('\'', '', $column['Type'])];
 
 				// TODO: Add unique rule
 				//if($column['Key'] == 'UNI')

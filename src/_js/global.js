@@ -41,11 +41,13 @@ function onAjaxStopHandler()
 
 function onAjaxErrorHandler(event, jqxhr, settings, thrownError)
 {
-	var m = jqxhr.responseJSON.message;
-
-	if( ! m)
+	if( ! jqxhr.responseJSON)
 		return;
 
 	$('#header')
-		.after(m);
+		.after(jqxhr.responseJSON.message);
+
+	if( ! settings.error && jqxhr.responseJSON.reason)
+		$('#content')
+			.html(jqxhr.responseJSON.reason);
 }

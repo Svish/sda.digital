@@ -17,7 +17,7 @@ class Html extends \View\Template
 	}
 	
 
-	private static function collect_xdebug(\Throwable $e = null)
+	public static function collect_xdebug(\Throwable $e = null)
 	{
 		if( ! $e) return null;
 

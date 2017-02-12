@@ -1,10 +1,9 @@
-// NOTE: http://stackoverflow.com/a/42104455/39321
-// CSS animate fade in from left?
-// bind a delay to $index * x ms?
 
-var API = 'manage/content/api/fresh';
 
-$.getJSON(API, function(data)
+var API = 'manage/content/api/';
+
+
+$.getJSON(API+'fresh', function(data)
 	{
 		var view = new ViewModel(data);
 		ko.applyBindings(view);
@@ -14,87 +13,97 @@ $.getJSON(API, function(data)
 // Root model
 var ViewModel = function(data)
 {
-	this.groups = ko.mapping.fromJS(data,
+	this.dirs = ko.mapping.fromJS(data,
 		{
-			create: function(options)
-			{
-				return new GroupModel(options.data);
-			}
+			create: opts => new DirectoryModel(opts.data),
 		});
 
-	this.totalFiles = ko.computed(function()
-	{
-		return this.groups().reduce(function(total, group)
+	this.selected = ko.computed(function()
 		{
-			return total + group.files().length;
-		}, 0);
-	}, this);
-
-	this.selectedFiles = ko.computed(function()
-	{
-		return this.groups().reduce(function(list, group)
-		{
-			list.push.apply(list, group.selectedFiles());
-			return list;
-		}, []);
-	}, this)
-
-	this.submitLabel = ko.computed(function()
-	{
-		return this.selectedFiles().length + ' / ' + this.totalFiles() + ' →';
-	}, this);
-
-	this.submit = function()
-	{
-		var data = ko.mapping.toJSON(this.selectedPaths());
-
-		$.ajax({
-			type: 'POST',
-			url: API,
-			data: data,
-			contentType: 'application/json',
-			success: function()
+			return this.dirs().reduce(function(list, dir)
 			{
-				//window.location(Site.Url.Current+'/../fill-out');
-			},
-		});
+				list.push.apply(list, dir.selected());
+				return list;
+			}, []);
+		}, this);
 
-		return false;
-	}
+	this.load = (nodes, file) => file.load();
+
+	// TODO: This "tab" stuff in own thing?
+	this.steps = ['select-template', 'enter-template'];
+
+	this.current = ko.observable(0);
+	this.template = ko.pureComputed(() => this.steps[this.current()]);
+
+	this.canNext = ko.pureComputed(() => this.selected().length > 0 && this.current() < this.steps.length-1);
+	this.canPrev = ko.pureComputed(() => this.current() > 0);
+	this.next = function(d, e)
+	{
+		this.current((this.current()+1)%this.steps.length);
+		if( ! this.canNext())
+			$(e.target).blur();
+	};
+	this.prev = function(d, e)
+	{
+		this.current((this.current()-1)%this.steps.length);
+		if( ! this.canPrev())
+			$(e.target).blur();
+	};
 }
 
 
-// Group of files
-var GroupModel = function(data)
+// Directory with files
+var DirectoryModel = function(data)
 {
 	ko.mapping.fromJS(data, 
 		{
 			files: {
-				create: function(options)
-				{
-					return new FileModel(options.data);
-				}
-			}
+				create: opts => new FileModel(opts.data),
+				},
 		}, this);
 
-	this.selectedFiles = ko.computed(function()
+	this.selectedLabel = ko.pureComputed(() => '( ' + this.selected().length + ' / ' + this.files().length + ' )', this);
+	this.selected = ko.computed(function()
 	{
 		return this.files().filter(f => f.selected());
-	}, this)
-
-	this.console = window.console;
+	}, this);
 
 	this.toggle = function(data, e)
 	{
 		var allSelected = data.files().every(f => f.selected());
 		ko.utils.arrayForEach(data.files(), f => f.selected( ! allSelected));
-	}
+	};
 }
 
+
+// Group of files
+var ContentModel = function(data)
+{
+	// TODO: How to get this in here?
+	// Wrap all files in ContentModel
+}
 
 // Single file
 var FileModel = function(data)
 {
 	ko.mapping.fromJS(data, {}, this);
 	this.selected = ko.observable(false);
+
+	this.loaded = ko.observable(false);
+	this.load = function()
+	{
+		if( ! this.loaded())
+			$.ajax({
+				type: 'POST',
+				url: API+'file',
+				data: ko.toJS(this.path()),
+				contentType: 'application/json',
+				context: this,
+				success: function(data)
+				{
+					this.loaded(true);
+					ko.mapping.fromJS(data, {}, this);
+				},
+			});
+	}
 }

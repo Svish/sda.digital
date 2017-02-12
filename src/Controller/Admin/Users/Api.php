@@ -2,25 +2,26 @@
 
 namespace Controller\Admin\Users;
 use Model;
+use \Data\User;
 
 class Api extends \Controller\Api
 {
 	protected $required_roles = ['admin'];
 
 
-	public function get_users()
+	public function get_users(): array
 	{
 		return Model::users()->all();
 	}
 
 
-	public function get_new()
+	public function get_new(): User
 	{
 		return Model::users()->get(null);
 	}
 
 
-	public function put_user($data)
+	public function put_user(array $data): User
 	{
 		$user = Model::users()->get($data['id'] ?? null);
 		$user->set($data);
@@ -29,8 +30,8 @@ class Api extends \Controller\Api
 	}
 
 
-	public function delete_user($data)
+	public function delete_user(int $id)
 	{
-		Model::users()->delete($data);
+		Model::users()->delete($id);
 	}
 }

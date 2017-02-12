@@ -28,7 +28,7 @@ class Valid
 			// set('allowed','values')
 			case 'set':
 				$value = explode(',', $value);
-				$allowed = explode(',', str_replace('\'', '', $m));
+				$allowed = explode(',', $m);
 				return $value == array_intersect($value, $allowed);
 
 			case 'datetime':

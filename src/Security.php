@@ -6,7 +6,7 @@ class Security
 	 * Checks if logged in and has required roles.
 	 *
 	 * @throws Unauthorized If not logged in.
-	 * @throws NoAccess If not having required roles
+	 * @throws Forbidden If not having required roles
 	 */
 	public static function require(array $roles): bool
 	{
@@ -22,7 +22,7 @@ class Security
 
 		// Check roles
 		if( ! $user->has_roles($roles))
-			throw new \Error\NoAccess($roles);
+			throw new \Error\Forbidden($roles);
 
 		return true;
 	}

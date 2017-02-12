@@ -33,4 +33,15 @@ class Handler
 		exit;
 	}
 
+	/**
+	 * @see http://php.net/manual/en/class.errorexception.php#errorexception.examples
+	 */
+	public function error($severity, $message, $file, $line)
+	{
+    	// Check if included in error_reporting
+	    if( ! (error_reporting() & $severity))
+	    	return;
+        
+        throw new \ErrorException($message, 0, $severity, $file, $line);
+	}
 }

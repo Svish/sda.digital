@@ -5,6 +5,7 @@
 @background-color: #0d0d0d;
 @shadow-color: #1c1c1c;
 @text-color: #f0f0f0;
+@border-color: @shadow-color;
 
 @accent1-color: #ed782a;
 @accent2-color: #3b53cf;
@@ -40,6 +41,16 @@ body
 	overflow-y: scroll;
 }
 
+section
+{
+	margin: 3em 0;
+	& + &
+	{
+		margin-top: -1.5em;
+		padding-top: 1.5em;
+		border-top: 1px solid @border-color;
+	}
+}
 
 b,
 strong
@@ -249,3 +260,4 @@ p.right
 
 @import "page-about";
 @import "page-tools";
+@import "page-manage-content";

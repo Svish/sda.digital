@@ -49,7 +49,7 @@ abstract class Sql extends Data
 		// Add to dirty if different
 		if($this->$key != $value)
 			$this->_dirty[$key] = $value;
-
+		
 		parent::__set($key, $value);
 	}
 	

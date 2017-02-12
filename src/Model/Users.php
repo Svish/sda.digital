@@ -3,12 +3,12 @@
 namespace Model;
 
 use Data\User;
-use Model, Session, DB, Valid;
+use Session, DB, Valid;
 
 /**
  * User model for handling logins, etc.
  */
-class Users extends Model
+class Users extends \Model
 {
 	const SESSION_KEY = 'user';
 

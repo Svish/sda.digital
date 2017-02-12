@@ -3,11 +3,11 @@
 {
 	cursor: text;
 	font-style: italic;
+	min-height: 1.5em;
 
 	&:empty
 	{
 		display: block;
-		min-height: 1em;
 		&:before
 		{
 			content: attr(data-key) "…";
@@ -17,181 +17,200 @@
 }
 
 
-form
+label
 {
-	label
+	cursor: pointer;
+}
+
+input[type=text],
+input[type=email],
+input[type=url],
+input[type=password],
+input[type=number],
+input[type=tel],
+input[type=date],
+input[type=time],
+input[type=search],
+select,
+textarea
+{
+	padding: .5em;
+	width: 320px;
+	max-width: 100%;
+	.box-sizing();
+
+	background: @input-background-color;
+	border: 1px solid @input-border-color;
+	color: inherit;
+	font-size: .9em;
+
+	&:invalid
 	{
-		cursor: pointer;
+		box-shadow: none;
+		//border-color: @error-color;
 	}
 
-	input[type=text],
-	input[type=email],
-	input[type=url],
-	input[type=password],
-	input[type=number],
-	input[type=tel],
-	input[type=date],
-	input[type=time],
-	input[type=search],
-	select,
-	textarea
+	&:required
 	{
-		padding: .5em;
-		width: 320px;
-		max-width: 100%;
-		.box-sizing();
-
-		background: @input-background-color;
-		border: 1px solid @input-border-color;
-		color: inherit;
-		font-size: .9em;
-
-		&:invalid
-		{
-			box-shadow: none;
-			//border-color: @error-color;
-		}
-
-		&:required
-		{
-			background-image: 
-				radial-gradient(@text-color 15%, transparent 16%);
-			background-size: 1em 1em;
-			background-position: top right;
-			background-repeat: no-repeat
-		}
+		background-image: 
+			radial-gradient(@text-color 15%, transparent 16%);
+		background-size: 1em 1em;
+		background-position: top right;
+		background-repeat: no-repeat
 	}
-	textarea
-	{
-		resize: vertical;
-		min-height: 200px;
-	}
+}
+textarea
+{
+	resize: vertical;
+	min-height: 200px;
+}
 
 
-	// Fancy checkboxes
-	input[type=checkbox]
-	{
-		display: none;
-		& + label:before
-		{
-			display: inline-block;
-			content: "";
-			height: 1em;
-			width: 2em;
-			background-size: 1em 1em;
-			background-position: .75em center;
-			background-repeat: no-repeat;
-			background-image: 
-				radial-gradient(darken(@text-color, 75%) 50%, transparent 50%);
-		}
-		&:checked + label:before
-		{
-			background-image: 
-				radial-gradient(@text-color 50%, transparent 50%);
-		}
-	}
-	.checkbox-list
-	{
-		padding-left: 0;
-		li
-		{
-			list-style: none;
-		}
-	}
-
-
-	// Fieldset
-	fieldset
-	{
-		margin-bottom: 1em;
-		&, legend
-		{
-			background: @input-background-color;
-			border: 1px solid @input-border-color;	
-		}
-		legend
-		{	
-			display: block;
-			padding: .25em .5em;
-		}
-	}
-
-
-
-	// Focused
-	input,
-	select,
-	textarea,
-	button,
-	a
-	{
-		&:focus
-		{
-			outline: 1px solid lighten(@input-border-color, 20%);
-		}
-	}
-
-
-
-	// Errors
-	input.error,
-	textarea.error
-	{
-		border-color: @error-color;
-		&:required
-		{
-			background-image: radial-gradient(@error-color 15%, transparent 15%);
-		}
-	}
-	ul.errors
-	{
-		margin-top: -1.1rem;
-		font-size: .8em;
-		color: @error-color;
-	}
-
-
-
-	// Buttons
-	button, a.button
-	{
-		cursor: pointer;
-		padding: .25em 1em;
-		font-size: .9em;
-
-		background: lighten(@background-color, 10%);
-		border: 1px outset fade(@background-color,50%);
-		color: inherit;
-
-		&:hover,
-		&:active
-		{
-			border: 1px outset fade(@background-color,50%);
-			color: inherit;
-			&:not(:disabled)
-			{
-				background: lighten(@background-color, 15%);
-			}
-		}
-		&:active:not(:disabled)
-		{
-			border: 1px inset fade(@background-color,50%);
-		}
-
-		&:disabled
-		{
-			opacity: .5;
-			cursor: default;
-		}
-	}
-
-
-
-	// Other
-	address
+// Fancy checkboxes
+input[type=checkbox]
+{
+	display: none;
+	& + label
 	{
 		display: block;
-		font-style: normal;
-		margin-bottom: 1em;
+		&:hover
+		{
+			background: lighten(@background-color, 5%);
+			outline: 1px solid lighten(@background-color, 25%);
+		}
 	}
+	& + label:before
+	{
+		display: inline-block;
+		content: "";
+		height: 1em;
+		width: 2em;
+		background-size: 1em 1em;
+		background-position: .75em center;
+		background-repeat: no-repeat;
+		background-image: 
+			radial-gradient(darken(@text-color, 75%) 50%, transparent 50%);
+	}
+	&:checked + label:before
+	{
+		background-image: 
+			radial-gradient(@text-color 50%, transparent 50%);
+	}
+}
+.checkbox-list
+{
+	padding-left: 0;
+	li
+	{
+		list-style: none;
+	}
+}
+
+
+// Fieldset
+fieldset
+{
+	margin-bottom: 1em;
+	&, legend
+	{
+		background: @input-background-color;
+		border: 1px solid @input-border-color;	
+	}
+	legend
+	{	
+		display: block;
+		padding: .25em .5em;
+	}
+}
+
+
+
+// Focused
+input,
+select,
+textarea,
+button,
+a
+{
+	&:focus
+	{
+		outline: 1px solid lighten(@input-border-color, 20%);
+	}
+}
+
+
+
+// Errors
+input.error,
+textarea.error
+{
+	border-color: @error-color;
+	&:required
+	{
+		background-image: radial-gradient(@error-color 15%, transparent 15%);
+	}
+}
+ul.errors
+{
+	margin-top: -1.1rem;
+	font-size: .8em;
+	color: @error-color;
+}
+
+
+
+// Buttons
+button
+{
+	vertical-align: middle;
+}
+button, a.button
+{
+	cursor: pointer;
+	padding: .25em 1em;
+	font-size: .9em;
+
+	background: lighten(@background-color, 10%);
+	border: 1px outset fade(@background-color,50%);
+	color: inherit;
+
+	transition: opacity 250ms;
+
+	&:hover,
+	&:active
+	{
+		color: inherit;
+		&:not(:disabled)
+		{
+			border: 1px outset fade(@background-color,50%);
+			background: lighten(@background-color, 15%);
+		}
+	}
+	&:active:not(:disabled)
+	{
+		border: 1px inset fade(@background-color,50%);
+	}
+
+	&:disabled
+	{
+		opacity: .5;
+		cursor: default;
+	}
+}
+button + .button-note
+{
+	display: inline-block;
+	margin-left: 1em;
+	font-size: small;
+	opacity: .5;
+}
+
+
+
+// Other
+address
+{
+	display: block;
+	font-style: normal;
+	margin-bottom: 1em;
 }

@@ -7,6 +7,70 @@
  */
 
 
+
+/**
+ * Filtered observable array
+ * @see http://stackoverflow.com/a/13216571/39321
+ */
+ ko.observableArray.fn.filtered = function(key)
+ {
+	return ko.computed({
+		read: function() { return this()[key]; },
+	}, this);
+ }
+
+
+
+/**
+ * Faded visible
+ * @see http://knockoutjs.com/examples/animatedTransitions.html
+ */
+ko.bindingHandlers.fadeVisible =
+{
+	init: function(element, valueAccessor)
+	{
+		var value = valueAccessor();
+		$(element).toggle(ko.unwrap(value));
+	},
+	update: function(element, valueAccessor)
+	{
+		var value = valueAccessor();
+		ko.unwrap(value) ? $(element).fadeIn(250) : $(element).fadeOut(250);
+	}
+};
+
+
+
+/**
+ * Lazy observable
+ * @see http://www.knockmeout.net/2011/06/lazy-loading-observable-in-knockoutjs.html
+ */
+ko.lazyObservable = function(callback, target)
+{
+	var _value = ko.observable(); 
+	
+	var result = ko.computed({
+			deferEvaluation: true,
+			read: function()
+				{
+					if( ! result.loaded())
+						callback.call(target);
+					return _value();
+				},
+			write: function(newValue)
+			{
+				result.loaded(true);
+				_value(newValue);
+			},
+		});
+
+	result.loaded = ko.observable();
+	result.refresh = () => result.loaded(false);
+	return result;
+};
+
+
+
 /**
  * Knockout: Dirty flag
  * @see http://www.knockmeout.net/2011/05/creating-smart-dirty-flag-in-knockoutjs.html
@@ -58,10 +122,10 @@ ko.bindingHandlers.editable = {
 			{
 				case 13:
 					context.$data.save();
-				 	return false;
+					return false;
 				 case 27:
 					context.$data.cancel();
-				 	return false;
+					return false;
 			}
 		});
 		$(element).on('input', function()

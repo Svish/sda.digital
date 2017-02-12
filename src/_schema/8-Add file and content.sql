@@ -3,10 +3,12 @@ DROP TABLE IF EXISTS `file`;
 CREATE TABLE `file`
 (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`path` VARCHAR(255) NOT NULL,
-	`sha256` VARCHAR(255) NOT NULL,
-	`original_filename` VARCHAR(255) NOT NULL,
 	`content_id` INT UNSIGNED NOT NULL,
+	`sha256` VARCHAR(255) NOT NULL,
+	`mime` VARCHAR(4) NOT NULL,
+	`path` VARCHAR(255) NOT NULL,
+	`filename` VARCHAR(255) NOT NULL,
+	`extension` VARCHAR(4) NOT NULL,
 	PRIMARY KEY (`id`),
 	CONSTRAINT `fk_file_content` 
 		FOREIGN KEY (`content_id`) 

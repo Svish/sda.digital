@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Mime type helper.
  *
@@ -19,15 +18,14 @@ class Mime
 			self::$instance = new self;
 		return self::$instance->file($path);
 	}
-
+	
 
 	private $finfo;
 	private $map;
 	public function __construct()
 	{
-		$cache = new Cache(__CLASS__, null);
-		$this->map = $cache->get('map', [Mime::class, 'load_map']);
 		$this->finfo = new finfo();
+		$this->cache = new Cache\PreCheckedCache(__CLASS__, [__CLASS__, 'load_map']);
 	}
 
 
@@ -42,7 +40,7 @@ class Mime
 
 		// HACK: Try use extension via map if finfo "fails"
 		if($type == 'application/octet-stream')
-			$type = $this->map[pathinfo($path, PATHINFO_EXTENSION)] ?? $type;
+			$type = $this->cache->get(pathinfo($path, PATHINFO_EXTENSION), $type);
 
 		return [
 			'type' => $type,

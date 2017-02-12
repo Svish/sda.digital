@@ -3,9 +3,9 @@
 namespace Error;
 
 /**
- * 403 No Access
+ * 403 Forbidden
  */
-class NoAccess extends UserError
+class Forbidden extends UserError
 {
 	public function __construct(array $required_roles)
 	{

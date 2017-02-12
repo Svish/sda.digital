@@ -1,7 +1,8 @@
 <?php
 
 namespace Controller\Manage\Content;
-use View, Model;
+use Model;
+use \Data\File;
 
 /**
  * Methods for content adding.
@@ -13,16 +14,15 @@ class Api extends \Controller\Api
 
 	public function get_fresh()
 	{
-		return Model::freshness()->get_fresh();
+		return Model::files()->fresh();
 	}
 
-
-	public function get_file_info($data)
+	public function post_file(string $path): File
 	{
-		var_dump($data);exit;
+		return Model::files()->file($path);
 	}
 
-	public function put_content($data)
+	public function put_content(array $data): File
 	{
 		var_dump($data);exit;
 		return true;

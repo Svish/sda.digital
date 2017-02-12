@@ -32,7 +32,7 @@ class Role
 			Security::require([$this->role]);
 			return $render ? $render($text) : $text;
 		}
-		catch(\Error\NoAccess $e)
+		catch(\Error\Forbidden $e)
 		{
 			return null;
 		}
