@@ -97,7 +97,8 @@ class Cache
 	}
 	private function _set(string $file, $data)
 	{
-		unroll_generators($data);
+		if($data instanceof Generator)
+			$data = iterator_to_array($data);
 		
 		File::put($file, serialize($data));
 		return $data;

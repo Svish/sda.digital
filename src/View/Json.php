@@ -17,8 +17,9 @@ class Json extends View
 
 	public function __construct($data)
 	{
-        unroll_generators($data, false);
-		
+		if($data instanceof Generator)
+			$data = iterator_to_array($data, false);
+
 		$this->_data = $data;
 	}
 
@@ -45,7 +46,7 @@ class Json extends View
 		$json = json_encode($this->_data, 
 			JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
 
-		echo $callback
+		return $callback
 			? "$callback($json)"
 			: "$json";
 	}
