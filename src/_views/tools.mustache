@@ -7,14 +7,22 @@
 
 <div class="menu no-select">
 
-	{{#role.editor}}
 	<section>
+		{{#role.editor}}
 		<a class="frame" href="manage/content/fresh">
 			{{#svg}}add{{/svg}}<br>
 			Nytt innhold
 		</a>
+		{{/role.editor}}
+		{{#role.admin}}
+		<a class="frame" href="manage/content/issues">
+			{{#svg}}error{{/svg}}<br>
+			Problemer
+		</a>
+		{{/role.admin}}
 	</section>
 
+	{{#role.editor}}
 	<section>
 		<a class="frame" href="manage/series">
 			{{#svg}}list{{/svg}}<br>
