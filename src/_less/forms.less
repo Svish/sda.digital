@@ -53,7 +53,7 @@ textarea
 	&:required
 	{
 		background-image: 
-			radial-gradient(@text-color 15%, transparent 16%);
+			radial-gradient(@text-color 17%, transparent 17%);
 		background-size: 1em 1em;
 		background-position: top right;
 		background-repeat: no-repeat
@@ -147,16 +147,20 @@ textarea.error
 	border-color: @error-color;
 	&:required
 	{
-		background-image: radial-gradient(@error-color 15%, transparent 15%);
+		background-image: radial-gradient(@error-color 17%, transparent 17%);
 	}
 }
-ul.errors
+.field.error
 {
 	margin-top: -1.1rem;
 	font-size: .8em;
 	color: @error-color;
 }
-
+.cell.error
+{
+	font-size: .8em;
+	color: @error-color;	
+}
 
 
 // Buttons

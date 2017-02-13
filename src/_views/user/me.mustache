@@ -12,15 +12,15 @@
 	
 	<p>
 		<input {{#errors.name}}class="error"{{/errors.name}} type="text" name="name" value="{{me.name}}" placeholder="Ditt navn" autocomplete="name" required>
-	<ul class="errors">{{#errors.name}}<li>{{.}}</li>{{/errors.name}}</ul>
+	{{#errors.name}}<div class="field error">{{.}}</div>{{/errors.name}}
 
 	<p>
 		<input {{#errors.email}}class="error"{{/errors.email}} type="email" name="email" value="{{me.email}}" placeholder="Din epost" autocomplete="email" required>
-	<ul class="errors">{{#errors.email}}<li>{{.}}</li>{{/errors.email}}</ul>
+	{{#errors.email}}<div class="field error">{{.}}</div>{{/errors.email}}
 	
 	<p>
 		<input {{#errors.password}}class="error"{{/errors.password}} type="text" name="password" placeholder="Passord, om du vil bytte" value="{{me.password}}" autocomplete="off">
-	<ul class="errors" optional>{{#errors.password}}<li>{{.}}</li>{{/errors.password}}</ul>
+	{{#errors.password}}<div class="field error">{{.}}</div>{{/errors.password}}
 
 	<p><button class="icon" type="submit">{{#svg}}save{{/svg}}</button>
 </form>

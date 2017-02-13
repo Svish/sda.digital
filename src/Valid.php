@@ -9,7 +9,6 @@ class Valid
 	public static function check($subject, array $rule_set)
 	{
 		$errors = [];
-
 		foreach($rule_set as $property => $rules)
 		{
 			$value = $subject[$property];
@@ -44,11 +43,12 @@ class Valid
 					array_shift($params);
 					if(is_array($method))
 						$method = implode(is_object($method[0]) ? '->' : '::', $method);
-					$errors[$property][$method] = Text::validation($method, $params);
+					$errors[$property] = Text::validation($method, $params);
 					break;
 				}
 			}
 		}
+
 		if($errors)
 			throw new Error\ValidationFailed($errors);
 		
@@ -67,14 +67,14 @@ class Valid
 
 
 
-	public static function max_length(string $value, int $length): bool
+	public static function max_length($value, int $length): bool
 	{
-		return strlen($value) <= $length;
+		return ! $value || strlen($value) <= $length;
 	}
 
-	public static function min_length(string $value, int $length): bool
+	public static function min_length($value, int $length): bool
 	{
-		return strlen($value) >= $length;
+		return $value && strlen($value) >= $length;
 	}
 
 
@@ -86,17 +86,14 @@ class Valid
 
 
 
-	public static function email(string $value): bool
+	public static function email($value): bool
 	{
-		return Swift_Validate::email($value);
+		return $value && Swift_Validate::email($value);
 	}
 
-	public static function email_domain(string $value): bool
+	public static function email_domain($value): bool
 	{
-		if (empty($value))
-			return false; // Empty fields cause issues with checkdnsrr()
-
 		// Check if the email domain has a valid MX record
-		return (bool) checkdnsrr(preg_replace('/^[^@]++@/', '', $value), 'MX');
+		return $value && (bool) checkdnsrr(preg_replace('/^[^@]++@/', '', $value), 'MX');
 	}
 }

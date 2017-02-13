@@ -30,21 +30,23 @@
 	</tfoot>
 </table>
 
+
 {{> waiting }}
 
-
-{{!> ko }}
 
 <script type="text/html" id="user-row">
 	<tr spellcheck="false">
 		<td>
 			<div data-key="Name" data-bind="editable: editing, editableValue: name"></div>
+			<div class="cell error" data-bind="text: errors().name"></div>
 		</td>
 		<td>
 			<div data-key="Email" data-bind="editable: editing, editableValue: email"></div>
+			<div class="cell error" data-bind="text: errors().email"></div>
 		</td>
 		<td>
 			<div data-key="Roles" data-bind="editable: editing, editableValue: roles"></div>
+			<div class="cell error" data-bind="text: errors().roles"></div>
 		</td>
 		<td>
 			<a href="javascript:void(0)" data-bind="click: edit, visible: canEdit">{{#svg}}edit{{/svg}}</a>

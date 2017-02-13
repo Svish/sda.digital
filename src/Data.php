@@ -5,7 +5,7 @@
  */
 abstract class Data implements ArrayAccess, JsonSerializable
 {
-	private $data = [];
+	protected $data = [];
 
 
 

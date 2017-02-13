@@ -8,6 +8,28 @@
 
 
 
+Model = {
+	cancel: function()
+	{
+			this.editing(false);
+			ko.mapping.fromJS(this.original, {}, this);
+	},
+	save: {
+		success: function(data)
+			{
+				this.editing(false);
+				this.errors({});
+				ko.mapping.fromJS(data, {}, this);
+			},
+		error: function(jqxhr, status, error)
+			{
+				if(jqxhr.responseJSON.errors)
+					this.errors(jqxhr.responseJSON.errors);
+			},
+	},
+};
+
+
 /**
  * Filtered observable array
  * @see http://stackoverflow.com/a/13216571/39321

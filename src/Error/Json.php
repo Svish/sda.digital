@@ -17,7 +17,7 @@ class Json extends \View\Json
 		];
 
 		if($e instanceof ValidationFailed)
-			$data['errors'] = array_map('array_values', $e->getErrors());
+			$data['errors'] = $e->getErrors();
 
 		if(ENV == 'dev')
 			$data['reason'] = Html::collect_xdebug($e);

@@ -46,8 +46,9 @@ function onAjaxErrorHandler(event, jqxhr, settings, thrownError)
 
 	$('#header')
 		.after(jqxhr.responseJSON.message);
-
-	if( ! settings.error && jqxhr.responseJSON.reason)
+	
+	if(jqxhr.status >= 500)
 		$('#content')
 			.html(jqxhr.responseJSON.reason);
+
 }

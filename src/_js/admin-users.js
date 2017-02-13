@@ -19,50 +19,50 @@ var ViewModel = function(data)
 		});
 
 	this.add = function()
-	{
-		$.ajax({
-			url: API+'new',
-			context: this,
-			success: function(data)
-			{
-				var user = new UserModel(data);
-				user.editing(true);
-				this.users.push(user);
-			},
-		});
-	};
+		{
+			$.ajax({
+				url: API+'new',
+				context: this,
+				success: function(data)
+				{
+					var user = new UserModel(data);
+					user.editing(true);
+					this.users.push(user);
+				},
+			});
+		};
 
 	this.remove = function(user)
-	{
-		if( ! user.id())
-			return this.users.remove(user);
+		{
+			if( ! user.id())
+				return this.users.remove(user);
 
-		if( ! doConfirm())
-			return;
+			if( ! doConfirm())
+				return;
 
-		$.ajax({
-			type: 'DELETE',
-			url: API+'user',
-			data: ''+user.id(),
-			contentType: 'application/json',
-			context: this,
-			success: function(data)
-			{
-				this.users.remove(user);
-			},
-		});
-	};
+			$.ajax({
+				type: 'DELETE',
+				url: API+'user',
+				data: ''+user.id(),
+				contentType: 'application/json',
+				context: this,
+				success: function(data)
+				{
+					this.users.remove(user);
+				},
+			});
+		};
 
 	this.afterAdd = function(e)
-	{
-		if(e.nodeType != 1)
-			return;
+		{
+			if(e.nodeType != 1)
+				return;
 
-		$(e)
-			.find('[contentEditable=true]')
-			.first()
-			.focus();
-	};
+			$(e)
+				.find('[contentEditable=true]')
+				.first()
+				.focus();
+		};
 }
 
 // Single file
@@ -79,35 +79,20 @@ var UserModel = function(data)
 	this.canSave = ko.pureComputed(()=> this.editing(), this);
 	this.canCancel = ko.pureComputed(() => this.editing() && this.id(), this);
 
-	this.cancel = function()
-	{
-		this.editing(false);
-		ko.mapping.fromJS(this.original, {}, this);
-	};
+	this.cancel = Model.cancel;
 
-	this.errors = ko.observableArray();
+	this.errors = ko.observable({});
 
 	this.save = function()
-	{
-		$.ajax({
-			type: 'PUT',
-			url: API+'user',
-			data: ko.mapping.toJSON(this),
-			contentType: 'application/json',
-			context: this,
-			success: function(data)
-			{
-				this.editing(false);
-				ko.mapping.fromJS(data, {}, this);
-			},
-			error: function(jqxhr, status, error)
-			{
-				if(jqxhr.responseJSON.errors)
-				{
-					// TODO: Hmm...
-					this.errors(jqxhr.responseJSON.errors);
-				}
-			},
-		});
-	};
+		{
+			$.ajax({
+				type: 'PUT',
+				url: API+'user',
+				data: ko.mapping.toJSON(this),
+				contentType: 'application/json',
+				context: this,
+				success: Model.save.success,
+				error: Model.save.error,
+			});
+		};
 }

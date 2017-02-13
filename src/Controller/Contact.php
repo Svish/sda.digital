@@ -38,7 +38,7 @@ class Contact extends Page
 			// Redirect
 			HTTP::redirect_self();
 		}
-		catch(HttpException $e)
+		catch(\Error\ValidationFailed $e)
 		{
 			return parent::error($e);
 		}

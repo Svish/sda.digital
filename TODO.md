@@ -1,5 +1,6 @@
 
 - (!) Use Knockout on user/me?
+- Deal with multiple messages covering each other
 
 foreign key getting and setting?
 	- RelationalSql extends Sql
