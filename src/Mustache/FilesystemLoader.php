@@ -26,7 +26,7 @@ class FilesystemLoader extends \Mustache_Loader_FilesystemLoader
 	{
 		// Split roles into array
 		$roles = preg_split('/\s*,\s*/', $roles[1] ?? '', null, PREG_SPLIT_NO_EMPTY);
-		$roles = array_multimap(['trim', 'strtolower'], $roles);
+		$roles = array_map_callbacks($roles, 'trim', 'strtolower');
 
 		// Secure access (throws if no access)
 		Security::require($roles);

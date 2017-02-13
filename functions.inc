@@ -15,10 +15,12 @@ function get_class_name($obj)
 	return substr(strrchr('\\'.get_class($obj), '\\'), 1);
 }
 
-function array_multimap(array $callbacks, array $array): array
+
+function array_map_callbacks(array $array, callable ...$callbacks): array
 {
 	foreach($callbacks as $callback)
-		$array = array_map($callback, $array);
+		foreach($array as $key => $value)
+			$array[$key] = $callback($value);
 
 	return $array;
 }
@@ -57,7 +59,7 @@ function array_group_by(string $key, $list, bool $keep_key = false, string $key_
 		$groups[$group][$group_name][] = $value;
 	}
 
-	return array_values($groups);
+	return $groups;
 }
 
 
