@@ -107,24 +107,16 @@ class Users extends \Model
 	 */
 	public function get($id): User
 	{
-		if($id === null)
-			return new User;
-
-		if(is_int($id))
-		$user = DB::prepare('SELECT * 
-								FROM user 
-								WHERE id=:id')
-			->bindValue(':id', $id)
-			->execute()
-			->fetchFirst(User::class);
+		if($id === null || is_int($id))
+			$user = User::get($id);
 
 		else
-		$user = DB::prepare('SELECT * 
-								FROM user 
-								WHERE email=:email')
-			->bindValue(':email', $id)
-			->execute()
-			->fetchFirst(User::class);
+			$user = DB::prepare('SELECT * 
+									FROM user 
+									WHERE email=:email')
+				->bindValue(':email', $id)
+				->execute()
+				->fetchFirst(User::class);
 
 		if( ! $user)
 			throw new \Error\NotFound($id, User::class);
@@ -138,9 +130,7 @@ class Users extends \Model
 	 */
 	public function delete(int $id): int
 	{
-		return DB::prepare('DELETE FROM user WHERE id=:id')
-			->bindValue(':id', $id)
-			->exec();
+		return User::delete($id);
 	}
 
 

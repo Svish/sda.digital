@@ -24,9 +24,4 @@ class Content extends Model
 			// Delete original if ok
 	}
 
-
-	/*
-var_dump(stat(utf8_decode('X:\dev\www\sda.digital\_new\I Naturens Tempel\02 Salige er de som hungrer og tørster etter rettferdighet.mp3')));
-	*/
-
 }

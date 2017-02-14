@@ -12,9 +12,16 @@ function preg_match_all_callback(string $pattern, string $subject, callable $cal
 
 function get_class_name($obj)
 {
-	return substr(strrchr('\\'.get_class($obj), '\\'), 1);
+	if(is_object($obj))
+		$obj = get_class($obj);
+	return substr(strrchr('\\'.$obj, '\\'), 1);
 }
 
+function array_map_callback(array $array, callable $callback, ...$extra_parameters)
+{
+	foreach($array as $key => $value)
+		$array[$key] = $callback($value, ...$extra_parameters);
+}
 
 function array_map_callbacks(array $array, callable ...$callbacks): array
 {

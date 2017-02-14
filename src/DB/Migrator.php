@@ -20,7 +20,7 @@ class Migrator
 			$current = (int) $q->fetchColumn(0);
 			$q->closeCursor();
 		}
-		catch(PDOException $e)
+		catch(\PDOException $e)
 		{
 			// Create version table
 			$pdo->exec('CREATE TABLE IF NOT EXISTS `version` (
@@ -81,9 +81,9 @@ class Migrator
 					// Update version table
 					$pdo->exec('UPDATE version SET version = '.$version);
 				}
-				catch(PDOException $e)
+				catch(\PDOException $e)
 				{
-					throw new Exception('DB Migration failed.', 0, $e);
+					throw new \Exception("DB Migration failed on file '$file'.", 0, $e);
 				}
 			}
 

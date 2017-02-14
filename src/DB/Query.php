@@ -5,7 +5,7 @@ use PDOStatement, PDO;
 
 /**
  * PDOStatement wrapper with common defaults
- * and method chaining.
+ *  and method chaining.
  */
 class Query
 {
@@ -110,6 +110,8 @@ class Query
 
 	}
 
+
+
 	/**
 	 * Fetches all rows as assoc array.
 	 */
@@ -123,9 +125,9 @@ class Query
 	/**
 	 * Fetches all rows.
 	 */
-	public function fetchAll($fetch_argument = 'stdClass', $ctor_arguments = null, $fetch_style = PDO::FETCH_CLASS)
+	public function fetchAll($fetch_argument = 'stdClass', ...$ctor_arguments)
 	{
-		return $this->statement->fetchAll($fetch_style, $fetch_argument, $ctor_arguments);
+		return $this->statement->fetchAll(PDO::FETCH_CLASS, $fetch_argument, $ctor_arguments);
 	}
 
 	/**
@@ -135,6 +137,8 @@ class Query
 	{
 		return $this->statement->fetchAll(PDO::FETCH_COLUMN, $column);
 	}
+
+
 
 
 
@@ -157,6 +161,8 @@ class Query
 		$this->close();
 		return $result;
 	}
+
+
 
 
 

@@ -23,7 +23,7 @@ Model = {
 			},
 		error: function(jqxhr, status, error)
 			{
-				if(jqxhr.responseJSON.errors)
+				if(jqxhr.responseJSON && jqxhr.responseJSON.errors)
 					this.errors(jqxhr.responseJSON.errors);
 			},
 	},

@@ -14,7 +14,21 @@ class DB
 {
 	use Instance;
 
+	// Transactions
+	public static function begin()
+	{
+		return self::instance()->pdo->beginTransaction();
+	}
+	public static function commit()
+	{
+		return self::instance()->pdo->commit();
+	}
+	public static function rollback()
+	{
+		return self::instance()->pdo->rollback();
+	}
 
+	// Queries
 	public static function exec($statement)
 	{
 		return self::instance()->pdo->exec($statement);
@@ -30,12 +44,15 @@ class DB
 		return new Query(self::instance()->pdo->query($statement), self::instance()->pdo);
 	}
 	
+	// Table info
+	private static $_table_info = [];
 	public static function table_info(string $table_name)
 	{
-		return self::instance()->cache->get($table_name, function($key)
-			{
-				throw new Exception("No table info found for table '$key'");
-			});
+		if( ! isset($_table_info[$table_name]))
+			$_table_info[$table_name]
+				= self::instance()->cache->get($table_name);
+
+		return $_table_info[$table_name];
 	}
 
 
@@ -73,7 +90,6 @@ class DB
 		// HACK: Make sure these classes mtimes are included in cache check.
 		class_exists('DB\\Query');
 		class_exists('DB\\Valid');
-		$this->cache = new PreCheckedCache(self::class, 
-			new DB\TableInfoLoader($this->pdo));
+		$this->cache = new PreCheckedCache(self::class, new DB\TableInfoLoader($this->pdo));
 	}
 }

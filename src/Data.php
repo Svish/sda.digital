@@ -31,7 +31,7 @@ abstract class Data implements ArrayAccess, JsonSerializable
 
 	public function __isset($key)
 	{
-		return array_key_exists($key, $this->data);
+		return $this->$key !== null;
 	}
 	
 	public function __unset($key)

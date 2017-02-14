@@ -9,31 +9,31 @@ use DB, Valid, Security;
  */
 abstract class Sql extends \Data
 {
+	const TABLE_NAME = null;
 	const RESTRICTED = [];
 
-	protected $rules;
-	
-	protected $loaded;
+	protected $table_name;
+	protected $table_info;
 
-	private $_table_name;
-	private $_table_info;
-	private $_dirty;
+	protected $rules = [];
+	
+	protected $loaded = false;
+	protected $dirty = [];
 
 	public function __construct()
 	{
 		// Get table name
-		$this->_table_name = $this->table_name();
+		$this->table_name = $this->table_name();
 
 		// Get table info
-		$this->_table_info = DB::table_info($this->_table_name);
+		$this->table_info = DB::table_info($this->table_name);
 
 		// Make sure columns exists in $data for serialization
-		foreach($this->_table_info->column_names as $column)
-			if( ! isset($this->$column))
-				$this->$column = null;
+		foreach($this->table_info->column_names as $col)
+			if( ! isset($this->data[$col]))
+				$this->data[$col] = null;
 
-		// Clean dirt and done loading from PDO or wherever
-		$this->_dirty = [];
+		// Done loading from PDO or wherever
 		$this->loaded = true;
 	}
 
@@ -41,14 +41,17 @@ abstract class Sql extends \Data
 	
 	public function __set($key, $value)
 	{
-		// Check if restricted property
-		$roles = static::RESTRICTED[$key] ?? [];
-		if($this->loaded && $roles)
-			Security::require($roles);
+		if($this->loaded)
+		{
+			// Check if restricted property
+			$roles = static::RESTRICTED[$key] ?? [];
+			if($roles)
+				Security::require($roles);
 
-		// Add to dirty if different
-		if($this->$key != $value)
-			$this->_dirty[$key] = $value;
+			// Add to dirty if different
+			if($this->data[$key] != $value)
+				$this->dirty[$key] = $value;
+		}
 		
 		parent::__set($key, $value);
 	}
@@ -57,40 +60,47 @@ abstract class Sql extends \Data
 	{
 		// "Remove" by setting dirty value to null
 		if(isset($this->$key))
-			$this->_dirty[$key] = null;
+			$this->dirty[$key] = null;
 
-		parent::__unset($key);
+		if(in_array($key, $this->table_info->column_names))
+			parent::__set($key, null);
+		else
+			parent::__unset($key);
 	}
 
 
 
 	public function validate()
 	{
-		$rules = array_merge_recursive($this->_table_info->rules, 
-										$this->rules ?? []);
+		$rules = array_merge_recursive($this->rules, $this->table_info->rules);
 		Valid::check($this, $rules);
 		return $this;
 	}
 
+
+	public function is_dirty()
+	{
+		 return ! empty($this->dirty);
+	}
 
 	/**
 	 * @return false if no changes; otherwise true
 	 */
 	public function save()
 	{
-		if( ! $this->_dirty)
+		if( ! $this->is_dirty())
 			return false;
 
 		// Validate
 		$this->validate();
 
 		// Make query
-		$data = array_whitelist($this->_dirty + $this->data,
-								$this->_table_info->column_names);
+		$data = array_whitelist($this->dirty + $this->data,
+								$this->table_info->column_names);
 		$column_names = array_keys($data);
 
 		$query = sprintf("INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s",
-			$this->_table_name,
+			$this->table_name,
 			implode(', ', $column_names),
 			implode(', ', self::cc($column_names)),
 			implode(', ', self::cu($column_names))
@@ -99,17 +109,22 @@ abstract class Sql extends \Data
 		// Prepare
 		$query = DB::prepare($query);
 		foreach($data as $column => $value)
-			$query->bindValue($column, $value, $this->_table_info->column_pdo_types[$column]);
+			$query->bindValue($column, $value, $this->table_info->columns[$column]['pdo_type']);
 
 		// Run query
-		$query->execute($data);
+		$affected_rows = $query->exec($data);
 
-		// If inserted, get auto_increment value
-		if($query->affectedRows() == 1 && $this->_table_info->auto_inc_column)
-			$this->data[$this->_table_info->auto_inc_column] = $query->lastInsertId();
 
-		// Reset $_dirty
-		$this->_dirty = [];
+		// If insert
+		if($affected_rows == 1)
+			// Look for auto_increment column
+			foreach($this->table_info->columns as $key => $col)
+				// If found, get id
+				if($col['auto_increment'])
+					$this->data[$key] = $query->lastInsertId();
+
+		// Reset dirt
+		$this->dirty = [];
 
 		return true;
 	}
@@ -119,7 +134,7 @@ abstract class Sql extends \Data
 	/**
 	 * "column" => "column = VALUES(column)"
 	 */
-	private static function cu(array $columns)
+	private static function cu(array $columns): array
 	{
 		return array_map(function($c)
 		{
@@ -130,7 +145,7 @@ abstract class Sql extends \Data
 	/**
 	 * "column" => ":column"
 	 */
-	private static function cc(array $columns)
+	private static function cc(array $columns): array
 	{
 		return array_map(function($c)
 		{
@@ -138,13 +153,53 @@ abstract class Sql extends \Data
 		}, $columns);
 	}
 
+
+
 	/**
 	 * Get table name from class name.
 	 */
-	protected function table_name()
+	public static final function table_name(): string
 	{
-		$name = get_class_name($this);
+		if(static::TABLE_NAME)
+			return static::TABLE_NAME;
+
+		$name = get_class_name(static::class);
 		$name = preg_replace('/(?<=[[:lower:]])([[:upper:]])/', '_$1', $name);
 		return strtolower($name);
+	}
+
+
+
+
+
+	public static function get(...$keys)
+	{
+		// Return new empty if no keys
+		if( ! $keys)
+			return new static;
+
+		$query = self::get_query(__FUNCTION__, $keys);
+		
+		return DB::prepare($query)
+			->execute($keys)
+			->fetchFirst(static::class);
+	}
+
+	public static function delete(...$keys)
+	{
+		$query = self::get_query(__FUNCTION__, $keys);
+		
+		return DB::prepare($query)
+			->exec($keys) > 0;
+	}
+
+	private static function get_query(string $name, array $keys): string
+	{
+		$info = DB::table_info(self::table_name());
+
+		if(count($keys) != count($info->primary_keys))
+			throw new \Exception('Incorrect number of keys');
+
+		return $info->query[$name];
 	}
 }
