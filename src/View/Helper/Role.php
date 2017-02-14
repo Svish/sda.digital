@@ -13,15 +13,20 @@ class Role
 	{
 		return true;
 	}
+
+	private $roles = [];
 	public function __get($key)
 	{
-		return new self($key);
+		return $this->roles[$key]
+			?? $this->roles[$key] = new self($key);
 	}
-
 
 	private $role;
 	public function __construct($role)
 	{
+		if( ! is_string($role))
+			return;
+
 		$this->role = $role;
 	}
 
