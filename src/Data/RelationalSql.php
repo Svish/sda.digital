@@ -11,7 +11,7 @@ abstract class RelationalSql extends ComputedColumns
 	{
 		parent::__construct();
 
-		$this->relations = $this->table_info->relations;
+		$this->relations = $this->table_info->relations ?? [];
 
 		foreach($this->relations as $prop => $rel)
 			if( ! isset($this->data[$prop]))
