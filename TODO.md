@@ -1,40 +1,29 @@
 
-- (!) Use Knockout on user/me?
+- (!) Use Knockout on user/me? And others
+?
 - Deal with multiple messages covering each other
 
-foreign key getting and setting?
-	- RelationalSql extends Sql
-		- __construct()
-			- Figure out relations? Already done in loadTableInfo()
-		- Add() / Remove()
-			- Add dirty rel for save
-		- Save()
-			- begin transaction
-			- parent::save()
-			- save relationships
-				- delete + insert?
-			- commit transaction
-	- group by?
+
+
+RelationalSql extends Sql
+===
+
+- Add() / Remove()
+	- Add dirty rel for save
+- Save()
+- Load with()
+	- Group by?
 	- key:foo?
 	- stream with yield and manual pdo "fetcher"?
-	- http://www.php.net/manual/en/reflectionclass.newinstancewithoutconstructor.php
-	- Analyze relations to find connections 
-		- define foreign keys
-		- loadTableInfo()
-		- one-many, many-many, many-one, many-many-through)
-	- Query()->fetch*
+	- Query()->stream(...$with)
+		- implode(', ', map($rel_columns, (c) => "$rel.$c AS :$rel:$c"))
+			- Or just use $self.$c and $rel.$c?
 		- Load/Handle relationships?
-			- If class is
+			- If class is RelationalSql
 
 
 Admin
 ===
-
-- User
-	- Add/Remove users
-		- Remove 'login'
-	- Assign roles
-
 
 - Content
 	- Add fresh
