@@ -1,4 +1,18 @@
 
+DROP TABLE IF EXISTS `content`;
+CREATE TABLE `content`
+(
+	`content_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`title` VARCHAR(255) NOT NULL,
+	`title_slug` VARCHAR(255) NOT NULL,
+	`summary` TEXT,
+	`time` DATETIME COMMENT 'When it happened, if known',
+	`added` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`content_id`)
+)
+COMMENT='Group of versions of the same file (audio, video, presentations, etc...)'
+ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS `file`;
 CREATE TABLE `file`
 (
@@ -21,18 +35,4 @@ CREATE TABLE `file`
 		ON DELETE RESTRICT
 )
 COMMENT='A content file on disk'
-ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS `content`;
-CREATE TABLE `content`
-(
-	`content_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`title` VARCHAR(255) NOT NULL,
-	`title_slug` VARCHAR(255) NOT NULL,
-	`summary` TEXT,
-	`time` DATETIME COMMENT 'When it happened, if known',
-	`added` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`content_id`)
-)
-COMMENT='Group of versions of the same file (audio, video, presentations, etc...)'
 ENGINE=InnoDB;
