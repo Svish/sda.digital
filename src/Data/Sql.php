@@ -48,8 +48,13 @@ abstract class Sql extends \Data
 			if($roles)
 				Security::require($roles);
 
+			// Clean set
+			$column = $this->table_info->columns[$key] ?? false;
+			if($column && strpos($column['db_type'], 'set(') === 0)
+				$value = preg_replace('/\s+/', '', $value);
+
 			// Add to dirty if different
-			if($this->data[$key] != $value)
+			if($this->data[$key] ?? null != $value)
 				$this->dirty[$key] = $value;
 		}
 		
@@ -62,10 +67,18 @@ abstract class Sql extends \Data
 		if(isset($this->$key))
 			$this->dirty[$key] = null;
 
+		// Only actually unset non-column properties
 		if(in_array($key, $this->table_info->column_names))
 			parent::__set($key, null);
 		else
 			parent::__unset($key);
+	}
+
+
+
+	public function pk(): array
+	{
+		return array_whitelist($this->data, $this->table_info->primary_keys);
 	}
 
 
@@ -78,27 +91,34 @@ abstract class Sql extends \Data
 	}
 
 
+
 	public function is_dirty()
 	{
-		 return ! empty($this->dirty);
+		$dirty = array_whitelist($this->dirty,
+					$this->table_info->column_names);
+		return ! empty($dirty);
 	}
 
+
+
 	/**
-	 * @return false if no changes; otherwise true
+	 * @return true if saved; false if no changes
 	 */
 	public function save()
 	{
-		if( ! $this->is_dirty())
+		// Check if dirty
+		if( ! self::is_dirty())
 			return false;
 
 		// Validate
 		$this->validate();
 
-		// Make query
+		// Get data
 		$data = array_whitelist($this->dirty + $this->data,
 								$this->table_info->column_names);
-		$column_names = array_keys($data);
 
+		// Make query
+		$column_names = array_keys($data);
 		$query = sprintf("INSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s",
 			$this->table_name,
 			implode(', ', $column_names),
@@ -175,14 +195,19 @@ abstract class Sql extends \Data
 	public static function get(...$keys)
 	{
 		// Return new empty if no keys
-		if( ! $keys)
+		if( ! array_filter($keys))
 			return new static;
 
 		$query = self::get_query(__FUNCTION__, $keys);
 		
-		return DB::prepare($query)
+		$obj = DB::prepare($query)
 			->execute($keys)
 			->fetchFirst(static::class);
+
+		if( ! $obj)
+			throw new \Error\NotFound(implode(', ', $keys), static::class);
+		else
+			return $obj;
 	}
 
 	public static function delete(...$keys)

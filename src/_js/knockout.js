@@ -27,6 +27,19 @@ Model = {
 					this.errors(jqxhr.responseJSON.errors);
 			},
 	},
+	inputKeydown: function(model, e)
+	{
+		switch(e.which)
+		{
+			case 13:
+				model.save();
+				return false;
+			 case 27:
+				model.cancel();
+				return false;
+		}
+		return true;
+	}
 };
 
 

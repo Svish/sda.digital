@@ -105,22 +105,21 @@ class Users extends \Model
 	/**
 	 * Get user by id or email.
 	 */
-	public function get($id): User
+	public function get($id = null): User
 	{
 		if($id === null || is_int($id))
-			$user = User::get($id);
-
-		else
-			$user = DB::prepare('SELECT * 
-									FROM user 
-									WHERE email=:email')
-				->bindValue(':email', $id)
-				->execute()
-				->fetchFirst(User::class);
+			return User::get($id);
+		
+		$user = DB::prepare('SELECT * 
+								FROM user 
+								WHERE email=:email')
+			->bindValue(':email', $id)
+			->execute()
+			->fetchFirst(User::class);
 
 		if( ! $user)
 			throw new \Error\NotFound($id, User::class);
-
+		
 		return $user;
 	}
 

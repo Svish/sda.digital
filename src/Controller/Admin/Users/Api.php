@@ -23,7 +23,7 @@ class Api extends \Controller\Api
 
 	public function put_user(array $data): User
 	{
-		$user = Model::users()->get($data['id'] ?? null);
+		$user = Model::users()->get($data['user_id'] ?? null);
 		$user->set($data);
 		$user->save();
 		return $user;

@@ -36,6 +36,9 @@ class Valid
 				if(is_string($method) && ! is_callable($method))
 					$method = [Valid::class, $method];
 
+				// Append subject to parameters
+				array_push($params, $property, $subject);
+
 				// Call validation method
 				if( ! $method(...$params))
 				{
@@ -49,6 +52,7 @@ class Valid
 			}
 		}
 
+		// Throw if any errors found
 		if($errors)
 			throw new Error\ValidationFailed($errors);
 		

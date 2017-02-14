@@ -153,7 +153,17 @@ class Query
 	}
 
 	/**
-	 * Fetches given column from first row and closes the cursor.
+	 * Fetches first rows as assoc array, and closes the cursor
+	 */
+	public function fetchFirstArray()
+	{
+		$result = $this->statement->fetch(PDO::FETCH_ASSOC);
+		$this->close();
+		return $result;
+	}
+
+	/**
+	 * Fetches given column from first row, and closes the cursor.
 	 */
 	public function fetchFirstColumn($column = 0)
 	{

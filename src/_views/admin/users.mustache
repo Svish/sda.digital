@@ -7,7 +7,7 @@
 
 <h1>Brukere</h1>
 
-<table class="collapsing full-width">
+<table class="fixed collapsing full-width">
 	<thead>
 		<tr>
 			<th style="width: 32%">Name</th>
@@ -16,7 +16,7 @@
 			<th style="width: 2.5em"></th>
 		</tr>
 	</thead>
-	<tbody>
+	<tbody class="striped">
 		<!-- ko template: {name: 'user-row', foreach: users, afterAdd: afterAdd} -->
 		<!-- /ko -->
 	</tbody>
@@ -30,24 +30,33 @@
 	</tfoot>
 </table>
 
-
 {{> waiting }}
 
 
 <script type="text/html" id="user-row">
 	<tr spellcheck="false">
-		<td>
-			<div data-key="Name" data-bind="editable: editing, editableValue: name"></div>
+		<!-- ko ifnot: editing -->
+		<td data-key="Name" data-bind="text: name, attr: {title: name}"></td>
+		<td data-key="Email" data-bind="text: email, attr: {title: email}"></td>
+		<td data-key="Roles" data-bind="text: roles, attr: {title: roles}"></td>
+		<!-- /ko -->
+	
+		<!-- ko if: editing -->
+		<td data-key="Name">
+			<input type="text" data-bind="value: name, event: {keydown: keydown}"></div>
 			<div class="cell error" data-bind="text: errors().name"></div>
 		</td>
-		<td>
-			<div data-key="Email" data-bind="editable: editing, editableValue: email"></div>
+		<td data-key="Email">
+			<input type="email" data-bind="value: email, event: {keydown: keydown}"></div>
 			<div class="cell error" data-bind="text: errors().email"></div>
 		</td>
-		<td>
-			<div data-key="Roles" data-bind="editable: editing, editableValue: roles"></div>
+		<td data-key="Roles">
+			<input type="text" data-bind="value: roles, event: {keydown: keydown}"></div>
+			{{! TODO: http://knockoutjs.com/documentation/selectedOptions-binding.html }}
 			<div class="cell error" data-bind="text: errors().roles"></div>
 		</td>
+		<!-- /ko -->
+
 		<td>
 			<a href="javascript:void(0)" data-bind="click: edit, visible: canEdit">{{#svg}}edit{{/svg}}</a>
 			<a href="javascript:void(0)" data-bind="click: $parent.remove.bind($parent, $data), visible: canRemove">{{#svg}}remove{{/svg}}</a>

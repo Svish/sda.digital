@@ -15,7 +15,6 @@ table
 	border-style: hidden;
 
 	empty-cells: hide;
-	table-layout: fixed;
 	
 	font-size: small;
 	color: @table-color;
@@ -23,6 +22,16 @@ table
 	&.full-width
 	{
 		width: 100%;
+	}
+
+	&.fixed
+	{
+		table-layout: fixed;
+		td
+		{
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 	}
 
 	// Cells
@@ -77,13 +86,11 @@ table
 		{
 			tr:nth-child(odd)
 			{
-				//td,th{&:nth-child(odd){background: fade(@accent1-color, 5%);}}
-				td,th{&:nth-child(even){background: fade(@accent1-color, 10%);}}
+				td,th{&:nth-child(even){background: darken(@table-background, 5%);}}
 			}
 			tr:nth-child(even)
 			{
-				td,th{&:nth-child(odd){background: fade(@accent1-color, 10%);}}
-				//td,th{&:nth-child(even){background: fade(@accent1-color, 5%);}}
+				td,th{&:nth-child(odd){background: lighten(@table-background, 5%);}}
 			}
 		}
 
@@ -91,15 +98,23 @@ table
 		{
 			tr:nth-child(odd)
 			{
-				td,th{background: fade(@accent1-color, 5%);}
+				td,th{background: darken(@table-background, 1.5%);}
 			}
 			tr:nth-child(even)
 			{
-				td,th{background: fade(@accent1-color, 10%);}
+				td,th{background: lighten(@table-background, 1.5%);}
 			}
 		}
 	}
+
+	// Input in table-cells
+	td>input[type]
+	{
+		//margin: -0.15rem -0.25rem;
+	}
 }
+
+
 
 table.xdebug,
 table.xdebug-error
@@ -118,6 +133,8 @@ table.xdebug-error
 		}
 	}
 }
+
+
 
 @media only screen and (max-width : 500px)
 {

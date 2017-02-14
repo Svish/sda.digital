@@ -3,7 +3,7 @@ namespace Data;
 
 class User extends RelationalSql
 {
-	const SERIALIZE = ['id', 'email', 'name', 'roles'];
+	const SERIALIZE = ['user_id', 'email', 'name', 'roles'];
 	const RESTRICTED = ['roles' => ['admin']];
 
 

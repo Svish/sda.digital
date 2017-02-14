@@ -34,7 +34,7 @@ var ViewModel = function(data)
 
 	this.remove = function(user)
 		{
-			if( ! user.id())
+			if( ! user.user_id())
 				return this.users.remove(user);
 
 			if( ! doConfirm())
@@ -43,11 +43,12 @@ var ViewModel = function(data)
 			$.ajax({
 				type: 'DELETE',
 				url: API+'user',
-				data: ''+user.id(),
+				data: ''+user.user_id(),
 				contentType: 'application/json',
 				context: this,
 				success: function(data)
 				{
+					// TODO: Move to UserModel by using _destroy?
 					this.users.remove(user);
 				},
 			});
@@ -75,11 +76,12 @@ var UserModel = function(data)
 	this.edit = user => user.editing(true);
 
 	this.canEdit = ko.pureComputed(() => ! this.editing(), this);
-	this.canRemove = ko.pureComputed(() => ! this.editing() || ! this.id(), this);
+	this.canRemove = ko.pureComputed(() => ! this.editing() || ! this.user_id(), this);
 	this.canSave = ko.pureComputed(()=> this.editing(), this);
-	this.canCancel = ko.pureComputed(() => this.editing() && this.id(), this);
+	this.canCancel = ko.pureComputed(() => this.editing() && this.user_id(), this);
 
 	this.cancel = Model.cancel;
+	this.keydown = Model.inputKeydown;
 
 	this.errors = ko.observable({});
 
