@@ -44,6 +44,7 @@ class Reflect
 		foreach(glob("$dir*.php") as $file)
 		{
 			$class = substr($file, strlen(SRC), -4);
+			$class = str_replace(DIRECTORY_SEPARATOR, '\\', $class);
 			if(class_exists($class))
 				yield $class;
 		}
@@ -56,7 +57,7 @@ class Reflect
 	{
 		foreach(self::classes_in_namespace($ns) as $sub)
 		{
-			$c = new \ReflectionClass($sub);
+			$c = new ReflectionClass($sub);
 			if($c->isSubclassOf($class))
 				yield $sub;
 		}
