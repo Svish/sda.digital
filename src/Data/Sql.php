@@ -18,7 +18,7 @@ abstract class Sql extends \Data
 	protected $rules = [];
 	
 	protected $loaded = false;
-	protected $dirty = [];
+	private $dirty = [];
 
 	public function __construct()
 	{
@@ -54,7 +54,7 @@ abstract class Sql extends \Data
 				$value = preg_replace('/\s+/', '', $value);
 
 			// Add to dirty if different
-			if($this->data[$key] ?? null != $value)
+			if($column && $this->data[$key] ?? null != $value)
 				$this->dirty[$key] = $value;
 		}
 		
@@ -76,14 +76,30 @@ abstract class Sql extends \Data
 
 
 
-	public function pk(): array
+
+	/**
+	 * Gets and optionally sets the primary keys.
+	 *
+	 * @return [$pk1, ...] or false if null
+	 */
+	public function pk(...$keys)
 	{
-		return array_whitelist($this->data, $this->table_info->primary_keys);
+		if(count($this->table_info->primary_keys) == count($keys))
+			foreach($this->table_info->primary_keys as $k => $key)
+				$this->{$this->table_info->primary_keys[$k]} = $keys[$k];
+
+		$keys = array_whitelist($this->data, $this->table_info->primary_keys);
+		return array_filter($keys) ?: false;
 	}
 
 
-
-	public function validate()
+	/**
+	 * Gets and optionally sets the primary keys.
+	 *
+	 * @return $this
+	 * @see Valid::check
+	 */
+	public function validate(): self
 	{
 		$rules = array_merge_recursive($this->rules, $this->table_info->rules);
 		Valid::check($this, $rules);
@@ -91,18 +107,18 @@ abstract class Sql extends \Data
 	}
 
 
-
+	/**
+	 * @return true if any table columns have new values; otherwise false.
+	 */
 	public function is_dirty()
 	{
-		$dirty = array_whitelist($this->dirty,
-					$this->table_info->column_names);
-		return ! empty($dirty);
+		return ! empty($this->dirty);
 	}
 
 
 
 	/**
-	 * @return true if saved; false if no changes
+	 * @return true if saved; false if no column changes, i.e. not saved
 	 */
 	public function save()
 	{

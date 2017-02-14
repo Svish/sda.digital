@@ -63,7 +63,7 @@ class Users extends \Model
 
 	private function _login(User $user): User
 	{
-		Session::set(self::SESSION_KEY, (int) $user->user_id);
+		Session::set(self::SESSION_KEY, $user->pk());
 		return $user;
 	}
 
@@ -90,15 +90,14 @@ class Users extends \Model
 			return false;
 
 		// User (still) exists?
-		$user = self::$_logged_in ?? $this->get($id);
+		$user = self::$_user ?? $this->get(...array_values($id));
 		if( ! $user)
 			return false;
 
-		// Only get user once per request
-		self::$_logged_in = $user;
-		return $user;
+		// Return user
+		return self::$_user = $user;
 	}
-	private static $_logged_in;
+	private static $_user;
 
 
 

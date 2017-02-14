@@ -139,9 +139,11 @@ class TableInfoLoader
 	 */
 	private function get_relations(array $class_map): array
 	{
+		$_tables = [];
+
 		// Get second degree relations
 		$second = $this->pdo
-			->query("SELECT
+			->query("SELECT DISTINCT
 						GROUP_CONCAT(referenced_table_name SEPARATOR ',') 'tables',
 						GROUP_CONCAT(referenced_column_name SEPARATOR ',') 'columns',
 						table_name 'through'
@@ -162,7 +164,6 @@ class TableInfoLoader
 				")
 			->fetchAll(PDO::FETCH_ASSOC);
 
-
 		// Gather M:M relations
 		$mmt = [];
 		foreach($second as $rel)
@@ -171,20 +172,22 @@ class TableInfoLoader
 			$mmt[] = $through;
 			$table = explode(',', $tables);
 			$column = explode(',', $columns);
-			$relations[$table[0]]['relations']["{$table[1]}_list"] = [
+			$_tables[$table[0]]['relations']["{$table[1]}_list"] = [
 				'type' => 'M:M',
 				'class' => $class_map[$table[1]] ?? 'stdClass',
 				'column' => $column[0],
+				'fp' => "{$table[0]}_list",
 				'query' => "SELECT {$table[1]}.*
 					FROM {$table[1]}
 					INNER JOIN $through USING ({$column[1]}) 
 					WHERE $through.{$column[0]} = :{$column[0]}",
 			];
 
-			$relations[$table[1]]['relations']["{$table[0]}_list"] = [
+			$_tables[$table[1]]['relations']["{$table[0]}_list"] = [
 				'type' => 'M:M',
 				'class' => $class_map[$table[0]] ?? 'stdClass',
 				'column' => $column[1],
+				'fp' => "{$table[1]}_list",
 				'query' => "SELECT {$table[0]}.*
 					FROM {$table[0]}
 					INNER JOIN $through USING ({$column[0]}) 
@@ -212,32 +215,34 @@ class TableInfoLoader
 		foreach($first as $rel)
 		{
 			extract($rel);
-
 			// Skip through-tables
 			if(in_array($table, $mmt))
 				continue;
 
 			// Many-to-One / One-to-One
-			$relations[$table]['relations'][$referenced_table] = [
+			$_tables[$table]['relations'][$referenced_table] = [
 				'type' => $key == 'UNI' ? '1:1' : 'M:1',
 				'class' => $class_map[$referenced_table] ?? 'stdClass',
 				'column' => $referenced_column,
+				'fp' => "{$table}_list",
 				'query' => "SELECT $referenced_table.*
 					FROM $referenced_table
 					WHERE $referenced_column = :$referenced_column",
 			];
 
 			// One-to-Many / One-to-One
-			$relations[$referenced_table]['relations'][$key == 'UNI' ? $table : "{$table}_list"] = [
+			$_tables[$referenced_table]['relations'][$key == 'UNI' ? $table : "{$table}_list"] = [
 				'type' => $key == 'UNI' ? '1:1' : '1:M',
 				'class' => $class_map[$table] ?? 'stdClass',
 				'column' => $column,
+				'fp' => "{$referenced_table}_list",
 				'query' => "SELECT $table.*
 					FROM $table
 					WHERE $column = :$column",
 			];
 		}
-		return $relations;
+
+		return $_tables;
 	}
 
 

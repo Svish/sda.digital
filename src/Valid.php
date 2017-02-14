@@ -6,12 +6,12 @@
  */
 class Valid
 {
-	public static function check($subject, array $rule_set)
+	public static function check(Data $subject, array $rule_set)
 	{
 		$errors = [];
 		foreach($rule_set as $property => $rules)
 		{
-			$value = $subject[$property];
+			$value = $subject->$property;
 
 			// If allowed empty, and value is empty, skip other rules
 			if( ! in_array('not_empty', $rules) and ! self::not_empty($value))

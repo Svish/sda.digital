@@ -3,9 +3,19 @@
 /**
  * Base class for data objects.
  */
-abstract class Data implements ArrayAccess, JsonSerializable
+abstract class Data implements JsonSerializable
 {
 	protected $data = [];
+
+
+
+	public function set(array $data)
+	{
+		foreach($data as $k => $v)
+			$this->{$k} = $v;
+		
+		return $this;
+	}
 
 
 
@@ -17,21 +27,11 @@ abstract class Data implements ArrayAccess, JsonSerializable
 	public function __set($key, $value)
 	{
 		$this->data[$key] = $value;
-	}
-
-
-	public function set(array $data)
-	{
-		foreach($data as $k => $v)
-			$this->$k = $v;
-		
-		return $this;
-	}
-	
+	}	
 
 	public function __isset($key)
 	{
-		return $this->$key !== null;
+		return $this->{$key} !== null;
 	}
 	
 	public function __unset($key)
@@ -39,33 +39,12 @@ abstract class Data implements ArrayAccess, JsonSerializable
 		unset($this->data[$key]);
 	}
 
-
-
 	public function __call($method, $args)
 	{
 		if(is_callable($this->data[$method]))
 			return call_user_func_array($this->data[$method], $args);
 	}
 
-
-
-	/** ArrayAccess implementation **/
-	public function offsetSet($offset, $value)
-	{
-		$this->$offset = $value;
-	}
-	public function offsetExists($offset)
-	{
-		return isset($this->$offset);
-	}
-	public function offsetUnset($offset)
-	{
-		unset($this->$offset);
-	}
-	public function offsetGet($offset)
-	{
-		return $this->$offset;
-	}
 
 
 	/**

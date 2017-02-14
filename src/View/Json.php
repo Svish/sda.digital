@@ -46,6 +46,9 @@ class Json extends View
 		$json = json_encode($this->_data, 
 			JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
 
+		if($json === false)
+			throw new \Exception('JSON encode failed: '.json_last_error_msg());
+
 		return $callback
 			? "$callback($json)"
 			: "$json";
