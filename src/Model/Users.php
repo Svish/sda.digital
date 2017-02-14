@@ -63,7 +63,7 @@ class Users extends \Model
 
 	private function _login(User $user): User
 	{
-		Session::set(self::SESSION_KEY, (int) $user->id);
+		Session::set(self::SESSION_KEY, (int) $user->user_id);
 		return $user;
 	}
 
@@ -86,7 +86,7 @@ class Users extends \Model
 	{
 		// Supposed to be logged in
 		$id = Session::get(self::SESSION_KEY);
-		if($id === null)
+		if( ! $id)
 			return false;
 
 		// User (still) exists?
