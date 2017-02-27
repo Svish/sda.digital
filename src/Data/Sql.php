@@ -50,13 +50,15 @@ abstract class Sql extends \Data
 			if($roles)
 				Security::require($roles);
 
-			// Clean set
+			// Clean sets
 			$column = $this->table_info->columns[$key] ?? false;
 			if($column && strpos($column['db_type'], 'set(') === 0)
-				$value = preg_replace('/\s+/', '', $value);
+				$value = preg_replace('/\s+/', '', $value) ?: null;
+
+
 
 			// Add to dirty if different
-			if($column && $this->data[$key] ?? null != $value)
+			if($column && $value != $this->data[$key] ?? null)
 				$this->dirty[$key] = $value;
 		}
 		
@@ -91,7 +93,8 @@ abstract class Sql extends \Data
 				$this->{$this->table_info->primary_keys[$k]} = $keys[$k];
 
 		$keys = array_whitelist($this->data, $this->table_info->primary_keys);
-		return array_filter($keys) ?: false;
+
+		return $keys;
 	}
 
 

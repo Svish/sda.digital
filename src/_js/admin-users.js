@@ -60,7 +60,7 @@ var ViewModel = function(data)
 				return;
 
 			$(e)
-				.find('[contentEditable=true]')
+				.find('input')
 				.first()
 				.focus();
 		};

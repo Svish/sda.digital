@@ -86,7 +86,7 @@ class Users extends \Model
 	{
 		// Supposed to be logged in
 		$id = Session::get(self::SESSION_KEY);
-		if( ! $id)
+		if( ! $id || ! is_array($id))
 			return false;
 
 		// User (still) exists?
@@ -106,7 +106,7 @@ class Users extends \Model
 	 */
 	public function get($id = null): User
 	{
-		if($id === null || is_int($id))
+		if($id === null || is_numeric($id))
 			return User::get($id);
 		
 		$user = DB::prepare('SELECT * 

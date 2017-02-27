@@ -38,11 +38,18 @@ table
 		text-align: left;
 		vertical-align: top;
 		padding: .3rem .5rem;
+	}
 
-		&:empty
-		{
-			background-color: @background-color;
-		}
+	th:empty
+	{
+		background-color: @background-color;
+	}
+	td:empty:before
+	{
+		content: 'null';
+		font-style: italic;
+		color: fadeOut(@table-color, 50%);
+		height: 1em;
 	}
 
 	// Header

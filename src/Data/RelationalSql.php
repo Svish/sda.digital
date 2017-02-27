@@ -156,6 +156,7 @@ abstract class RelationalSql extends ComputedColumns
 		// TODO: Check relationships, if any
 		// Use _destroy to remove?
 		// Set flag in Query->fetch to check if object is from DB?
+		// Check "not-empty" relationships
 		return false;
 	}
 
