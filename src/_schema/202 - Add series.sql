@@ -19,6 +19,7 @@ CREATE TABLE `series_content`
 (
 	`series_id` INT UNSIGNED NOT NULL,
 	`content_id` INT UNSIGNED NOT NULL,
+	`added` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`n` SMALLINT COMMENT 'Use content time if null',
 	PRIMARY KEY (`series_id`, `content_id`),
 	CONSTRAINT `fk.series_content.content.series`

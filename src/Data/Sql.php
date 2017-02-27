@@ -22,6 +22,8 @@ abstract class Sql extends \Data
 
 	public function __construct()
 	{
+		parent::__construct();
+
 		// Get table name
 		$this->table_name = $this->table_name();
 

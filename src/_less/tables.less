@@ -5,12 +5,10 @@
 @table-background: lighten(@background-color, 5%);
 @table-color: @text-color;
 
-@table-footer-background: lighten(@background-color, 2%);
+@table-footer-background: lighten(@background-color, 7.5%);
 
 table
-{
-	margin-bottom: 1.5em;
-	
+{	
 	border-collapse: collapse;
 	border-style: hidden;
 
@@ -41,18 +39,18 @@ table
 		vertical-align: top;
 		padding: .3rem .5rem;
 
-		&:not(.empty)
+		&:empty
 		{
-			//border: 1px solid @table-border-color;
+			background-color: @background-color;
 		}
 	}
 
 	// Header
 	thead
 	{
-		background: @table-header-background;
+		background-color: @table-header-background;
 		color: @table-header-color;
-		border-bottom: 3px solid @table-border-color;
+		border-bottom: .35em solid @table-border-color;
 		th
 		{
 			overflow: hidden;
@@ -64,9 +62,13 @@ table
 	// Body
 	tbody
 	{
+		tr + tr
+		{
+			border-top: .2em solid @table-border-color;
+		}
 		td,th
 		{
-			background: @table-background;
+			background-color: @table-background;
 			color: @table-color;
 		}
 	}
@@ -74,43 +76,38 @@ table
 	// Footer
 	tfoot
 	{
-		background: @table-footer-background;
-		border-top: 3px solid @table-border-color;
+		background-color: @table-footer-background;
+		border-top: .35em solid @table-border-color;
 	}
 
 	// Fancy body
 	tbody
 	{
+		&.striped
+		{
+			tr:nth-child(odd)
+			{
+				td,th{background-color: darken(@table-background, 2%);}
+			}
+			tr:nth-child(even)
+			{
+				td,th{background-color: lighten(@table-background, 2%);}
+			}
+		}
 
 		&.checkered
 		{
 			tr:nth-child(odd)
 			{
-				td,th{&:nth-child(even){background: darken(@table-background, 5%);}}
+				td,th{&:nth-child(odd){background-color: darken(@table-background, 2.5%);}}
+				td,th{&:nth-child(even){background-color: lighten(@table-background, 2.5%);}}
 			}
 			tr:nth-child(even)
 			{
-				td,th{&:nth-child(odd){background: lighten(@table-background, 5%);}}
+				td,th{&:nth-child(odd){background-color: lighten(@table-background, 2.5%);}}
+				td,th{&:nth-child(even){background-color: darken(@table-background, 2.5%);}}
 			}
 		}
-
-		&.striped
-		{
-			tr:nth-child(odd)
-			{
-				td,th{background: darken(@table-background, 1.5%);}
-			}
-			tr:nth-child(even)
-			{
-				td,th{background: lighten(@table-background, 1.5%);}
-			}
-		}
-	}
-
-	// Input in table-cells
-	td>input[type]
-	{
-		//margin: -0.15rem -0.25rem;
 	}
 }
 
@@ -126,7 +123,7 @@ table.xdebug-error
 	}
 	th
 	{
-		background: mix(@table-header-background, @error-color, 75%);
+		background-color: mix(@table-header-background, @error-color, 75%);
 		span:first-child
 		{
 			display: none;
@@ -170,7 +167,7 @@ table.xdebug-error
 					position: absolute;
 					top: 0;
 					right: 0;
-					background: @table-header-background;
+					background-color: @table-header-background;
 					color: @table-header-color;
 					padding: 0 .4em;
 					font-size: x-small;

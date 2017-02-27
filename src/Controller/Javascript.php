@@ -58,17 +58,17 @@ class Javascript extends Cached
 	{
 		header('Content-Type: text/javascript; charset=utf-8');
 
-
 		// Gather contents of all input files into one string
 		$js = array_map('file_get_contents', $this->files);
 		$js = implode(PHP_EOL.PHP_EOL, $js);
-
 
 		// Try compile
 		$params = [
 			'language' => 'ECMASCRIPT6_STRICT',
 			'language_out' => 'ECMASCRIPT5',
-			'compilation_level' => 'SIMPLE_OPTIMIZATIONS',
+			'compilation_level' => ENV == 'dev'
+				? 'WHITESPACE_ONLY'
+				: 'SIMPLE_OPTIMIZATIONS',
 			'output_format' => 'text',
 			'output_info' => 'compiled_code',
 			'js_code' => $js,

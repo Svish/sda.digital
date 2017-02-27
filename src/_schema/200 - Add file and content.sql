@@ -6,7 +6,7 @@ CREATE TABLE `content`
 	`title` VARCHAR(255) NOT NULL,
 	`title_slug` VARCHAR(255) NOT NULL,
 	`summary` TEXT,
-	`time` DATETIME COMMENT 'When it happened, if known',
+	`time` VARCHAR(19) COMMENT 'yyyy-mm-dd hh:mm:ss, as accurate as known',
 	`added` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`content_id`)
 )

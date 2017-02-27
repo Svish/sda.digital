@@ -12,87 +12,129 @@ use \Data\Series;
  */
 class Fresh extends \Model
 {
-	const DIR_NEW = ROOT.'_new'.DIRECTORY_SEPARATOR;
-	
-
-	/**
-	 * Analyze file.
-	 */
-	public function analyze(string $path): File
-	{
-		$path = self::to_win($path);
-		
-		// Check that file is in allowed directory
-		if( ! starts_with(self::DIR_NEW, realpath($path)))
-			throw new \Error\PleaseNo("Tried to access '$path'");
-
-		$file = new File;
-		$file->path = self::from_win($path);
-
-		if(starts_with('audio/', $file->mime))
-			$file->id3 = ID3::read($path);
-
-		return $file;
-	}
+	const DIR = ROOT.'_new'.DIRECTORY_SEPARATOR;
 
 
 
 	/**
-	 * Get list of new stuff.
+	 * Get list of non-empty directories.
 	 */
-	public function list()
+	public function directories()
 	{
-		$it = new \RecursiveDirectoryIterator(self::DIR_NEW,
+		$it = new \RecursiveDirectoryIterator(self::DIR,
 			\FilesystemIterator::SKIP_DOTS);
 
-		yield from $this->fresh_series($it);
+		yield from $this->fresh_dir($it);
 	}
-	private function fresh_series(\RecursiveDirectoryIterator $it)
+
+	private function fresh_dir(\RecursiveDirectoryIterator $it)
 	{
-		$content = [];
+		$file_count = 0;
 		while($it->valid())
 		{
-			// Recurse down directories
 			if($it->current()->isDir())
-				yield from $this->fresh_series($it->getChildren());
-			// Gather files
+				yield from $this->fresh_dir($it->getChildren());
 			else
-				$content[] = $this->fresh_content($it->current());
-
+				$file_count++;
 			$it->next();
 		}
 
-		// Ignore group if no content
-		if(empty($content))
+		if( ! $file_count)
 			return;
 
-		// Sort
-		//array_sort_by('filename', $content);
+		$path = self::from_win($it->getSubPath());
+		yield [
+			'title' => str_replace(DIRECTORY_SEPARATOR, ' / ', $path) ?: '$root',
+			'path' => $path ?: '.',
+			'count' => $file_count,
+		];
+	}
 
-		// Yield as series
-		yield \Reflect::pre_construct(Series::class,
-			function($series) use ($content, $it)
-			{
-				$series->title = self::from_win($it->getSubPath()) ?: '/';
-				$series->content = $content;
-			});
-	}
-	private function fresh_content(\SplFileInfo $file): Content
+
+
+
+
+	/**
+	 * Get list of content in $dir.
+	 */
+	public function content(string $dir)
 	{
-		return \Reflect::pre_construct(Content::class,
-			function($content) use ($file)
+		$dir = self::DIR.$dir;
+		$dir = self::safe_path($dir);
+
+		// Find files
+		$it = new \FilesystemIterator($dir);
+		$it = new \CallbackFilterIterator($it, function($f)
 			{
-				$content->title = self::from_win($file->getFilename());
-				$content->files = [self::fresh_file($file)];
+				return $f->isFile();
 			});
+		foreach($it as $file)
+			$files[] = [
+				'path' => $file->getPathname(),
+				'name' => $file->getBasename('.'.$file->getExtension()),
+				];
+
+		// Group by name
+		$list = array_group_by('name', $files ?? []);
+
+		// Yield content
+		foreach($list as $content)
+		{
+			$files = array_map([$this, 'fresh_file'], $content['items']);
+
+			yield \Reflect::pre_construct(Content::class,
+				function($new) use ($content, $files)
+				{
+					$new->title = self::from_win($content['name']);
+					$new->file_list = $files;
+				});
+		}
 	}
-	private function fresh_file(\SplFileInfo $file): File
+
+	private function fresh_file($file): File
 	{
-		$path = str_replace(ROOT, '', $file->getPathname());
+		$path = str_replace(ROOT, '', $file['path']);
+
 		$file = new File;
 		$file->path = self::from_win($path);
 		return $file;
 	}
+
+
+
+
+
+	/**
+	 * Analyze file and return whatever we can deduce from it.
+	 */
+	public function analyze(string $path)
+	{
+		$path = self::safe_path($path);
+		$info = ID3::instance()->read($path);
+		return iterator_to_array($info);
+	}
+
+
+
+
+	/**
+	 * @return to_win( $path )
+	 * @throws If $path is outside DIR
+	 */
+	private static function safe_path(string $path): string
+	{
+		$path = self::to_win($path);
+		$real = realpath($path);
+
+		if(is_dir($real))
+			$real .= DIRECTORY_SEPARATOR;
+
+		if( ! starts_with(self::DIR, $real))
+			throw new \Error\PleaseNo("Tried to access '$path'");
+
+		return $real;
+	}	
+
 
 	use \WinPathFix;
 

@@ -15,7 +15,7 @@ var ViewModel = function(data)
 {
 	this.users = ko.mapping.fromJS(data,
 		{
-			create: opts => new UserModel(opts.data),
+			create: ø => new UserModel(ø.data),
 		});
 
 	this.add = function()

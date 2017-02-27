@@ -4,7 +4,8 @@ return [
 	
 	# Resources
 	'js/(:any:.js)$' => '\Controller\\Javascript',
-	'theme/(:any:.css)$' => '\Controller\\Less',
+	'theme/(:any:\.css)$' => '\Controller\\Less',
+	'theme/icon/(:any:\.svg)' => '\Controller\\Svg',
 
 
 	# Content slugs

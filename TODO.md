@@ -1,8 +1,13 @@
 
-- (!) Use Knockout on user/me? And others
-?
-- Deal with multiple messages covering each other
+- (!) Remove DROPs from SQLs when site is being used
+- (!) Use Knockout on user/me? And others?
 
+- Move array_* from functions.inc to Array class
+
+- Deal with multiple messages covering each other
+	- Get messages via ajax? (admin/users)
+
+- Talere => Mennesker ?
 
 
 RelationalSql extends Sql
@@ -41,11 +46,8 @@ Admin
 				- ha/sh/hash_id.ext
 			- commit transaction
 			- if good, delete originals, otherwise delete copies
-
-
-	- Reset to new?
+	
 	- Update info
-	- Browsing editable?
 
 	- Add remote content?
 		- YouTube?
@@ -63,10 +65,8 @@ Admin
 	- Remove content
 
 - Speakers/Places
-	- Reset to new?
-	- Update info
-	- Editable browsing?
-	- Restrict delete if attached to content
+	- (!) Copy admin/users?
+	- (!) Throw ValidationFailed? if delete fails because of constraint
 
 
 Profile?
@@ -106,6 +106,12 @@ Public
 - Speakers
 	- List series partaking in
 	- Then content (or somehow side-by-side?)
+
+- Series
+	- Don't show empty ones
+	- List partaking speakers
+	- List content
+		- Order by n, then content.added / series_content.added
 
 - Content
 	- List files

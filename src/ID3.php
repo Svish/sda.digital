@@ -5,30 +5,131 @@
  */
 class ID3
 {
-	private static $id3;
+	use Instance;
 
-	public static function read($path)
+
+	private $lib;
+	private function __construct()
 	{
-		// Init getID3
-		if( ! self::$id3)
-			self::$id3 = new getID3;
+		$this->lib = new getID3;
+	}
 
+
+	public function read($path)
+	{
 		// Analyze
-		$tags = self::$id3->analyze($path);
-		getid3_lib::CopyTagsToComments($tags);
+		$info = $this->lib->analyze($path);
 
-		$tags = [
-			'artist' => self::c($tags, 'artist'),
-			'title' => self::c($tags, 'title'),
-			'track' => self::c($tags, 'track_number'),
+		// Check encoding
+		if($info['encoding'] != 'UTF-8')
+			throw new Internal("ID3 encoding '{$info['encoding']}' != 'UTF-8'... so, guess we need to deal with that now...");
 
-			'time' => $tags['playtime_string'],
+		// Yield info
+		yield 'fileformat' => $info['fileformat'] ?? null;
+		yield 'mime' => $info['mime_type'] ?? null;
+		yield 'size' => [
+			'string' => Format::bytes($info['filesize']),
+			'raw' => $info['filesize']
+			];
+
+
+		if(isset($info['bitrate']))
+		yield 'bitrate' => [
+			'string' => Format::si($info['bitrate'], 'bps'),
+			'raw' => $info['bitrate'],
 		];
-		return array_filter($tags);
+
+
+		if(isset($info['playtime_string']))
+		yield 'time' => [
+			'string' => $info['playtime_string'],
+			'seconds' => $info['playtime_seconds'],
+			];
+
+
+		// Yield tags of interest
+		foreach($info['tags'] ?? [] as $tags)
+			yield from $this->tags($tags);
+
+
+		// Yield audio info
+		if(isset($info['audio']))
+		yield 'audio' => iterator_to_array($this->media($info['audio']));
+		
+
+		// Yield video info
+		if(isset($info['video']))
+		yield 'video' => iterator_to_array($this->media($info['video']));
 	}
 
-	private static function c(array $tags, $comment)
+
+
+	private function tags(array $tags)
 	{
-		return implode('; ', $tags['comments'][$comment] ?? []);
+		foreach($tags as $key => $value)
+		{
+			if( ! in_array($key, self::OF_INTEREST))
+				continue;
+
+			switch($key)
+			{
+				case 'artist':
+					yield $key => array_flatten(array_map(function($item)
+						{
+							return explode('/', $item);
+						}, $value));
+					break;
+
+				default:
+					yield $key => is_array($value)
+						? implode('; ', $value)
+						: $value;
+					break;
+			}
+		}
 	}
+
+
+
+	private function media(array $info)
+	{
+		foreach($info as $key => $value)
+		{
+			if(is_array($value))
+				continue;
+
+			switch($key)
+			{
+				case 'bitrate':
+					yield $key => [
+						'string' => Format::si($value, 'bps'),
+						'raw' => $value,
+					];
+					break;
+
+				case 'sample_rate':
+					yield $key => [
+						'string' => Format::si($value, 'Hz', 1),
+						'raw' => $value,
+					];
+					break;
+
+				case 'encoder':
+					// HACK: Remove garbage from... something...
+					$value = explode("\u{4}", $value)[0];
+
+				default:
+					yield $key => $value;
+					break;
+			}
+		}
+	}
+
+	const OF_INTEREST = [
+		'band',
+		'album',
+		'artist',
+		'title',
+		'track',
+		];
 }

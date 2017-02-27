@@ -186,4 +186,25 @@ class Query
 		$this->statement->debugDumpParams();
 		return $this;
 	}
+
+
+
+
+
+	/**
+	 * Fetch yielding
+	 */
+	public function stream()
+	{
+		// TODO: fetch and yield
+	}
+
+	/**
+	 * Fetch
+	 */
+	public function streamRelationships()
+	{
+		// TODO: fetch and yield
+		// Set relationships somehow
+	}
 }

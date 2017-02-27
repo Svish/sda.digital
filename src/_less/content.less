@@ -1,6 +1,6 @@
 #content
 {
-	margin: 1.5rem 0;
+	margin: 2.5rem 0;
 	padding: 0 @padding;
 
 
@@ -17,15 +17,15 @@
 
 	h1,h2,h3,h4
 	{
-		&:first-child
-		{
-			margin-top: 0;
-		}
+		min-height: 1.5em;
+
 		span
 		{
 			vertical-align: super;
+			margin-left: .5em;
 			font-size: medium;
-			color: black;
+			color: @text-color;
+			white-space: nowrap;
 		}	
 	}
 }

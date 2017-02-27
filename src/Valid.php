@@ -100,4 +100,43 @@ class Valid
 		// Check if the email domain has a valid MX record
 		return $value && (bool) checkdnsrr(preg_replace('/^[^@]++@/', '', $value), 'MX');
 	}
+
+
+	public static function between($value, $min, $max): bool
+	{
+		return $value >= $min && $value <= $max;
+	}
+
+
+	public static function flexi_time($value): bool
+	{
+		$valid = preg_match('/^(?<year>\d{4})(?:-(?<month>\d{2})(?:-(?<day>\d{2})(?: (?<hour>\d{2}):(?<min>\d{2})(?::(?<sec>\d{2}))?)?)?)?$/', $value, $x);
+		
+		if( ! $valid)
+			return false;
+
+		extract($x);
+
+		// Check month
+		if($month ?? null AND ! self::between($month, 1, 12))
+			return false;
+
+		// Check date
+		if($day ?? null AND ! checkdate($month, $day, $year))
+			return false;
+
+		// Check hour
+		if($hour ?? null AND ! self::between($hour, 0, 23))
+			return false;
+
+		// Check minute
+		if($min ?? null AND ! self::between($min, 0, 59))
+			return false;
+
+		// Check second
+		if($sec ?? null AND ! self::between($sec, 0, 59))
+			return false;
+
+		return true;
+	}
 }

@@ -17,6 +17,13 @@ function get_class_name($obj)
 	return substr(strrchr('\\'.$obj, '\\'), 1);
 }
 
+function array_flatten(array $array)
+{
+	$it = new \RecursiveArrayIterator($array);
+	$it = new \RecursiveIteratorIterator($it);
+    return iterator_to_array($it, false);
+}
+
 function array_map_callback(array $array, callable $callback, ...$extra_parameters)
 {
 	foreach($array as $key => $value)
@@ -46,7 +53,14 @@ function array_sort_by($key, array &$array)
 {
 	return usort($array, function($x, $y) use ($key)
 	{
-		return strnatcasecmp($x[$key] ?? null, $y[$key] ?? null);
+		$x = is_array($x)
+			? $x[$key] ?? null
+			: $x->$key ?? null;
+
+		$y = is_array($y)
+			? $y[$key] ?? null
+			: $y->$key ?? null;
+		return strnatcasecmp($x, $y);
 	});
 }
 
@@ -66,7 +80,7 @@ function array_group_by(string $key, $list, bool $keep_key = false, string $key_
 		$groups[$group][$group_name][] = $value;
 	}
 
-	return $groups;
+	return array_values($groups);
 }
 
 

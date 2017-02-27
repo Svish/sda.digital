@@ -12,15 +12,22 @@ class Api extends \Controller\Api
 	protected $required_roles = ['editor'];
 
 
-	public function get_fresh()
+	public function get_fresh_content()
 	{
-		return Model::fresh()->list();
+		return Model::fresh()->content($_GET['path'] ?? null);
+	}
+	
+	public function get_fresh_dirs()
+	{
+		return Model::fresh()->directories();
 	}
 
-	public function post_file(string $path): File
+	public function get_analyze_file()
 	{
-		return Model::fresh()->file($path);
+		return Model::fresh()->analyze($_GET['path'] ?? null);
 	}
+
+
 
 	public function put_content(array $data): File
 	{

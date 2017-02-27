@@ -1,0 +1,78 @@
+{{% ACCESS editor }}
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}Nytt innhold{{/ title }}
+
+{{$ content}}
+
+
+<script defer type="text/javascript" src="js/dragndrop.js"></script>
+<script defer type="text/javascript" src="js/manage-content-fresh-content.js"></script>
+
+
+<h1>Nytt innhold</h1>
+
+<div data-bind="event: {dragstart: ondragstart, drop: ondrop}">
+<!-- ko template: { name: 'content-tmpl', foreach: content} -->
+<!-- /ko -->
+</div>
+
+{{!> ko }}
+
+{{> waiting }}
+
+
+<script type="text/html" id="content-tmpl">
+	
+	<div class="content">
+		<h2 data-bind="text: title"></h2>
+		<div class="flex">
+			<p>
+				<input required type="text" placeholder="Tittel" data-bind="textInput: title" />
+			</p>
+			<p>
+				<input type="text" placeholder="Når" data-bind="value: time") />
+				<small>Så langt du vet: yyyy-mm-dd hh:mm:ss</small>
+			</p>
+		</div>
+
+		<p>
+			<textarea optional placeholder="Sammendrag" data-bind="value: summary"></textarea>
+		</p>
+	
+		<table class="fixed collapsing full-width">
+			<thead>
+				<tr>
+					<th>Filer</th>
+					<th style="width: 3em">Ext</th>
+					<th style="width: 7em">Type</th>
+					<td style="width: 1em" class="dropzone" data-bind="event: {drop: ondrop}"></td>
+				</tr>
+			</thead>
+			<tbody data-bind="event: {dragstart: ondragstart}">
+				<!-- ko foreach: {data: file_list, afterAdd: doFadeIn} -->
+				<tr data-bind="event: {dragstart: ondragstart}">
+					<td data-key="Filnavn">
+						<input required type="text" data-bind="textInput: filename"></div>
+						<small>
+							<b>Info:</b> <span data-bind="text: description"></span>
+							<br>
+							<b>Hash:</b> <span data-bind="text: hash"></span>
+							<br>
+							<b>Filename:</b> <span data-bind="text: filename"></span><span data-bind="text: extension"></span>
+						</small>
+					</td>
+					<td data-key="Ext" data-bind="text: extension, attr: {title: extension}"></td>
+					<td data-key="Type" data-bind="text: type, attr: {title: type}"></td>
+					<td draggable="true">{{#svg}}extract{{/svg}}</td>
+				</tr>
+				<!-- /ko -->
+			</tbody>
+		</table>
+	</div>
+	<!-- /ko -->
+
+</script>
+
+{{/ content}}
+{{/ layout }}

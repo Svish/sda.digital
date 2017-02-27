@@ -16,6 +16,16 @@
 	}
 }
 
+*[data-key]:empty:not(td)
+{
+	display: block;
+	&:before
+	{
+		content: attr(data-key) "…";
+		opacity: .50;
+	}
+}
+
 
 label
 {
@@ -56,18 +66,20 @@ textarea
 			radial-gradient(@text-color 17%, transparent 17%);
 		background-size: 1em 1em;
 		background-position: top right;
-		background-repeat: no-repeat
+		background-repeat: no-repeat;
 	}
 }
 textarea
 {
 	resize: vertical;
-	min-height: 200px;
+	min-height: 6em;
+	width: 100%;
 }
 
 
 // Fancy checkboxes
-input[type=checkbox]
+input[type=checkbox],
+input[type=radio]
 {
 	display: none;
 	& + label
@@ -85,8 +97,8 @@ input[type=checkbox]
 		content: "";
 		height: 1em;
 		width: 2em;
-		background-size: 1em 1em;
-		background-position: .75em center;
+		background-size: .9em .9em;
+		background-position: .75em .22em;
 		background-repeat: no-repeat;
 		background-image: 
 			radial-gradient(darken(@text-color, 75%) 50%, transparent 50%);

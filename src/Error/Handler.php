@@ -14,10 +14,14 @@ class Handler
 		if( ! $e instanceof UserError)
 			$e = new Internal($e);
 
+		// TODO: Write to log file, which should be visible in UI
+		// @see http://www.geekality.net/2011/05/28/php-tail-tackling-large-files/
+
 		// Add message
 		Message::exception($e);
 
 		// Redirect to login if unauthorized
+		// TODO: Bring extra GET query parameters too
 		if($e instanceof Unauthorized)
 			HTTP::redirect('user/login?url='.urlencode(PATH));
 

@@ -169,13 +169,13 @@ abstract class RelationalSql extends ComputedColumns
 		{
 			// Begin transaction
 			DB::begin();
-						
+			
 			// Save children
-
+			
 			// Save relationships
 			// Get current, then reorder / _destroy / etc and insert new?
 			// INSERT IGNORE ?
-
+			
 			// Save self
 			$saved = $saved || parent::save();
 			

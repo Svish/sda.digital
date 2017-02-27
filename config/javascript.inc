@@ -11,9 +11,9 @@ return (object) [
 		],
 	'bundles' => [
 		'script.js' => [
+			'knockout.my-stuff.js',
 			'polyfills.js',
 			'global.js',
-			'knockout.js',
 			],
 		],
 ];

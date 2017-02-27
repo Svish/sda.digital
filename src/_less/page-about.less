@@ -3,13 +3,20 @@ body.about #content
 	dt
 	{
 		clear: both;
-		margin-top: .5em;
 	}
 	dd
 	{
 		display: inline;
 		margin: 0;
-		margin-right: .5em;
+	}
+	dd + dd
+	{
+		&:before
+		{
+			content: ', ';
+			margin-right: .2em;
+			opacity: .5;
+		}
 	}
 
 

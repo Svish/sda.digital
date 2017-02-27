@@ -5,7 +5,13 @@
  */
 abstract class Data implements JsonSerializable
 {
-	protected $data = [];
+	protected $data;
+
+	protected function __construct()
+	{
+		// Add _type for JSON
+		$this->data['_type'] = get_class($this);
+	}
 
 
 
@@ -60,11 +66,11 @@ abstract class Data implements JsonSerializable
 			throw new \Exception(get_class($this).'::SERIALIZE must be array of keys to serialize, or boolean (true=all, false=none)');
 		
 		// None (default)
-		if($keys === false)
+		if($keys === false || $keys == [])
 			return [];
 
 		// All
-		if($keys === true || $keys == [])
+		if($keys === true)
 			return $this->data;
 
 		// Only whitelisted

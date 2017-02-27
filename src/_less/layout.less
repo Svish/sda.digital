@@ -41,17 +41,37 @@ body
 	overflow-y: scroll;
 }
 
+
+// Margins
+h1,h2,h3,h4,p,ul,ol,dl,pre,table
+{
+	margin-top: 0;
+	margin-bottom: 2rem;
+}
+
+// Empty
+h1,h2,h3,h4,p,ul,ol,li,table,div,span
+{
+	&:empty
+	{
+		display: none;
+	}
+}
+
+// Sections
 section
 {
-	margin: 3em 0;
+	margin-bottom: 3em;
 	& + &
 	{
-		margin-top: -1.5em;
-		padding-top: 1.5em;
+		margin-top: -1em;
+		padding-top: 2em;
 		border-top: 1px solid @border-color;
 	}
 }
 
+
+// Styles
 b,
 strong
 {
@@ -64,11 +84,26 @@ small,
 }
 
 
+// Pre
 pre
 {
 	white-space: pre-wrap;
 }
 
+
+// Small
+small
+{
+	display: block;
+	font-size: x-small;
+	margin-top: .1em;
+	opacity: .2;
+	transition: opacity 250ms;
+	&:hover
+	{
+		opacity: .75;
+	}
+}
 
 // Headers
 h1,h2,h3,h4
@@ -76,7 +111,7 @@ h1,h2,h3,h4
 	font-family: 'Open Sans Condensed', sans-serif;
 	font-weight: 300;
 	color: @accent1-color;
-
+	
 	a
 	{
 		color: inherit;
@@ -173,43 +208,41 @@ hr
 // Quotes
 blockquote
 {
-	display: inline-block;
 	position: relative;
-	background: #fff;
 	padding: 15px 20px 15px 45px;
 	margin: 0 0 20px;
+	border-top-left-radius: .75em;
+	border-bottom-right-radius: .75em;
 
-	color: #666;
+	background: darken(@background-color, 5%);
+	color: @text-color;
 	
-	border-left: 15px solid @accent1-color;
-	border-right: 2px solid @accent1-color;
-}
-blockquote::before{
-  content: "\201C"; /*Unicode for Left Double Quote*/
-  
-  /*Font*/
-  font-family: Georgia, serif;
-  font-size: 60px;
-  font-weight: bold;
-  color: #999;
-  
-  /*Positioning*/
-  position: absolute;
-  left: 10px;
-  top:5px;
-}
-blockquote::after{
-  /*Reset to make sure*/
-  content: "";
-}
+	border-left: .5em solid fade(@accent1-color, 40%);
+	border-right: .2em solid fade(@accent1-color, 40%);
 
-
-// Empty
-h1,h2,h3,p,div,span,ul,ol,li
-{
-	&:empty
+	transition: border-color 400ms;
+	&:hover
 	{
-		display: none;
+		border-color: @accent1-color;
+	}
+
+	&::before
+	{
+		content: "\201C"; /*Unicode for Left Double Quote*/
+
+		font-family: serif;
+		font-size: 3em;
+		font-weight: bold;
+		color: lighten(@background-color, 15%);
+
+		position: absolute;
+		left: .15em;
+		top: -.15em;
+	}
+	&::after
+	{
+		// None
+		content: "";
 	}
 }
 
@@ -254,6 +287,7 @@ p.right
 @import "footer";
 
 @import "fancy";
+@import "dragndrop";
 
 @import "tables";
 @import "forms";
@@ -261,3 +295,4 @@ p.right
 @import "page-about";
 @import "page-tools";
 @import "page-manage-content";
+@import "page-contact";

@@ -25,10 +25,10 @@ class FileInfo extends Computed
 		$file = self::to_win($file);
 		
 		yield 'filename'
-			=> self::from_win(pathinfo($file, PATHINFO_BASENAME));
+			=> self::from_win(pathinfo($file, PATHINFO_FILENAME));
 
 		yield 'extension'
-			=> self::from_win(pathinfo($file, PATHINFO_EXTENSION));
+			=> self::from_win('.'.pathinfo($file, PATHINFO_EXTENSION));
 
 		yield from Mime::get($file);
 		
