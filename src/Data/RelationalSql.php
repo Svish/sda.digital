@@ -3,7 +3,7 @@
 namespace Data;
 use DB;
 
-abstract class RelationalSql extends ComputedColumns
+abstract class RelationalSql extends Sql
 {
 	private $relations;
 	private $dirty;
@@ -14,25 +14,29 @@ abstract class RelationalSql extends ComputedColumns
 
 		// Get relations
 		$this->relations = $this->table_info->relations ?? [];
-
-		// Make sure relation props exists
-		foreach($this->relations as $prop => $rel)
-			if( ! isset($this->data[$prop]))
-				$this->data[$prop] = null;
 	}
 
 
-	public function load(string ...$props): self
+	public function load_relations(string ...$props): self
 	{
+		if(empty($props))
+			$props = array_keys($this->relations);
+
 		foreach($props as $prop)
 		{
 			$rel = $this->relations[$prop];
-			$keys = array_whitelist($this->data, 
-									$this->table_info->primary_keys);
 
-			$this->data[$prop] = DB::prepare($rel['query'])
-				->execute($keys)
-				->fetchAll($rel['class']);
+			$key = [
+				$rel['column'] => $this->{$rel['column']},
+				];
+
+			$query = DB::prepare($rel['query'])
+				->execute($key);
+
+			$this->$prop = ends_with('_list', $prop)
+				? $query->fetchAll($rel['class'])
+				: $query->fetchFirst($rel['class']);
+
 			unset($this->dirty[$prop]);
 		}
 		return $this;
@@ -41,14 +45,7 @@ abstract class RelationalSql extends ComputedColumns
 
 	public function __get($key)
 	{
-		// Load first if null and a relation
-		if($this->loaded
-		&& parent::__get($key) === null
-		&& array_key_exists($key, $this->relations))
-		{
-			$this->load($key);
-		}
-
+		// TODO: Load if empty relationship? $this->loaded[$rel] ?
 		return parent::__get($key);
 	}
 	
@@ -56,13 +53,14 @@ abstract class RelationalSql extends ComputedColumns
 	{
 		$rel = $this->relations[$key] ?? false;
 
-		// If not not loaded, or not a relation
-		if( ! $this->loaded || ! $rel)
+		// Only proceed if loaded, relationship and not null
+		if( ! $this->loaded || ! $rel || is_null($value))
 			return parent::__set($key, $value);
-		
+
 		// Depending on relation type
 		switch($rel['type'])
 		{
+			case 'M:M':
 			case '1:M':
 				// Only set as array
 				if( ! is_array($value))
@@ -78,42 +76,20 @@ abstract class RelationalSql extends ComputedColumns
 
 			case 'M:1':
 				// Set 1 key column to own key
-				parent::__set($rel['column'], $value->{$rel['column']});
+				//parent::__set($rel['column'], $value->{$rel['column']});
 
 				// Add 1 to M
-				$value->data[$rel['fp']][] = $this;
+				//$value->data[$rel['fp']][] = $this;
 
 				// Set relation to 1 $value
 				return parent::__set($key, $value);
 				
 
 			default:
+				var_dump(get_defined_vars());
 				throw new \Exception("Support '{$rel['type']}'");
 		}
 
-	}
-
-	public function add(string $relation, Sql $object) // Or id?
-	{
-		$rel = $this->relations[$relation] ?? false;
-		
-		switch($rel['type'])
-		{
-			case '1:M':
-				var_dump($relation);
-				$this->data[$relation][] = $object;
-				return;
-		}
-		
-		throw new \Exception("Not an M relation: '$relation'");
-	}
-
-	public function remove(string $relation, Sql $object) // Or id?
-	{
-		throw new \Exception("Not implemented: ".__METHOD__);
-		// TODO: Remove from relationship array ($object->_destroy = true)
-		// (make sure self gets dirty)
-		// Or just quickly remove link in db?
 	}
 
 	public function __unset($key)
@@ -162,8 +138,10 @@ abstract class RelationalSql extends ComputedColumns
 
 
 
-	public function save()
+	public function save(bool $force = false): bool
 	{
+		return parent::save($force);
+
 		$saved = false;
 		
 		try
@@ -173,7 +151,7 @@ abstract class RelationalSql extends ComputedColumns
 			
 			// Save children
 			
-			// Save relationships
+			// TODO: Save relationships
 			// Get current, then reorder / _destroy / etc and insert new?
 			// INSERT IGNORE ?
 			
@@ -190,5 +168,14 @@ abstract class RelationalSql extends ComputedColumns
 		}
 
 		return $saved;
+	}
+
+
+	public function jsonData(): array
+	{
+		$columns = array_keys($this->table_info->relations);
+		
+		return parent::jsonData()
+			+ array_fill_keys($columns, null);
 	}
 }

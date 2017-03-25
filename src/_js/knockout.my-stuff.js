@@ -75,32 +75,6 @@ ko.bindingHandlers.fadeVisible =
 };
 
 
-ko.steps = function(templates)
-{
-	var self = this;
-	self.templates = templates;
-
-	self.current = ko.observable(0);
-	self.template = ko.pureComputed(() => self.templates[self.current()]);
-
-	self.canNext = ko.pureComputed(() => self.current() < self.templates.length-1);
-	self.canPrev = ko.pureComputed(() => self.current() > 0);
-	
-	self.next = function(d, e)
-	{
-		self.current((self.current()+1) % self.templates.length);
-		if( ! self.canNext())
-			$(e.target).blur();
-	};
-	
-	self.prev = function(d, e)
-	{
-		self.current((self.current()-1) % self.templates.length);
-		if( ! self.canPrev())
-			$(e.target).blur();
-	};
-}
-
 
 /**
  * Lazy observable

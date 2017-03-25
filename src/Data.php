@@ -3,19 +3,19 @@
 /**
  * Base class for data objects.
  */
-abstract class Data implements JsonSerializable
+class Data implements JsonSerializable
 {
-	protected $data;
+	protected $data = [];
 
-	protected function __construct()
+	public function __construct(array $data = null)
 	{
-		// Add _type for JSON
-		$this->data['_type'] = get_class($this);
+		if($data)
+			$this->set($data);
 	}
 
 
 
-	public function set(array $data)
+	public function set(array $data): self
 	{
 		foreach($data as $k => $v)
 			$this->{$k} = $v;
@@ -69,11 +69,31 @@ abstract class Data implements JsonSerializable
 		if($keys === false || $keys == [])
 			return [];
 
+		// Get json data
+		$data = $this->jsonData();
+
 		// All
 		if($keys === true)
-			return $this->data;
+			return $data;
 
 		// Only whitelisted
-		return array_whitelist($this->data, static::SERIALIZE);
+		return array_whitelist($data, static::SERIALIZE);
+	}
+
+	public function jsonData(): array
+	{
+		return ['__type' => get_class($this)]
+			+ $this->data;
+	}
+
+	public static function from($data)
+	{
+		$class = array_remove($data, '__type');
+
+		return Reflect::pre_construct($class ?? static::class,
+			function ($obj) use ($data)
+			{
+				$obj->data = $data;
+			});
 	}
 }

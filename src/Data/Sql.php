@@ -1,7 +1,7 @@
 <?php
 
 namespace Data;
-use DB, Valid, Security;
+use DB, Valid, Security, Log;
 
 
 /**
@@ -30,21 +30,23 @@ abstract class Sql extends \Data
 		// Get table info
 		$this->table_info = DB::table_info($this->table_name);
 
-		// Make sure columns exists in $data for serialization
-		foreach($this->table_info->column_names as $col)
-			if( ! isset($this->data[$col]))
-				$this->data[$col] = null;
-
 		// Done loading from PDO or wherever
 		$this->loaded = true;
 	}
 
-
+	public function __toString()
+	{
+		return static::class.'('.implode(',', $this->pk()).')';
+	}
 	
 	public function __set($key, $value)
 	{
 		if($this->loaded)
 		{
+			// Prevent changing pk
+			if( ! is_null($this->$key) && in_array($key, $this->table_info->primary_keys))
+				return;
+
 			// Check if restricted property
 			$roles = static::RESTRICTED[$key] ?? [];
 			if($roles)
@@ -55,10 +57,8 @@ abstract class Sql extends \Data
 			if($column && strpos($column['db_type'], 'set(') === 0)
 				$value = preg_replace('/\s+/', '', $value) ?: null;
 
-
-
 			// Add to dirty if different
-			if($column && $value != $this->data[$key] ?? null)
+			if($column && $value != ($this->data[$key] ?? null))
 				$this->dirty[$key] = $value;
 		}
 		
@@ -67,6 +67,10 @@ abstract class Sql extends \Data
 	
 	public function __unset($key)
 	{
+		// Prevent unsetting pk
+		if(in_array($key, $this->table_info->primary_keys))
+			return;
+
 		// "Remove" by setting dirty value to null
 		if(isset($this->$key))
 			$this->dirty[$key] = null;
@@ -84,9 +88,9 @@ abstract class Sql extends \Data
 	/**
 	 * Gets and optionally sets the primary keys.
 	 *
-	 * @return [$pk1, ...] or false if null
+	 * @return [$pk1, ...]
 	 */
-	public function pk(...$keys)
+	public function pk(...$keys): array
 	{
 		if(count($this->table_info->primary_keys) == count($keys))
 			foreach($this->table_info->primary_keys as $k => $key)
@@ -95,6 +99,14 @@ abstract class Sql extends \Data
 		$keys = array_whitelist($this->data, $this->table_info->primary_keys);
 
 		return $keys;
+	}
+
+	/**
+	 * Returns true if primary key is not empty.
+	 */
+	public function has_pk(): bool
+	{
+		return ! empty(array_filter($this->pk()));
 	}
 
 
@@ -113,7 +125,7 @@ abstract class Sql extends \Data
 
 
 	/**
-	 * @return true if any table columns have new values; otherwise false.
+	 * @return true if new, or any columns have new values.
 	 */
 	public function is_dirty()
 	{
@@ -125,11 +137,14 @@ abstract class Sql extends \Data
 	/**
 	 * @return true if saved; false if no column changes, i.e. not saved
 	 */
-	public function save()
+	public function save(bool $force = false): bool
 	{
 		// Check if dirty
-		if( ! self::is_dirty())
+		if( ! $force && $this->has_pk() && ! self::is_dirty())
+		{
+			Log::trace(static::class, 'has no changes to save.');
 			return false;
+		}
 
 		// Validate
 		$this->validate();
@@ -158,11 +173,16 @@ abstract class Sql extends \Data
 
 		// If insert
 		if($affected_rows == 1)
+		{
 			// Look for auto_increment column
 			foreach($this->table_info->columns as $key => $col)
 				// If found, get id
 				if($col['auto_increment'])
 					$this->data[$key] = $query->lastInsertId();
+			Log::trace(static::class, 'with id', $this->pk(), 'inserted');
+		}
+		else
+			Log::trace(static::class, 'with id', $this->pk(), 'updated');
 
 		// Reset dirt
 		$this->dirty = [];
@@ -231,12 +251,20 @@ abstract class Sql extends \Data
 			return $obj;
 	}
 
-	public static function delete(...$keys)
+	public static function delete(...$keys): bool
 	{
 		$query = self::get_query(__FUNCTION__, $keys);
 		
 		return DB::prepare($query)
 			->exec($keys) > 0;
+	}
+
+
+	public static function all()
+	{
+		$query = DB::table_info(self::table_name())->query[__FUNCTION__];
+		return DB::query($query)
+			->fetchAll(static::class);
 	}
 
 	private static function get_query(string $name, array $keys): string
@@ -247,5 +275,14 @@ abstract class Sql extends \Data
 			throw new \Exception('Incorrect number of keys');
 
 		return $info->query[$name];
+	}
+
+
+	public function jsonData(): array
+	{
+		$columns = $this->table_info->column_names;
+
+		return parent::jsonData()
+			+ array_fill_keys($columns, null);
 	}
 }

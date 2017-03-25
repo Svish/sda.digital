@@ -20,8 +20,8 @@ class Page extends Secure
 		Message::exception($e);
 
 		if($e instanceof \Error\ValidationFailed)
-			$context += ['errors' => $e->getErrors()];
+			$context += ['errors' => $e->errors];
 
-		return View::template($context)->output();;
+		return View::template($context)->output();
 	}
 }

@@ -21,6 +21,12 @@ class TimeValidator
 	 */
 	public function __invoke($time)
 	{
-		return (time() - $time) <= $this->ttl;
+		$age = time() - $time;
+		$valid = $age <= $this->ttl;
+		
+		if( ! $valid)
+			Log::trace("Age={$age} is older than TTL={$this->ttl}");
+
+		return $valid;
 	}
 }

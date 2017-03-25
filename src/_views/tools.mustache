@@ -11,33 +11,14 @@
 		{{#role.editor}}
 		<a class="frame" href="manage/content/fresh-dirs">
 			{{#svg}}add{{/svg}}<br>
-			Nytt innhold
+			Nytt innhold…
+		</a>
+		<a class="frame" href="manage/content/fresh-series">
+			{{#svg}}list{{/svg}}<br>
+			…i serier
 		</a>
 		{{/role.editor}}
-		{{#role.admin}}
-		<a class="frame" href="manage/content/issues">
-			{{#svg}}error{{/svg}}<br>
-			Problemer
-		</a>
-		{{/role.admin}}
 	</section>
-
-	{{#role.editor}}
-	<section>
-		<a class="frame" href="manage/series">
-			{{#svg}}list{{/svg}}<br>
-			Serier
-		</a>
-		<a class="frame" href="manage/speakers">
-			{{#svg}}speakers{{/svg}}<br>
-			Talere
-		</a>
-		<a class="frame" href="manage/places">
-			{{#svg}}place{{/svg}}<br>
-			Steder
-		</a>
-	</section>
-	{{/role.editor}}
 
 	<section>
 		{{#role.admin}}
@@ -58,6 +39,14 @@
 		{{/role.login}}
 	</section>
 
+	{{#role.admin}}
+	<section>
+		<a class="frame" href="manage/content/issues">
+			{{#svg}}error{{/svg}}<br>
+			Problemer
+		</a>
+	</section>
+	{{/role.admin}}
 </div>
 
 {{/ content}}

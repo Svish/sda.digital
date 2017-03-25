@@ -4,7 +4,7 @@ namespace View\Helper;
 use Session, Message, Mustache;
 
 /**
- * Returns HTML for current messages.
+ * Helper: Returns HTML for current messages.
  */
 class Messages
 {

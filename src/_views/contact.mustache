@@ -11,13 +11,13 @@
 <form action="{{PATH}}" method="post">
 	
 	<p><input {{#errors.from}}class="error"{{/errors.from}} type="email" name="from" placeholder="Din epost" value="{{_post.from}}" required>
-	{{#errors.from}}<div class="field error">{{.}}</div>{{/errors.from}}
+	{{#errors.from}}<span class="field error">{{.}}</span>{{/errors.from}}
 	
 	<p><input {{#errors.subject}}class="error"{{/errors.subject}} type="text" name="subject" placeholder="Emne" value="{{_post.subject}}" required>
-	{{#errors.subject}}<div class="field error">{{.}}</div>{{/errors.subject}}
+	{{#errors.subject}}<span class="field error">{{.}}</span>{{/errors.subject}}
 	
-	<p><textarea {{#errors.message}}class="error"{{/errors.message}} name="message" placeholder="Melding" required>{{_post.message}}</textarea>
-	{{#errors.message}}<div class="field error">{{.}}</div>{{/errors.message}}
+	<p><textarea class="full-width {{#errors.message}}error{{/errors.message}}" name="message" placeholder="Melding" required>{{_post.message}}</textarea>
+	{{#errors.message}}<span class="field error">{{.}}</span>{{/errors.message}}
 	
 	<p><button class="icon" type="submit">{{#svg}}send;style="width:2em"{{/svg}}</button>
 </form>

@@ -5,7 +5,7 @@ use Model, Security;
 
 
 /**
- * Outputs only if user has role.
+ * Helper: Output wrapped text only if user has role.
  */
 class Role
 {
@@ -37,7 +37,7 @@ class Role
 			Security::require([$this->role]);
 			return $render ? $render($text) : $text;
 		}
-		catch(\Error\Forbidden $e)
+		catch(\Error\UserError $e)
 		{
 			return null;
 		}

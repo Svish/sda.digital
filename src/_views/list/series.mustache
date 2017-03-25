@@ -1,0 +1,12 @@
+<ul class="item-list no-select">
+	{{#series_list}}
+	<li>
+		<a href="{{url}}">
+			{{#svg}}list{{/svg}}
+			{{title}}
+			<span class="count">{{count}}</span>
+			{{#n}}<span class="count">#{{n}}</span>{{/n}}
+		</a>
+	</li>
+	{{/series_list}}
+</ul>

@@ -3,7 +3,7 @@
 namespace View\Helper;
 
 /**
- * Dumb an object.
+ * Helper: Dumb an object.
  */
 class Debug
 {

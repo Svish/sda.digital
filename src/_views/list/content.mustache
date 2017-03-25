@@ -1,0 +1,17 @@
+<ul class="item-list no-select">
+	{{#content_list}}
+	<li>
+		<a href="{{url}}">
+			{{title}}
+			
+			{{#n}}<span class="count">#{{n}}</span>{{/n}}
+
+			<div class="meta">
+				<time datetime="{{created}}">{{created | df.full}}</time>
+				{{#speaker}}<br>{{speaker}}{{/speaker}}
+				{{#role}}<br>{{role | __ | ucfirst}}{{/role}}
+			</div>
+		</a>
+	</li>
+	{{/content_list}}
+</ul>

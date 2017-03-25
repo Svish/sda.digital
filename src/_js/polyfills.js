@@ -28,6 +28,17 @@ String.prototype.includes = String.prototype.includes || function(search, start)
 
 
 /**
+ * PolyFill: Regexp.escape
+ * @https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+ */
+RegExp.escape = function(string)
+{
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
+
+
+/**
  * PolyFill: Number.isInteger
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isInteger#Polyfill
  */

@@ -36,6 +36,7 @@ class DB
 
 	public static function prepare($statement)
 	{
+		// TODO: "Cache" prepared statements?
 		return new Query(self::instance()->pdo->prepare($statement), self::instance()->pdo);
 	}
 	
@@ -58,7 +59,7 @@ class DB
 
 
 	private static $_migrator;
-	private $_pdo;
+	private $pdo;
 
 	public function __construct()
 	{
@@ -90,6 +91,7 @@ class DB
 		// HACK: Make sure these classes mtimes are included in cache check.
 		class_exists('DB\\Query');
 		class_exists('DB\\Valid');
+		class_exists('DB\\TableInfo');
 		$this->cache = new PreCheckedCache(self::class, new DB\TableInfoLoader($this->pdo));
 	}
 }

@@ -10,7 +10,7 @@ class Reset extends \Controller\Page
 {
 	public function get()
 	{
-		if(isset($_GET['email']))
+		if(isset($_GET['token']))
 		{
 			try
 			{

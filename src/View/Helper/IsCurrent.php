@@ -5,7 +5,7 @@ use Mustache_LambdaHelper;
 
 
 /**
- * Menu hack for selecting active menu item.
+ * Helper: Menu hack for selecting active menu item.
  */
 class IsCurrent
 {

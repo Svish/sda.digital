@@ -7,6 +7,7 @@ class Cache
 {	
 	const DIR = ROOT.'.cache'.DIRECTORY_SEPARATOR;
 	
+	protected $id;
 	protected $dir;
 	protected $valid = [];
 
@@ -23,6 +24,7 @@ class Cache
 	public function __construct(string $id, ...$cache_validators)
 	{
 		// Set cache directory
+		$this->id = $id;
 		$this->dir = self::DIR.$id.DIRECTORY_SEPARATOR;
 
 		// Unless first is null, add default file validator
@@ -62,7 +64,7 @@ class Cache
 
 		// Call and store default if callable
 		if(is_callable($default))
-			return $this->_set($file, $default);
+			return $this->set($key, $default);
 
 		// Otherwise, return $default
 		return $default;
@@ -74,13 +76,16 @@ class Cache
 
 	protected function is_valid(int $mtime, string $key): bool
 	{
-		// False if any validators fails
-		foreach($this->valid as $valid)
-			if( ! $valid($mtime, $key))
-				return false;
+		$valid = true;
 
-		// Otherwise; valid
-		return true;
+		foreach($this->valid as $v)
+			if( ! $v($mtime, $key))
+			{
+				Log::trace("{$this->id}[$key] invalidated by ".strval_any($v));
+				$valid = false;
+			}
+
+		return $valid;
 	}
 
 
@@ -130,6 +135,7 @@ class Cache
 	public function clear()
 	{
 		File::rdelete($this->dir);
+		Log::trace("Cleared {$this->id}");
 	}
 
 	/**
@@ -138,5 +144,6 @@ class Cache
 	public static function clear_all()
 	{
 		File::rdelete(self::DIR);
+		Log::trace("Cleared all");
 	}
 }

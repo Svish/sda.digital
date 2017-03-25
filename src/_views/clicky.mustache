@@ -1,5 +1,6 @@
 
 {{!TODO: Check if canonical is used when PATH is not same}}
+{{#site_id}}
 <script type="text/javascript">
     var clicky_site_ids = [{{site_id}}];
     (function() {
@@ -10,3 +11,4 @@
         ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
     })();
 </script>
+{{/site_id}}

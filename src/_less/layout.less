@@ -12,6 +12,8 @@
 
 @input-border-color: lighten(@background-color, 15%);
 @input-background-color: darken(@background-color, 10%);
+@placeholder-color:#7f7f7f;
+@small-color: #5c5c5c;
 @error-color: #b40000;
 
 
@@ -43,20 +45,30 @@ body
 
 
 // Margins
-h1,h2,h3,h4,p,ul,ol,dl,pre,table
+h1,h2,h3,h4,
+p,ul,ol,dl,
+pre,table,details,summary
 {
 	margin-top: 0;
 	margin-bottom: 2rem;
 }
+h2,h3,h4
+{
+	margin-bottom: 1rem;
+}
+
 
 // Empty
-h1,h2,h3,h4,p,ul,ol,li,table,div,span
+h1,h2,h3,h4,
+p,ul,ol,li,
+table,div,span
 {
 	&:empty
 	{
 		display: none;
 	}
 }
+
 
 // Sections
 section
@@ -66,7 +78,7 @@ section
 	{
 		margin-top: -1em;
 		padding-top: 2em;
-		border-top: 1px solid @border-color;
+		//border-top: 1px solid @border-color;
 	}
 }
 
@@ -81,6 +93,14 @@ small,
 .small
 {
 	font-size: smaller;
+}
+
+// Mark
+mark
+{
+	background: none;
+	color: inherit;
+	outline: 1px solid fade(@accent1-color, 50%);
 }
 
 
@@ -108,12 +128,10 @@ h2{font-size: 1.5em}
 h3{font-size: 1.2em}
 
 
-
 // Links
 a
 {
 	text-decoration: none;
-
 	color: @accent2-color;
 
 	&:hover,
@@ -125,13 +143,41 @@ a
 }
 
 
+// Details
+details
+{
+	summary
+	{
+		cursor: help;
+		display: block;
+
+
+		&::-webkit-details-marker
+		{
+			display: none;
+		}
+
+		&::before
+		{
+			content: '\25B6';
+			padding-right: .5em;
+			display: inline-block;
+		}
+	}
+
+	&[open]>summary::before
+	{
+			content: '\25BC';
+	}
+}
+
 
 // Images
 img
 {
 	max-width: 100%;
+	box-sizing: border-box;
 }
-
 
 
 // SVG
@@ -148,17 +194,15 @@ svg.flag
 }
 
 
-
 // Lists
 ul,ol
 {
 	padding-left: 2em;
-	li
-	{
-		list-style: square;
-	}
 }
-
+ul li
+{
+	list-style: square;
+}
 
 
 // Definition lists
@@ -227,7 +271,6 @@ blockquote
 	}
 	&::after
 	{
-		// None
 		content: "";
 	}
 }
@@ -253,17 +296,17 @@ p.right
 	text-align: center;
 }
 
-.responsive
+.full-width
 {
-	margin-right: 2rem;
-	display: inline-block;
-	vertical-align: top;
-
-	&:last-of-type
-	{
-		margin-right: 0;
-	}
+	width: 100%;
 }
+
+.gone
+{
+	display: none;
+}
+
+
 
 
 
@@ -273,10 +316,15 @@ p.right
 @import "footer";
 
 @import "fancy";
-@import "dragndrop";
+@import "dnd";
 
 @import "tables";
 @import "forms";
+
+@import "editor";
+@import "items";
+@import "google";
+@import "search-bar";
 
 @import "page-about";
 @import "page-tools";

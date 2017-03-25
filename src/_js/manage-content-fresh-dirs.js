@@ -1,5 +1,5 @@
 
-var API = 'manage/content/api/';
+var API = 'manage/fresh/api/';
 
 
 $.getJSON(API+'fresh-dirs', function(data)

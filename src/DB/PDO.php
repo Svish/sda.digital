@@ -35,7 +35,7 @@ class PDO extends \PDO
 	{
 		if(--$this->_counter)
 		{
-			$this->exec('ROLLBACK TO trans'.$this->_counter + 1);
+			$this->exec('ROLLBACK TO trans'.($this->_counter+1));
 			return true;
 		}
 		return parent::rollback();

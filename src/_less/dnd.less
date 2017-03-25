@@ -1,0 +1,36 @@
+
+[draggable]
+{
+	cursor: -webkit-grab;
+	cursor: -moz-grab;
+	&>svg
+	{
+		color: @accent2-color;
+	}
+}
+[draggable]:active
+{
+	cursor: -webkit-grabbing;
+	cursor: -moz-grabbing;
+	opacity: 0.2;
+}
+
+.dropzone
+{
+	min-height: 1em;
+	min-width: 1em;
+
+	&.accept
+	{
+		background-color: fadeout(@accent2-color, 20%) !important;
+	}
+
+	&:empty
+	{
+		background-color: unset;
+		&::before
+		{
+			content: "\00a0";
+		}
+	}
+}

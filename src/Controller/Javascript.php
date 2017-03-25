@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller;
-use Config, HTTP;
+use Config, HTTP, Log;
 
 /**
  * Handles compression and serving of javascript files.
@@ -19,18 +19,19 @@ class Javascript extends Cached
 	public function __construct()
 	{
 		parent::__construct();
-		$this->config = Config::javascript();
+		$this->config = Config::js();
 		
 		// Add full path to bundle files
 		array_walk_recursive($this->config->bundles, function(&$value)
 		{
-			if(is_string($value))
+			if(is_string($value) && ! starts_with('http', $value))
 				$value = self::DIR.$value;
 		});
 
 		// Add single files
 		foreach(glob(self::DIR.'*.js') as $file)
-			$this->config->bundles[basename($file)] = [$file];
+			$singles[basename($file)] = [$file];
+		$this->config->bundles += $singles;
 	}
 
 	public function before(array &$info)
@@ -47,7 +48,12 @@ class Javascript extends Cached
 
 	protected function cache_valid($cached_time)
 	{
-		$newest = array_reduce(array_map('filemtime', $this->files), 'max');
+		$files = array_filter($this->files, function($f)
+			{
+				return ! starts_with('http', $f);
+			});
+		$files = array_map('filemtime', $files);
+		$newest = array_reduce($files, 'max');
 		return parent::cache_valid($cached_time)
 		   and $cached_time >= $newest;
 	}
@@ -61,6 +67,7 @@ class Javascript extends Cached
 		// Gather contents of all input files into one string
 		$js = array_map('file_get_contents', $this->files);
 		$js = implode(PHP_EOL.PHP_EOL, $js);
+
 
 		// Try compile
 		$params = [
@@ -76,6 +83,10 @@ class Javascript extends Cached
 		$compiled = HTTP::post(self::URL, $params);
 
 
+		Log::group();
+		Log::trace_raw("Files:", array_map('basename', $this->files));
+		Log::trace_raw("Compilation took: {$compiled->info['total_time']}s");
+
 		// Output if we got something
 		if($compiled->header['Content-Length'] > 1)
 		{
@@ -89,22 +100,26 @@ class Javascript extends Cached
 				" */",
 				$compiled->content,
 				]);
-			return;
+		}
+		// Otherwise, get helpful error (hopefully)
+		else
+		{
+			$error = HTTP::post(self::URL, ['output_info' => 'errors'] + $params);
+			http_response_code(500);
+			echo implode("\r\n", [
+				"/**",
+				" * Javascript error",
+				" * Using: ".self::URL,
+				" * Took: {$compiled->info['total_time']} + {$error->info['total_time']}",
+				" **",
+				"",
+				trim($error->content),
+				" */",
+				]);
+			Log::error_raw("Error: ", $error->content);
+			Log::trace_raw("Took: {$error->info['total_time']}s");
 		}
 
-
-		// Otherwise, get hopefully helpful error
-		$error = HTTP::post(self::URL, ['output_info' => 'errors'] + $params);
-		http_response_code(500);
-		echo implode("\r\n", [
-			"/**",
-			" * Javascript error",
-			" * Using: ".self::URL,
-			" * Took: {$compiled->info['total_time']} + {$error->info['total_time']}",
-			" **",
-			"",
-			trim($error->content),
-			" */",
-			]);
+		Log::groupEnd();
 	}
 }

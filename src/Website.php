@@ -78,6 +78,10 @@ class Website
 	protected function find_route($path)
 	{
 		$route = $this->parse_path($path);
+		Log::group();
+		Log::trace_raw('Path:', $path);
+		Log::trace_raw('Route:', $route);
+		Log::groupEnd();
 		
 		if($route['handler'] === null)
 			throw new Error\PageNotFound($path);
@@ -91,7 +95,7 @@ class Website
 	{
 		// 0: Check for direct match
 		if(array_key_exists($path, $this->routes))
-			return ['handler' => $this->routes[$path], 'route' => $path];
+			return ['route' => $path, 'handler' => $this->routes[$path]];
 
 		// 1: Check for regex matches
 		foreach($this->routes as $pattern => $handler)
@@ -104,13 +108,13 @@ class Website
 			if(preg_match('#'.$regex.'/?#Au', $path, $matches))
 			{
 				unset($matches[0]);
-				return ['handler' => $handler, 'params' => $matches, 'route' => $pattern];
+				return ['route' => $pattern, 'handler' => $handler, 'params' => $matches];
 			}
 		}
 
 		// 2: Check for default route
 		if(array_key_exists(0, $this->routes))
-			return ['handler' => $this->routes[0], 'route' => 0];
+			return ['route' => 0, 'handler' => $this->routes[0]];
 
 		// 3: None found
 		return [];

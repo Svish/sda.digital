@@ -7,16 +7,17 @@
 
 <h1>Brukere</h1>
 
-<table class="fixed full-width">
+<table id="user-table" class="fixed full-width editor">
 	<thead>
 		<tr>
 			<th style="width: 32%">Name</th>
 			<th style="width: 32%">Email</th>
 			<th style="width: 32%">Roles</th>
-			<th style="width: 2.5em"></th>
+			<th style="width: 6ch"></th>
 		</tr>
 	</thead>
 	<tbody>
+		{{> waiting-row }}
 		<!-- ko template: {name: 'user-row', foreach: users, afterAdd: afterAdd} -->
 		<!-- /ko -->
 	</tbody>
@@ -30,8 +31,6 @@
 	</tfoot>
 </table>
 
-{{> waiting }}
-
 
 <script type="text/html" id="user-row">
 	<tr spellcheck="false">
@@ -43,25 +42,28 @@
 	
 		<!-- ko if: editing -->
 		<td>
-			<input type="text" data-bind="value: name, event: {keydown: keydown}"></div>
+			<input required type="text" data-bind="value: name">
 			<div class="cell error" data-bind="text: errors().name"></div>
 		</td>
 		<td>
-			<input type="email" data-bind="value: email, event: {keydown: keydown}"></div>
+			<input required type="email" data-bind="value: email">
 			<div class="cell error" data-bind="text: errors().email"></div>
 		</td>
 		<td>
-			<input type="text" data-bind="value: roles, event: {keydown: keydown}"></div>
+			<input type="text" data-bind="value: roles">
 			{{! TODO: http://knockoutjs.com/documentation/selectedOptions-binding.html }}
 			<div class="cell error" data-bind="text: errors().roles"></div>
 		</td>
 		<!-- /ko -->
 
-		<td>
-			<a href="javascript:void(0)" data-bind="click: edit, visible: canEdit">{{#svg}}edit{{/svg}}</a>
-			<a href="javascript:void(0)" data-bind="click: $parent.remove.bind($parent, $data), visible: canRemove">{{#svg}}remove{{/svg}}</a>
-			<a href="javascript:void(0)" data-bind="click: cancel, visible: canCancel">{{#svg}}close{{/svg}}</a>
-			<a href="javascript:void(0)" data-bind="click: save, visible: canSave">{{#svg}}save{{/svg}}</a>
+		<td class="buttons">
+			<a href="javascript:void(0)" data-bind="visible: canEdit, click: edit">{{#svg}}edit{{/svg}}</a>
+			
+			<a href="javascript:void(0)" data-bind="visible: canRemove, click: $parent.remove.bind($parent, $data)">{{#svg}}remove{{/svg}}</a>
+
+			<a href="javascript:void(0)" data-bind="visible: canCancel, click: cancel">{{#svg}}close{{/svg}}</a>
+
+			<a href="javascript:void(0)" data-bind="visible: canSave, click: save">{{#svg}}save{{/svg}}</a>
 		</td>
 	</tr>
 </script>

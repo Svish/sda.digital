@@ -1,0 +1,45 @@
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}{{content.title}}{{/ title }}
+
+{{$ content}}
+
+
+{{#content}}
+
+	<h1>
+		<a href="{{url}}">
+			{{title}}
+		</a>
+	</h1>
+	<div class="meta no-select">
+		{{#location}}
+		<span><b>Sted:</b> <a href="{{url}}">{{name}}</a></span>
+		{{/location}}
+		<span><b>Tatt opp:</b> {{time | df.flex | ucfirst}}</span>
+		<span><b>Lagt til:</b> <time datetime="{{created | df.iso}}">{{created | df.full}}</time></span>
+	</div>
+
+	<pre>// TODO: Media player</pre>
+
+	{{#md}}{{summary}}{{/md}}
+
+
+	<h2>Filer</h2>
+	{{> list/file}}
+
+	
+
+	<hr>
+
+	<h2>Deltakere</h2>
+	{{> list/person}}
+
+	<h2>Serier</h2>
+	{{> list/series}}
+
+{{/content}}
+
+
+{{/ content}}
+{{/ layout }}

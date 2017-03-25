@@ -62,8 +62,32 @@ class Query
 	 */
 	public function exec($input_parameters = null): int
 	{
-		$this->statement->execute($input_parameters);
-		$this->close();
+		try
+		{
+			$this->statement->execute($input_parameters);
+
+		}
+		catch(\PDOException $e)
+		{
+			// https://mariadb.com/kb/en/mariadb/mariadb-error-codes/
+			switch($e->errorInfo[1])
+			{
+				case 1062: // ER_DUP_ENTRY
+					throw new \Error\Duplicate($e);
+				case 1216: // ER_NO_REFERENCED_ROW
+				case 1217: // ER_ROW_IS_REFERENCED
+				case 1451: // ER_ROW_IS_REFERENCED_2
+				case 1452: // ER_NO_REFERENCED_ROW_2
+					throw new \Error\KeyConstraint($e);
+					
+				default:
+					throw $e;
+			}
+		}
+		finally
+		{
+			$this->close();
+		}
 		return $this->affectedRows();
 	}
 
@@ -110,8 +134,6 @@ class Query
 
 	}
 
-
-
 	/**
 	 * Fetches all rows as assoc array.
 	 */
@@ -125,9 +147,9 @@ class Query
 	/**
 	 * Fetches all rows.
 	 */
-	public function fetchAll($fetch_argument = 'stdClass', ...$ctor_arguments)
+	public function fetchAll(string $class = 'stdClass', ...$ctor_arguments)
 	{
-		return $this->statement->fetchAll(PDO::FETCH_CLASS, $fetch_argument, $ctor_arguments);
+		return $this->statement->fetchAll(PDO::FETCH_CLASS, $class, $ctor_arguments);
 	}
 
 	/**
@@ -145,7 +167,7 @@ class Query
 	/**
 	 * Fetches the first row, and closes the cursor.
 	 */
-	public function fetchFirst($class_name = null, array $ctor_arguments = [])
+	public function fetchFirst($class_name = 'stdClass', ...$ctor_arguments)
 	{
 		$result = $this->fetch($class_name, $ctor_arguments);
 		$this->close();

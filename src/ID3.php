@@ -7,7 +7,6 @@ class ID3
 {
 	use Instance;
 
-
 	private $lib;
 	private function __construct()
 	{
@@ -17,7 +16,18 @@ class ID3
 
 	public function read($path)
 	{
+		$cache = new Cache(__CLASS__, [$path]);
+
+		return $cache->get($path, function($path)
+			{
+				return $this->_read($path);
+			});
+	}
+
+	public function _read($path)
+	{
 		// Analyze
+		Log::trace("Analyzing", $path);
 		$info = $this->lib->analyze($path);
 
 		// Check encoding
@@ -41,16 +51,15 @@ class ID3
 
 
 		if(isset($info['playtime_string']))
-		yield 'time' => [
+		yield 'length' => [
 			'string' => $info['playtime_string'],
 			'seconds' => $info['playtime_seconds'],
 			];
 
 
 		// Yield tags of interest
-		foreach($info['tags'] ?? [] as $tags)
-			yield from $this->tags($tags);
-
+		if(isset($info['tags']))
+		yield 'tags' => iterator_to_array($this->tags($info['tags']));
 
 		// Yield audio info
 		if(isset($info['audio']))
@@ -66,7 +75,8 @@ class ID3
 
 	private function tags(array $tags)
 	{
-		foreach($tags as $key => $value)
+		foreach($tags as $version => $values)
+		foreach($values as $key => $value)
 		{
 			if( ! in_array($key, self::OF_INTEREST))
 				continue;
@@ -74,21 +84,32 @@ class ID3
 			switch($key)
 			{
 				case 'artist':
-					yield $key => array_flatten(array_map(function($item)
+					yield self::name($key) => array_flatten(array_map(function($item)
 						{
 							return explode('/', $item);
 						}, $value));
 					break;
 
+				case 'comment':
+					if(is_array($value))
+						$value = trim(implode(PHP_EOL.PHP_EOL, $value));
+
+					if(preg_match('/\s*\b(?<t>'.Valid::FLEXI_TIME.')\b\s*/', $value, $x, PREG_OFFSET_CAPTURE))
+					{
+						yield 'time' => $x['t'][0];
+						$value = substr_replace($value, '', $x['t'][1], strlen($x[0][0]));
+					}
+
+					yield self::name($key) => trim($value) ?: null;
+
 				default:
-					yield $key => is_array($value)
+					yield self::name($key) => is_array($value)
 						? implode('; ', $value)
 						: $value;
 					break;
 			}
 		}
 	}
-
 
 
 	private function media(array $info)
@@ -101,14 +122,14 @@ class ID3
 			switch($key)
 			{
 				case 'bitrate':
-					yield $key => [
+					yield self::name($key) => [
 						'string' => Format::si($value, 'bps'),
 						'raw' => $value,
 					];
 					break;
 
 				case 'sample_rate':
-					yield $key => [
+					yield self::name($key) => [
 						'string' => Format::si($value, 'Hz', 1),
 						'raw' => $value,
 					];
@@ -119,17 +140,31 @@ class ID3
 					$value = explode("\u{4}", $value)[0];
 
 				default:
-					yield $key => $value;
+					yield self::name($key) => $value;
 					break;
 			}
 		}
 	}
 
+
+	private static function name(string $key):string
+	{
+		return self::NAMES[$key] ?? $key;
+	}
+
+	const NAMES = [
+		'creation_date' => 'date',
+		'band' => 'album_artist',
+	];
+
 	const OF_INTEREST = [
 		'band',
 		'album',
 		'artist',
+		'comment',
 		'title',
 		'track',
+		'year',
+		'creation_date',
 		];
 }

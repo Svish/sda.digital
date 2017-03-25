@@ -56,7 +56,8 @@ a:not(.frame):hover img.frame
 	}
 	.spinner
 	{
-
+		top: 1.5rem + 1rem;
+		right: 1rem;
 	}
 	.spinner-icon
 	{
@@ -96,7 +97,7 @@ a.badge:active
 {
 	box-shadow: 0 0 10px rgba(0,0,0,.5);
 }
-.badge:before
+.badge::before
 {
 	padding: 0 .75em;
 	margin-right: 1em;
@@ -105,7 +106,7 @@ a.badge:active
 	color: #fff;
 	box-shadow: 0 0 5px #000;
 }
-.badge[data-name]:before
+.badge[data-name]::before
 {
 	content: attr(data-name);
 }
@@ -122,39 +123,42 @@ a.badge:active
 
 
 // Waiting for content
-.waiting-padding
-{
-	height: 1px;
-	width: 0;
-	display: block !important;
-}
 .waiting
 {
-	margin: auto;
-	width: 70px;
-	text-align: center;
-	
-	& > div
+	.padding
 	{
-		width: 18px;
-		height: 18px;
-		background-color: #333;
-
-		border-radius: 100%;
-		display: inline-block;
-		-webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-		animation: sk-bouncedelay 1.5s infinite ease-in-out both;
+		height: 1px;
+		width: 0;
+		display: block !important;
 	}
+	.dots
+	{
+		margin: auto;
+		width: 70px;
+		text-align: center;
+		
+		& > div
+		{
+			width: 18px;
+			height: 18px;
+			background-color: #333;
 
-	.bounce1
-	{
-		-webkit-animation-delay: -0.32s;
-		animation-delay: -0.32s;
-	}
-	.bounce2
-	{
-		-webkit-animation-delay: -0.16s;
-		animation-delay: -0.16s;
+			border-radius: 100%;
+			display: inline-block;
+			-webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+			animation: sk-bouncedelay 1.5s infinite ease-in-out both;
+		}
+
+		.bounce1
+		{
+			-webkit-animation-delay: -0.32s;
+			animation-delay: -0.32s;
+		}
+		.bounce2
+		{
+			-webkit-animation-delay: -0.16s;
+			animation-delay: -0.16s;
+		}
 	}
 }
 @-webkit-keyframes sk-bouncedelay {
@@ -169,4 +173,23 @@ a.badge:active
 	-webkit-transform: scale(1.0);
 	transform: scale(1.0);
   }
+}
+
+// Flex
+// @see http://flexbox.help
+.flex
+{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+
+	&>*
+	{
+		margin-right: 2em;
+	}
+
+	h2,h3
+	{
+		margin-bottom: 0;
+	}
 }

@@ -5,6 +5,23 @@
  */
 class Email
 {
+	public static function __callStatic($name, $args)
+	{
+		try
+		{
+			Log::group();
+			Log::trace_raw("Sending $name email…");
+			$result = call_user_func_array([new self, "send_$name"], $args);
+			Log::groupEnd();
+			return $result;
+		}
+		catch(Swift_SwiftException $e)
+		{
+			throw new Exception('Failed to send email.', $e);
+		}
+	}
+
+
 	public function send_reset(\Data\User $user)
 	{
 		// Make token
@@ -15,7 +32,7 @@ class Email
 			[
 				'user' => $user,
 				'host' => HOST,
-				'url' => new \View\Helper\Url,
+				'u' => new \View\Helper\Url,
 			]);
 		$text = preg_split('/\R/', $text);
 
@@ -59,7 +76,7 @@ class Email
 	/**
 	 * Send message.
 	 */
-	private function send(Swift_Message $message)
+	private function send(Swift_Message $message): bool
 	{
 		// Set common message stuff
 		$text = $message->getBody();
@@ -79,6 +96,7 @@ class Email
 
 		// Send message
 		$mailer = Swift_Mailer::newInstance($transport);
+		$mailer->registerPlugin(Email\SwiftLogger::plugin());
 		return $mailer->send($message) > 0;
 	}
 
@@ -86,19 +104,5 @@ class Email
 	public function __construct()
 	{
 		$this->config = Config::contact();
-	}
-
-
-	public static function __callStatic($name, $args)
-	{
-		try
-		{
-			return call_user_func_array([new self, "send_$name"], $args);
-		}
-		catch(Swift_SwiftException $e)
-		{
-			error_log("Failed to send '$name' email: " . $e->getMessage());
-			throw new \Exception('Failed to send email.', $e);
-		}
 	}
 }

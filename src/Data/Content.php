@@ -2,10 +2,9 @@
 
 namespace Data;
 
-class Content extends RelationalSql
+class Content extends UrlEntity
 {
 	const SERIALIZE = true;
-
 
 	protected $rules = [
 			'time' => ['flexi_time'],

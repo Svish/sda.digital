@@ -1,0 +1,115 @@
+.series,
+.location,
+.person
+{
+	section.meta
+	{
+		margin-bottom: .5em;
+		padding-bottom: .5em;
+		border-bottom: 1px solid @shadow-color;
+
+		ul
+		{
+			display: inline-block;
+			margin-bottom: 0;
+		}
+	}
+}
+
+
+.item-list
+{
+	padding: 0;
+
+	&:blank::before
+	{
+		content: 'Ingen';
+		font-style: italic;
+		color: @small-color;
+		height: 1em;
+	}
+
+	li
+	{
+		list-style: none;
+		display: inline-block;
+		width: 15em;
+
+		vertical-align: top;
+		margin-bottom: 1em;
+		margin-right: 1em;
+
+		a
+		{
+			display: block;
+			position: relative;
+
+			padding: .5em 1em;
+			color: inherit;
+
+			background: lighten(@background-color, 2%);
+			border: 1px solid lighten(@background-color, 15%);
+
+			&:hover
+			{
+				background: lighten(@background-color, 5%);
+				border: 1px solid lighten(@background-color, 25%);
+
+				.count
+				{
+					background: fade(lighten(@background-color, 5%), 75%);
+				}
+			}
+
+			.count
+			{
+				color: @small-color;
+				background: fade(lighten(@background-color, 2%), 75%);
+
+				position: absolute;
+				padding: .5em 1em .5em .5em;
+				right: 0;
+				top: 0;
+			}
+
+			.meta
+			{
+				color: lighten(@small-color, 10%);
+				font-size: small;
+			}
+		}
+	}
+}
+
+
+body.series:not(.index) .item-list:first-of-type
+{
+	&,li
+	{
+		display: block;
+		width: 100%;
+		margin-right: 0;
+	}
+}
+
+@media only screen and (max-width : 550px)
+{
+	.series,
+	.location,
+	.person
+	{
+		section.meta
+		{
+			ul
+			{
+				display: block;
+			}
+		}
+	}
+	.item-list li
+	{
+		display: block;
+		width: 100%;
+		margin-right: 0;
+	}
+}

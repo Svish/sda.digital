@@ -32,7 +32,7 @@ var ViewModel = function(data)
 			});
 		};
 
-	this.remove = function(user)
+	this.remove = function(user, e)
 		{
 			if( ! user.user_id())
 				return this.users.remove(user);
@@ -81,7 +81,6 @@ var UserModel = function(data)
 	this.canCancel = ko.pureComputed(() => this.editing() && this.user_id(), this);
 
 	this.cancel = Model.cancel;
-	this.keydown = Model.inputKeydown;
 
 	this.errors = ko.observable({});
 

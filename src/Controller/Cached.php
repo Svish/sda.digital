@@ -1,7 +1,8 @@
 <?php
 
 namespace Controller;
-use HTTP,Cache;
+use HTTP, Cache, Log;
+use Geekality\ConsoleLog;
 
 /**
  * Base controller which handles caching of content
@@ -37,7 +38,7 @@ abstract class Cached extends Controller
 
 		// Init our cache
 		$get = array_whitelist($_GET, $this->parameter_whitelist);
-		$get = json_encode($get, JSON_NUMERIC_CHECK);
+		$get = $get ? json_encode($get, JSON_NUMERIC_CHECK) : '';
 
 		$this->cache = new Cache(__CLASS__);
 		$this->cache_key = $info['path'].$get;
@@ -84,12 +85,12 @@ abstract class Cached extends Controller
 		}
 
 		// Otherwise resend cached
+		Log::trace("Found '{$this->cache_key}'");
 		http_response_code($this->cached['code']);
 		
 		foreach($this->cached['headers'] as $h)
 			header($h, false);
 
-		header('X-Cache: Hit');
 		echo $this->cached['content'];
 	}
 
@@ -110,8 +111,14 @@ abstract class Cached extends Controller
 			header("Etag: $etag");
 			header("Cache-Control: max-age=$max_age, public");
 
+			$headers = array_filter(headers_list(), function($h)
+				{
+					// Don't cache logger header
+					return ! starts_with(ConsoleLog::HEADER_NAME.':', $h);
+				});
+
 			$data = [
-				'headers' => headers_list(),
+				'headers' => $headers,
 				'code' => http_response_code(),
 				'time' => $time,
 				'lmod' => $lmod,
@@ -120,7 +127,7 @@ abstract class Cached extends Controller
 				'content' => $content,
 			];
 
-			header('X-Cache: Set');
+			Log::trace("Added '{$this->cache_key}'");
 			$this->cache->set($this->cache_key, $data);
 			echo $content;
 		}

@@ -2,28 +2,32 @@
 {
 	padding: .6rem @padding;
 	
-	background: fadeout(blue, 50%);
-	border-bottom: 1px solid blue;
+	background: fadeout(darkblue, 15%);
+	border-bottom: 1px solid darkblue;
 	color: white;
+	font-size: large;
+	white-space: pre-line;
 
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
+	z-index: 100;
 
 	animation: slide-up-down 10s both;
+
 }
 
 .message.error
 {
-	background: fadeout(red, 50%);
-	border-bottom: 1px solid red;
+	background: fadeout(darkred, 15%);
+	border-bottom: 1px solid darkred;
 }
 
 .message.ok
 {
-	background: fadeout(green, 50%);
-	border-bottom: 1px solid green;
+	background: fadeout(darkgreen, 15%);
+	border-bottom: 1px solid darkgreen;
 }
 
 @keyframes slide-up-down

@@ -1,12 +1,15 @@
 <?php
 
 namespace Cache;
+use Log;
 
 /**
  * Checks if given files have changed.
  */
 class FileValidator
 {
+	use \WinPathFix;
+
 	protected $files;
 
 	/**
@@ -24,7 +27,11 @@ class FileValidator
 	{
 		foreach($this->files as $f)
 			if(filemtime($f) > $time)
+			{
+				$f = self::from_win($f, true);
+				Log::trace("$f has changed");
 				return false;
+			}
 		return true;
 	}
 }

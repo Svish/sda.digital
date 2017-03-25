@@ -1,18 +1,103 @@
 <?php
 
 namespace Model;
-use Mime, ID3;
-use \Data\File;
-use \Data\Content;
-use \Data\Series;
+use Data, Model, DB, Log;
+use Mime, ID3, Valid;
+use Data\Content;
+use Data\File;
+use Data\Person;
+use Data\Series;
+use Data\ContentPerson;
+use Data\SeriesContent;
+use Data\FreshLog;
 
 
 /**
- * Model for fresh files.
+ * Helper model for fresh files.
  */
 class Fresh extends \Model
 {
 	const DIR = ROOT.'_new'.DIRECTORY_SEPARATOR;
+
+
+	public function for_series(): array
+	{
+		$uid = Model::users()->logged_in()->user_id;
+
+		return DB::query("SELECT content_id, title, created,
+				GROUP_CONCAT(person.name SEPARATOR ', ') 'persons'
+				FROM content
+					INNER JOIN fresh_log USING (content_id)
+					INNER JOIN content_person USING (content_id)
+					INNER JOIN person USING (person_id)
+				WHERE fresh_log.user_id = 1
+				GROUP BY content_id
+				ORDER BY content.created")
+			->fetchArray();
+	}
+
+
+	/**
+	 * Validate and save content data.
+	 */
+	public function save(array $data)
+	{
+		Valid::check_array($data, [
+			'persons' => ['not_empty'],
+		]);
+
+		$uid = Model::users()->logged_in()->user_id;
+
+		try
+		{
+			DB::begin();
+
+			// Save content to get id
+			$content = new Content;
+			$content->set($data);
+			$content->user_id = $uid;
+			$content->save();
+
+			// Add persons
+			foreach($data['persons'] as $person)
+			{
+				$person = Person::from($person);
+				$person->save();
+
+				$cp = new ContentPerson;
+				$cp->content_id = $content->content_id;
+				$cp->person_id = $person->person_id;
+				$cp->role = $person->role;
+				$cp->save();
+			}
+
+			// Add files
+			foreach($data['files'] as $f)
+			{
+				$file = File::from($f);
+				$file->content_id = $content->content_id;
+				$file->save();
+				$files[] = $file;
+			}
+
+			// Move files from _new
+			foreach($files as $file)
+				$file->update_path();
+
+			DB::commit();
+		}
+		catch(\Exception $e)
+		{
+			DB::rollback();
+			throw $e;
+		}
+
+		$log = new FreshLog;
+		$log->user_id = $uid;
+		$log->content_id = $content->content_id;
+		$log->save();
+	}
+
 
 
 
@@ -26,7 +111,6 @@ class Fresh extends \Model
 
 		yield from $this->fresh_dir($it);
 	}
-
 	private function fresh_dir(\RecursiveDirectoryIterator $it)
 	{
 		$file_count = 0;
@@ -69,10 +153,12 @@ class Fresh extends \Model
 				return $f->isFile();
 			});
 		foreach($it as $file)
+		{
 			$files[] = [
 				'path' => $file->getPathname(),
 				'name' => $file->getBasename('.'.$file->getExtension()),
 				];
+		}
 
 		// Group by name
 		$list = array_group_by('name', $files ?? []);
@@ -80,24 +166,21 @@ class Fresh extends \Model
 		// Yield content
 		foreach($list as $content)
 		{
-			$files = array_map([$this, 'fresh_file'], $content['items']);
-
-			yield \Reflect::pre_construct(Content::class,
-				function($new) use ($content, $files)
-				{
-					$new->title = self::from_win($content['name']);
-					$new->file_list = $files;
-				});
+			yield [
+				'title' => self::from_win($content['name']),
+				'files' => array_map([$this, 'file'], $content['items']),
+				'time' => null,
+				'summary' => null,
+				'persons' => [],
+				'location_id' => null,
+			];
 		}
 	}
-
-	private function fresh_file($file): File
+	private function file($file): File
 	{
-		$path = str_replace(ROOT, '', $file['path']);
-
-		$file = new File;
-		$file->path = self::from_win($path);
-		return $file;
+		$f = new File;
+		$f->path = self::from_win($file['path'], true);
+		return $f;
 	}
 
 
@@ -105,14 +188,48 @@ class Fresh extends \Model
 
 
 	/**
-	 * Analyze file and return whatever we can deduce from it.
+	 * Returns ID3 tag info.
 	 */
-	public function analyze(string $path)
+	public function tag_info(string $path)
 	{
 		$path = self::safe_path($path);
 		$info = ID3::instance()->read($path);
-		return iterator_to_array($info);
+		$info = iterator_to_array($info);
+
+		Log::trace(self::from_win($path, true), $info);
+
+		foreach($info['tags'] as $key => $val)
+		switch($key)
+		{
+			case 'time':
+				yield 'time' => $val; break;
+
+			case 'year':
+				if( ! array_key_exists('time', $info['tags']))
+					yield 'time' => $val;
+				break;
+
+			case 'title':
+				yield 'title' => $val; break;
+
+			case 'date':
+				yield 'time' => $val; break;
+
+			case 'comment':
+				yield 'summary' => $val; break;
+
+			case 'artist':
+				foreach($val as $i => $artist)
+				{
+					$person = Model::persons()->find($artist);
+					$person->role = $i ? 'translator' : 'speaker';
+					$persons[] = $person;
+				}
+
+				yield 'persons' => $persons; break;
+		}
 	}
+
 
 
 

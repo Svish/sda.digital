@@ -1,7 +1,7 @@
 <?php
 
 namespace Error;
-use View, HTTP, Message;
+use View, HTTP, Message, Log;
 
 /**
  * Global error handler.
@@ -14,14 +14,16 @@ class Handler
 		if( ! $e instanceof UserError)
 			$e = new Internal($e);
 
-		// TODO: Write to log file, which should be visible in UI
-		// @see http://www.geekality.net/2011/05/28/php-tail-tackling-large-files/
+		// Log
+		$log = $e instanceof Internal ? 'error_raw' : 'warn_raw';
+		Log::$log(get_class($e), $e->getMessage());
+		Log::trace_raw($e->getFile(), $e->getLine());
 
 		// Add message
 		Message::exception($e);
 
 		// Redirect to login if unauthorized
-		// TODO: Bring extra GET query parameters too
+		// TODO: Bring extra GET query parameters along
 		if($e instanceof Unauthorized)
 			HTTP::redirect('user/login?url='.urlencode(PATH));
 

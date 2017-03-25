@@ -4,7 +4,7 @@ namespace View\Helper;
 use Mustache_LambdaHelper;
 
 /**
- * Formats durations.
+ * Helper: Formats durations.
  */
 class FormatDuration
 {

@@ -2,7 +2,7 @@
 
 namespace Data;
 
-class Series extends RelationalSql
+class Series extends UrlEntity
 {
 	const SERIALIZE = true;
 
@@ -12,6 +12,4 @@ class Series extends RelationalSql
 
 		$this->computed( new Slug('title') );
 	}
-
-	// TODO: How to deal with n in series_content?
 }

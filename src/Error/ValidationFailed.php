@@ -7,16 +7,13 @@ namespace Error;
  */
 class ValidationFailed extends UserError
 {
-	private $errors;
+	public $errors;
+	public $subject;
 
-	public function __construct(array $errors)
+	public function __construct(array $errors, $subject)
 	{
 		$this->errors = $errors;
+		$this->subject = $subject;
 		parent::__construct(400, [count($errors)]);
-	}
-
-	public function getErrors()
-	{
-		return $this->errors;
 	}
 }

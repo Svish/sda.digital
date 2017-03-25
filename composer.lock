@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "87cb94054cf8555de02a595227477bd6",
+    "content-hash": "ebe56737297efc18dd85fcb9c878a36a",
     "packages": [
         {
             "name": "bitworking/mimeparse",
@@ -63,6 +63,48 @@
             "time": "2016-02-09T18:45:00+00:00"
         },
         {
+            "name": "geekality/consolelog",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Svish/consolelog.git",
+                "reference": "a818fe2925c186bd9ff378fd3d6634b2b72b3183"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Svish/consolelog/zipball/a818fe2925c186bd9ff378fd3d6634b2b72b3183",
+                "reference": "a818fe2925c186bd9ff378fd3d6634b2b72b3183",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Geekality\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Log variables to browser console via Chrome Logger protocol.",
+            "homepage": "https://github.com/Svish/chromephp",
+            "keywords": [
+                "browser",
+                "chrome logger",
+                "console",
+                "debugging",
+                "log",
+                "logging"
+            ],
+            "support": {
+                "source": "https://github.com/Svish/consolelog/tree/master",
+                "issues": "https://github.com/Svish/consolelog/issues"
+            },
+            "time": "2017-03-08 03:56:10"
+        },
+        {
             "name": "james-heinrich/getid3",
             "version": "v1.9.13",
             "source": {
@@ -97,6 +139,52 @@
                 "tags"
             ],
             "time": "2016-12-14T14:29:29+00:00"
+        },
+        {
+            "name": "kus/php-image",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Svish/php-image.git",
+                "reference": "26516ed3a918971b76be55ba8928cb4592c52287"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Svish/php-image/zipball/26516ed3a918971b76be55ba8928cb4592c52287",
+                "reference": "26516ed3a918971b76be55ba8928cb4592c52287",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/PHPImage.php"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Blake Kus",
+                    "email": "blakekus@gmail.com",
+                    "homepage": "http://www.blakek.us"
+                }
+            ],
+            "description": "Wrapper for PHP's GD Library for easy image manipulation",
+            "homepage": "http://blakek.us",
+            "keywords": [
+                "gd",
+                "image",
+                "php",
+                "text"
+            ],
+            "support": {
+                "source": "https://github.com/Svish/php-image/tree/master"
+            },
+            "time": "2016-01-20 06:46:06"
         },
         {
             "name": "leafo/lessphp",
@@ -256,16 +344,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.4.5",
+            "version": "v5.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "cd142238a339459b10da3d8234220963f392540c"
+                "reference": "81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/cd142238a339459b10da3d8234220963f392540c",
-                "reference": "cd142238a339459b10da3d8234220963f392540c",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e",
+                "reference": "81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e",
                 "shasum": ""
             },
             "require": {
@@ -306,7 +394,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2016-12-29T10:02:40+00:00"
+            "time": "2017-02-13T07:52:53+00:00"
         },
         {
             "name": "webuni/commonmark-attributes-extension",
@@ -421,7 +509,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "kus/php-image": 20,
+        "geekality/consolelog": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

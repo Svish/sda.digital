@@ -4,7 +4,7 @@ namespace View\Helper;
 use Mustache_LambdaHelper;
 
 /**
- * Returns the first line of text.
+ * Helper: Returns the first line of text.
  */
 class FirstLine
 {

@@ -30,7 +30,7 @@ class Contact extends Page
 		try
 		{
 			// Check
-			Valid::check($_POST, $this->_rules);
+			Valid::check_array($_POST, $this->_rules);
 
 			// Send
 			Email::feedback($_POST['from'], $_POST['subject'], $_POST['message']);

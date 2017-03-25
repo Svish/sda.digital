@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller;
-use Config, Cache, HTTP;
+use Config, Cache, HTTP, Log;
 use lessc;
 
 /**
@@ -19,7 +19,7 @@ class Less extends Cached
 	{
 		parent::__construct();
 
-		$this->config = Config::less();
+		$this->config = Config::css();
 		$this->config->valid = array_map('basename', glob(self::DIR.'*'.self::EXT));
 	}
 
@@ -63,6 +63,9 @@ class Less extends Cached
 
 	private function compile()
 	{
+		Log::group();
+		Log::trace_raw('Cached compilation of '.basename($this->file).'…');
+
 		$cache = new Cache(__CLASS__);
 		$cache_key = basename($this->file).'c';
 
@@ -86,5 +89,7 @@ class Less extends Cached
 		$this->data = $new['updated'] > $old['updated']
 			? $cache->set($cache_key, $new)
 			: $new;
+			
+		Log::groupEnd();
 	}
 }

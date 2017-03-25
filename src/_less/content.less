@@ -15,9 +15,15 @@
 	}
 
 
+	// Headers
 	h1,h2,h3,h4
 	{
 		min-height: 1.5em;
+
+		a
+		{
+			color: inherit;
+		}
 
 		span
 		{
@@ -26,20 +32,59 @@
 			font-size: medium;
 			color: @text-color;
 			white-space: nowrap;
-		}	
+		}
+		svg
+		{
+			* {fill: @text-color;}
+		}
+	}
+	h1 + div.meta
+	{
+		margin-top: -2.5rem;
+		margin-bottom: 1rem;
+		padding-bottom: 1rem;
+		font-size: small;
+		a
+		{
+			color: inherit;
+		}
+		span
+		{
+			display: inline-block;
+			white-space: nowrap;
+			margin-right: 1em;
+		}
 	}
 
+
 	// Small
+	.small-note,
+	small
+	{
+		font-size: small;
+		transition: opacity 250ms;
+		opacity: .4;
+	}
 	small
 	{
 		display: block;
-		font-size: x-small;
 		margin-top: .1em;
-		opacity: .2;
-		transition: opacity 250ms;
-		&:hover
-		{
-			opacity: .75;
-		}
+	}
+	.small-note:hover,
+	select:focus + small,
+	input:focus + small
+	{
+		opacity: 1;
+	}
+
+
+	// Empty stuff
+	a:empty::before,
+	tbody td:empty::before
+	{
+		content: 'null';
+		font-style: italic;
+		color: @small-color;
+		height: 1em;
 	}
 }

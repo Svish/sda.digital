@@ -1,0 +1,33 @@
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}{{series.title}}{{/ title }}
+
+{{$ content}}
+
+
+{{#series}}
+
+	<h1>
+		<a href="{{url}}">
+			{{#svg}}list{{/svg}}
+			{{title}}
+		</a>
+	</h1>
+
+	
+	{{> edit/series}}
+
+	{{> list/filter}}
+	{{> list/content}}
+
+	<h2>Deltakere</h2>
+	{{> list/person}}
+
+	<h2>Steder</h2>
+	{{> list/location}}
+
+{{/series}}
+
+
+{{/ content}}
+{{/ layout }}

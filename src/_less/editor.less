@@ -1,0 +1,35 @@
+#editor
+{
+	margin-bottom: 2rem;
+	margin-top: 1rem;
+	padding: 1rem;
+
+	background: darken(@background-color, 10%);
+	border: 3px dashed @shadow-color;
+
+
+	input,
+	textarea
+	{
+		width: 100%;
+		&.number
+		{
+			max-width: 13ch;
+		}
+	}
+
+	p
+	{
+		margin-bottom: .5em;
+	}
+
+	&>*:not(:last-child)
+	{
+		margin-bottom: .5em;
+	}
+
+	.buttons
+	{
+		text-align: right;
+	}
+}

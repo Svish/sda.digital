@@ -9,6 +9,9 @@ use HTTP;
 class Svg extends Cached
 {
 	const DIR = SRC.'_icons'.DIRECTORY_SEPARATOR;
+	const OPTS = ['fill'];
+
+	protected $parameter_whitelist = self::OPTS;
 
 	private $files;
 	private $file;
@@ -50,6 +53,11 @@ class Svg extends Cached
 		// Set id attribute
 		$svg = $doc->documentElement;
 		$svg->setAttribute('id', $filename);
+
+		// Extra stuff
+		$opts = array_whitelist($_GET ?? [], self::OPTS);
+		foreach($opts as $a => $v)
+			$svg->setAttribute($a, $v);
 
 		// Output
 		header('Content-Type: image/svg+xml; charset=utf-8');

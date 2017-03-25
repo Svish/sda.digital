@@ -2,7 +2,6 @@
 # Charset
 AddDefaultCharset UTF-8
 
-
 # Environment
 RewriteEngine on
 RewriteBase /sda.digital/

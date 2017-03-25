@@ -1,0 +1,45 @@
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}{{location.name}}{{/ title }}
+
+{{$ content}}
+
+
+{{#location}}
+
+	<h1>
+		<a href="{{url}}">
+			{{#svg}}place{{/svg}}
+			{{name}}
+		</a>
+	</h1>
+	
+	{{> edit/location}}
+
+	<p>{{> map}}
+
+	<section class="meta flex">
+		<div>
+			<h2>Adresse</h2>
+			<address>{{address}}</address>
+		</div>
+		{{#website}}
+		<div>
+			<h2>Nettside</h2>
+			<p><a href="{{website}}">{{website | urlLabel}}</a>
+		</div>
+		{{/website}}
+	</section>
+
+	<section>
+		{{> list/filter}}
+		{{> list/series}}
+		{{> list/person}}
+		{{> list/content}}
+	</section>
+
+{{/location}}
+
+
+{{/ content}}
+{{/ layout }}

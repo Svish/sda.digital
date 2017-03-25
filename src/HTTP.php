@@ -6,23 +6,26 @@
 class HTTP
 {
 
-	public static function get(string $url, array $opts = [])
+	public static function get(string $url, array $opts = []): CurlResponse
 	{
 		$c = curl_init();
-		curl_setopt_array($c, [
+		curl_setopt_array($c, $opts + [
 				CURLOPT_URL => $url,
 				CURLOPT_HEADER => true,
-			] + $opts);
+				CURLOPT_FOLLOWLOCATION => true,
+			]);
 
 		try
 		{
-
 			ob_start();
 			curl_exec($c);
 			$response = ob_get_clean();
 
 			if(curl_errno($c))
+			{
+				Log::warn(curl_errno($c));
 				throw new \Error\CurlError($c);
+			}
 
 			return new CurlResponse($c, $response);
 		}
@@ -32,12 +35,26 @@ class HTTP
 		}
 	}
 
-	public static function post(string $url, array $post, array $opts = [])
+	public static function post(string $url, array $post, array $opts = []): CurlResponse
 	{
 		return self::get($url, $opts + [
-			CURLOPT_POST => true,
-			CURLOPT_POSTFIELDS => http_build_query($post),
-		]);
+				CURLOPT_POST => true,
+				CURLOPT_POSTFIELDS => http_build_query($post),
+			]);
+	}
+
+	public static function head(string $url, array $opts = [])
+	{
+		try
+		{
+			return self::get($url, $opts + [
+					CURLOPT_NOBODY => true,
+				]);	
+		}
+		catch(\Error\CurlError $e)
+		{
+			return null;
+		}
 	}
 
 
@@ -84,43 +101,6 @@ class HTTP
 	{
 		self::redirect(PATH.$append, 303);
 	}
-
-
-
-	/**
-	 * Get headers through a HEAD request.
-	 */
-public static function get_headers(string $url, array $opts = [])
-{
-	// Get headers
-	$prev = stream_context_get_options(stream_context_get_default());
-	stream_context_set_default(['http' => $opts + 
-		[
-			'method' => 'HEAD',
-			'timeout' => 2,
-		]]);
-	$req = @get_headers($url, true);
-	if( ! $req)
-		return false;
-
-	// Make more sane response
-	foreach($req as $h => $v)
-	{
-		if(is_int($h))
-			$headers[$h]['Status'] = $v;
-		else
-		{
-			if(is_string($v))
-				$headers[0][$h] = $v;
-			else
-				foreach($v as $x => $y)
-					$headers[$x][$h] = $y;
-		}
-
-	}
-	stream_context_set_default($prev);
-	return $headers;
-}
 
 
 

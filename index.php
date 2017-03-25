@@ -1,6 +1,5 @@
 <?php
 
-
 // Include autoloader and stuff
 require 'vendor/autoload.php';
 require 'functions.inc';

@@ -5,7 +5,7 @@ use ReflectionFunction, Mustache_LambdaHelper;
 
 
 /**
- * PHP Function wrapper for Mustache templates.
+ * Helper: PHP Function wrapper for Mustache templates.
  */
 class PhpFunction
 {

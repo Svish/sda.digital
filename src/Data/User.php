@@ -1,7 +1,8 @@
 <?php
 namespace Data;
+use Log;
 
-class User extends RelationalSql
+class User extends ExtendedSql
 {
 	const SERIALIZE = ['user_id', 'email', 'name', 'roles'];
 	const RESTRICTED = ['roles' => ['admin']];
@@ -60,6 +61,7 @@ class User extends RelationalSql
 		{
 			$this->password = $password;
 			$this->save();
+			Log::info("Rehashed password for $this");
 		}
 
 		return true;
@@ -71,6 +73,7 @@ class User extends RelationalSql
 	{
 		$this->token = bin2hex(random_bytes(16));
 		$this->save();
+		Log::info("Made reset token for $this");
 		return $this;
 	}
 

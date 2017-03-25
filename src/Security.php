@@ -10,19 +10,28 @@ class Security
 	 */
 	public static function require(array $roles): bool
 	{
+		$back = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
+		Log::trace("Called from {$back['class']}->{$back['function']}");
+
 		// Get logged in user
 		$user = Model::users()->logged_in();
 
 		// Redirect if not logged in
 		if( ! $user)
+		{
+			Log::info('User not logged in.');
 			throw new \Error\Unauthorized();
+		}
 
 		// Always require login role
 		array_unshift($roles, 'login');
 
 		// Check roles
 		if( ! $user->has_roles($roles))
+		{
+			Log::warn('Requires:', $roles, '; Has:', $user->roles);
 			throw new \Error\Forbidden($roles);
+		}
 
 		return true;
 	}

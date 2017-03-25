@@ -2,9 +2,11 @@
 
 namespace View\Helper;
 use Mustache_LambdaHelper;
+use Data\UrlEntity;
+use Data\Slug;
 
 /**
- * URL helper for Mustache templates.
+ * Helper: URL helper for Mustache templates.
  */
 class Url
 {
@@ -18,7 +20,7 @@ class Url
 	{
 		if($render)
 			$url = $render($url);
-		
+
 		return strpos($url, '/') === 0
 			? WEBROOT.ltrim($url, '/')
 			: WEBBASE.$url;

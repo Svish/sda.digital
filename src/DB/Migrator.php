@@ -1,7 +1,7 @@
 <?php
 
 namespace DB;
-use DB, PDO, Cache, Message;
+use DB, PDO, Cache, Message, Log;
 
 /**
  * Performs DB migrations.
@@ -56,13 +56,18 @@ class Migrator
 			// Disable key checks while migrating
 			$pdo->exec("SET foreign_key_checks = 0");
 
+			Log::group();
+
 			// Process each file
 			foreach($files as $file)
 			{
 				extract($file);
+				Log::trace_raw('Processing version:', $version);
+
 				try
 				{
 					// Get SQL script, without # comments
+					Log::trace_raw('File:', $version);
 					$script = preg_replace('/#.++/', NULL, file_get_contents($file));
 
 					// Split into queries
@@ -75,8 +80,11 @@ class Migrator
 						$pdo->exec($q);
 
 					// Run <version>.php if it exists
-					if(file_exists(self::DIR.$version.'.php'))
-						require self::DIR.$version.'.php';
+					if(file_exists(self::DIR.$version.'.inc'))
+					{
+						Log::trace_raw('File:', $file);
+						require self::DIR.$version.'.inc';
+					}
 
 					// Update version table
 					$pdo->exec('UPDATE version SET version = '.$version);
@@ -95,7 +103,8 @@ class Migrator
 			$cache->clear();
 
 			// Add info message
-			Message::ok('db-migrated', $version);			
+			Message::ok('db-migrated', $version);
+			Log::groupEnd();
 		}
 	}
 

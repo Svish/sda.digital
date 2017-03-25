@@ -1,0 +1,12 @@
+<ul class="item-list no-select">
+	{{#person_list}}
+	<li>
+		<a href="{{url}}">
+			{{#svg}}person{{/svg}}
+			{{name}}
+			<span class="count">{{count}}</span>
+			{{#role}}<div class="meta">{{role | __ | ucfirst}}</div>{{/role}}
+		</a>
+	</li>
+	{{/person_list}}
+</ul>

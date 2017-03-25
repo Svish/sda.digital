@@ -1,13 +1,42 @@
+Up next
+===
 
-- (!) Remove DROPs from SQLs when site is being used
-- (!) Use Knockout on user/me? And others?
+
+- Edit content
+- Edit files
+- (!) Edit series
+	- Add content from freshlog
+	- Add other content
+	- Sortable
+	- Removable (_destroy)
+	
+- Add session_id() to fresh_log table?
+
+
+Maps
+===
+- Make cached controller instead of hardcoded map.mustache
+	- https://developers.google.com/maps/documentation/static-maps/intro#quick_example
+- (!) Implement Signing
+	- https://developers.google.com/maps/documentation/static-maps/get-api-key#sample-code-for-url-signing
+
+
+Tidbits
+===
+
+- (!) Use Knockout on user/me? And contact? Others?
 
 - Move array_* from functions.inc to Array class
 
 - Deal with multiple messages covering each other
 	- Get messages via ajax? (admin/users)
+	
+- Knockout model extend/inherit/something
+	- Look into js loader stuff?
 
-- Talere => Mennesker ?
+- Flash updated fields after ID3-search
+
+
 
 
 RelationalSql extends Sql
@@ -32,20 +61,10 @@ Admin
 
 - Content
 	- Add fresh
-		- Get info via id3
-		- Info editable
 		- Option:
 			- Put single (and replace with content template)
 			- Add as series (including already put)
 		- Auto-complete place and speakers
-
-		- Submit
-			- begin transaction
-			- insert rows
-			- copy files
-				- ha/sh/hash_id.ext
-			- commit transaction
-			- if good, delete originals, otherwise delete copies
 	
 	- Update info
 
@@ -57,17 +76,74 @@ Admin
 		- Use Redded 2016 for testing?
 	- List lost content (shouldn't get any, but who knows...)
 
+
+- Persons/Places
+	- (!) Throw ValidationFailed? if delete fails because of constraint
+	- Show count of content
+	- Link to person/place page
+		- person/<id>/<slug>
+
+
+
+Public
+===
+
+- Cache model::for_(speaker/location/series/content) view data
+	- (!) Remember footer and header changes...
+	- Somehow clear on save
+		- Don't remove slashes in cached key names, then delete 'url'?
+
+- Front
+	- Remove "Siste - " from <title>
+	- Latest content
+		- By added
+		- Fetch more link/button
+	- Searchbar on top
+		- Search for both content and series?
+		- Result replaces latest content
+	- http://flexbox.help/
+
+
+- (!) Show content length AND speaker
+	- How to get smoothly in person/series/location listings?
+
+- Locations
+	- Link map to google maps page
+
 - Series
-	- Delete
-		- Remove sermons?
-		- Make sermons without serie?
+	- Playlist-player?
 	- Reorder
 	- Remove content
+	- Add content
+		- Emphazis on fresh-log
 
-- Speakers/Places
-	- (!) Copy admin/users?
-	- (!) Throw ValidationFailed? if delete fails because of constraint
+- Content
+	- List files
+	- Embed codes?
+	- Share widget?
+	- Edit
+		- Content editable?
+		- {{#role.editor}}
+		- Add files (select from new)
+		- Add to / Remove from series
+	- https://www.audioverse.org/english/sermons/recordings/3162/revival-and-transformation.html
+	- https://www.audioverse.org/english/sermons/recordings/13863/1-soul-searching-our-emotions.html
 
+- RSS Feed
+	- Latest content (created)
+	- Latest sermon (recorded)
+	- Series
+	- Person?
+
+- Search?
+	- In titles and descriptions?
+	- Include speakers and series?
+		- Like iMDB: Speakers, Series, Content (hide empty sections)
+
+- Time?
+	- List by year/month
+	- Choose between created/time
+		- (!) Rename time => recorded
 
 Profile?
 ===
@@ -80,58 +156,3 @@ Profile?
 - Add last_login / login_log?
 - MyFavorites? (favorite_series_id =>)
 - MySeries? (series.owner != null)
-
-
-
-Public
-===
-
-- Cache views
-	- Somehow clear on save
-		- Don't remove slashes in cached key names, then delete 'url'?
-- (!) Set canonical on slug pages
-	- Overrideable _path in Template ($context + [_path => PATH])
-
-- Front
-	- Latest content
-		- By added
-	- Searchbar on top
-		- Result replaces latest content
-	- http://flexbox.help/
-
-- Speakers/Series/Places
-	- Browse lists
-	- Content editable?
-
-- Speakers
-	- List series partaking in
-	- Then content (or somehow side-by-side?)
-
-- Series
-	- Don't show empty ones
-	- List partaking speakers
-	- List content
-		- Order by n, then content.added / series_content.added
-
-- Content
-	- List files
-	- Link to speaker/series/place
-	- List series this is in at bottom
-		- Only owner == null? Or on top?
-	- Embed codes?
-	- Share widget?
-	- Edit
-		- Content editable?
-		- {{#role.editor}}
-		- Add files (select from new)
-		- Add to / Remove from series
-
-- RSS Feed
-	- Latest uploads
-	- Latest sermon
-
-- Search?
-	- In titles and descriptions?
-	- Include speakers and series?
-		- Like iMDB: Speakers, Series, Content (hide empty sections)
-

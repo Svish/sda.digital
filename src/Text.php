@@ -5,7 +5,7 @@
  *
  * Examples: 
  *     Text::ok('email-sent');
- *     Text::error('between', [1, 10]);
+ *     Text::error('within', [1, 10]);
  */
 class Text
 {
@@ -21,6 +21,9 @@ class Text
 		$args = array_shift($args);
 
 		$text = self::$t[$header][$key] ?? "$header.$key";
+
+		if(is_array($text))
+			$text = implode("\r\n", $text);
 
 		return $args
 			? vsprintf($text, $args)

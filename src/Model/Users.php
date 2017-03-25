@@ -45,7 +45,6 @@ class Users extends \Model
 
 		extract($data, EXTR_SKIP);
 
-
 		// Check if user exists
 		$user = $this->get($email);
 		if( ! $user)
@@ -58,9 +57,7 @@ class Users extends \Model
 		// Login
 		return $this->_login($user);
 	}
-
-
-
+	
 	private function _login(User $user): User
 	{
 		Session::set(self::SESSION_KEY, $user->pk());
@@ -126,7 +123,7 @@ class Users extends \Model
 	/**
 	 * Delete user by id.
 	 */
-	public function delete(int $id): int
+	public function delete(int $id): bool
 	{
 		return User::delete($id);
 	}
@@ -137,9 +134,7 @@ class Users extends \Model
 	 */
 	public function all(): array
 	{
-		return DB::query('SELECT * FROM user')
-			->execute()
-			->fetchAll(User::class);
+		return User::all();
 	}
 
 }

@@ -8,18 +8,15 @@ return [
 	'theme/icon/(:any:\.svg)' => '\Controller\\Svg',
 
 
-	# Content slugs
-	':alpha:/:digit:/:alpha:' => function (array &$request)
+	# Content slugs (type/id/slug)
+	# @see src/Data/UrlEntity
+	':alpha:/([\p{Nd}]+|new)(?:/:any:)?' => function (array &$request)
 	{
-		// TODO: Does this work?
-		$params = explode('/', $request['path']);
-		$handler = array_shift($params);
-		$request['params'] = $params;
-
-		var_dump(get_defined_vars()); exit('did it?');
-		
-		return $handler;
+		$type = array_shift($request['params']);
+		$type = ucfirst($type);
+		return "Controller\\$type";
 	},
+
 
 	# APIs
 	'.+/api/:alpha:' => function (array $request)
@@ -29,6 +26,7 @@ return [
 		$handler = substr($path, 0, strrpos($path, '\\'));
 		return "Controller\\$handler";
 	},
+
 
 	# Any other pages
 	0 => function (array $request)

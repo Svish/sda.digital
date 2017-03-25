@@ -29,11 +29,17 @@ function getQueryParameter(name, clean = true)
 
 
 /**
- * Generic confirm function.
+ * Generic confirmation.
  */
 function doConfirm()
 {
 	return confirm('Sikker? 🤔');
+}
+function doUnloadConfirm(e)
+{
+	var msg = '🤔';
+	(e || window.event).returnValue = msg;
+	return msg;
 }
 
 
@@ -60,20 +66,20 @@ function onAjaxSendHandler(e, x, opts)
 function onAjaxStopHandler()
 {
 	NProgress.done();
-	$('.waiting')
-		.slideUp(1000); //, () => $(this).remove());
+	$('.waiting').remove();
 }
 
-function onAjaxErrorHandler(event, jqxhr, settings, thrownError)
+function onAjaxErrorHandler(event, x, settings, thrownError)
 {
-	if( ! jqxhr.responseJSON)
+	if( ! x.responseJSON)
 		return;
 
 	$('#header')
-		.after(jqxhr.responseJSON.message);
+		.after(x.responseJSON.message);
 	
-	if(jqxhr.status >= 500)
+	if(x.status >= 500)
 		$('#content')
-			.html(jqxhr.responseJSON.reason);
+			// TODO: .html()
+			.append(x.responseJSON.reason);
 
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace Cache;
+use Log;
 
 /**
  * Preloaded cache.
@@ -24,14 +25,18 @@ class PreCheckedCache extends \Cache
 
 	public function reload()
 	{
+		Log::group();
+		Log::trace_raw("Reloading {$this->id}…");
+
 		// Clear first
 		$this->clear();
-
 
 		// Then reload
 		$x = $this->loader;
 		foreach($x() as $key => $value)
 			$this->set($key, $value);
+
+		Log::groupEnd();
 	}
 
 

@@ -1,0 +1,18 @@
+{{#role.editor}}
+
+<div id="editor">
+	<div data-bind="with: item">
+		<p>
+			<input type="text" placeholder="Tittel" data-bind="value: title" required>
+			<span class="field error" data-bind="text: $parent.errors().title"></span>
+		</p>
+	</div>
+	{{> edit/buttons}}
+</div>
+
+<script>
+var ID = '{{series_id}}';
+</script>
+<script defer src="js/edit-series.js"></script>
+
+{{/role.editor}}

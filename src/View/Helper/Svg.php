@@ -4,7 +4,7 @@ namespace View\Helper;
 use Mustache_LambdaHelper;
 
 /**
- * SVG importer for Mustache templates.
+ * Helper: SVG importer for Mustache templates.
  *
  * If the name includes a ";" everything
  * following it will be added to the <svg> 

@@ -3,7 +3,7 @@
 namespace View\Helper;
 
 /**
- * Returns the first line of text.
+ * Helper: Returns the first line of text.
  */
 class PathClasses
 {

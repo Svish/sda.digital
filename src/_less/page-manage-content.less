@@ -14,58 +14,51 @@ body.manage.content.fresh-dirs #content
 
 body.manage.content.fresh-content #content
 {
-	h2,p
+	#workspace,
+	details
 	{
-		margin-bottom: .5em;
+		h2,p,fieldset
+		{
+			margin-bottom: .5em;
+		}
 	}
 
 	input,
+	select,
 	textarea
 	{
 		padding-top: .15em;
 		padding-bottom: .15em;
 	}
 
-	table
+	fieldset
 	{
-		tbody
+		div
 		{
-			padding-bottom: 1em;
-			tr
+			white-space: nowrap;
+			select
 			{
-				padding-left: 1em;
-			}
-			td
-			{
-				vertical-align: baseline;
-				input
-				{
-					width: 100%;
-				}
-			}
-			&:empty
-			{
-				outline: 1px solid red;
+				width: 15ch;
 			}
 		}
 	}
 
-
-	.flex
+	table
 	{
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-
-		&>*
+		tbody
 		{
-			margin-right: 1em;
+			tr
+			{
+				padding-left: 1em;
+			}
 		}
 	}
 
 	.dropzone
 	{
-		background: url(icon/insert.svg) center no-repeat;
+		background: url(icon/insert.svg) no-repeat;
+		background-position: center;
 		background-size: 1em 1em;
 	}
+
 }

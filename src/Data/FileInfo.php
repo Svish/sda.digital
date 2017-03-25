@@ -6,9 +6,10 @@ use Mime;
 
 class FileInfo extends Computed
 {
+	use \WinPathFix;
+	
 	const HASH_ALGO = 'sha256';
 
-	use \WinPathFix;
 
 	protected function _unset(string $key)
 	{
@@ -29,24 +30,16 @@ class FileInfo extends Computed
 
 		yield 'extension'
 			=> self::from_win('.'.pathinfo($file, PATHINFO_EXTENSION));
-
-		yield from Mime::get($file);
 		
 		yield 'hash'
-			=> '$'.self::HASH_ALGO.'$'.hash_file(self::HASH_ALGO, $file);
+			 => hash_file(self::HASH_ALGO, $file);
+
+		yield from Mime::get($file);
 	}
 
-	public static function verify(string $file, string $hash): bool
+
+	public static function verify_hash(string $file, string $hash): bool
 	{
-		$algo = self::HASH_ALGO;
-
-		if(strpos($hash, '$') === 0)
-		{
-			$s = strpos($hash, '$', 1);
-			$algo = substr($hash, 1, $s-1);
-			$hash = substr($hash, $s+1);
-		}
-
-		return $hash == hash_file($algo, self::to_win($file));
+		return $hash == hash_file(self::HASH_ALGO, self::to_win($file));
 	}
 }

@@ -36,7 +36,7 @@ class Json extends View
 
 		// Set content-type
 		if( ! headers_sent($file, $line))
-			header("content-type: $mime; charset=utf-8");
+			header("Content-Type: $mime; charset=utf-8");
 
 		// If no data
 		if($this->_data === null)

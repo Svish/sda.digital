@@ -6,6 +6,11 @@
  */
 class Valid
 {
+	public static function check_array(array $subject, array $rule_set)
+	{
+		return self::check(new Data($subject), $rule_set);
+	}
+
 	public static function check(Data $subject, array $rule_set)
 	{
 		$errors = [];
@@ -16,6 +21,7 @@ class Valid
 			// If allowed empty, and value is empty, skip other rules
 			if( ! in_array('not_empty', $rules) and ! self::not_empty($value))
 				continue;
+
 
 			foreach($rules as $rule)
 			{
@@ -54,7 +60,10 @@ class Valid
 
 		// Throw if any errors found
 		if($errors)
-			throw new Error\ValidationFailed($errors);
+		{
+			Log::warn($errors);
+			throw new Error\ValidationFailed($errors, $subject);
+		}
 		
 		return true;
 	}
@@ -102,15 +111,34 @@ class Valid
 	}
 
 
-	public static function between($value, $min, $max): bool
+
+	public static function http_ok($value): bool
+	{
+		$r = HTTP::head($value);
+
+		if($r == false)
+			return false;
+
+		return $r->info['http_code'] >= 200
+			&& $r->info['http_code'] <  300;
+	}
+
+	public static function integer($value): bool
+	{
+		return preg_match('/^-?\d+$/', $value);
+	}
+
+
+	public static function within($value, $min, $max): bool
 	{
 		return $value >= $min && $value <= $max;
 	}
 
+	const FLEXI_TIME = '(?<year>\d{4})(?:-(?<month>\d{2})(?:-(?<day>\d{2})(?: (?<hour>\d{2}):(?<min>\d{2})(?::(?<sec>\d{2}))?)?)?)?';
 
 	public static function flexi_time($value): bool
 	{
-		$valid = preg_match('/^(?<year>\d{4})(?:-(?<month>\d{2})(?:-(?<day>\d{2})(?: (?<hour>\d{2}):(?<min>\d{2})(?::(?<sec>\d{2}))?)?)?)?$/', $value, $x);
+		$valid = preg_match('/^'.self::FLEXI_TIME.'$/', $value, $x);
 		
 		if( ! $valid)
 			return false;
@@ -118,7 +146,7 @@ class Valid
 		extract($x);
 
 		// Check month
-		if($month ?? null AND ! self::between($month, 1, 12))
+		if($month ?? null AND ! self::within($month, 1, 12))
 			return false;
 
 		// Check date
@@ -126,15 +154,15 @@ class Valid
 			return false;
 
 		// Check hour
-		if($hour ?? null AND ! self::between($hour, 0, 23))
+		if($hour ?? null AND ! self::within($hour, 0, 23))
 			return false;
 
 		// Check minute
-		if($min ?? null AND ! self::between($min, 0, 59))
+		if($min ?? null AND ! self::within($min, 0, 59))
 			return false;
 
 		// Check second
-		if($sec ?? null AND ! self::between($sec, 0, 59))
+		if($sec ?? null AND ! self::within($sec, 0, 59))
 			return false;
 
 		return true;

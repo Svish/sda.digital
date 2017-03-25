@@ -1,0 +1,29 @@
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}{{person.name}}{{/ title }}
+
+{{$ content}}
+
+
+{{#person}}
+
+	<h1>
+		<a href="{{url}}">
+			{{#svg}}person{{/svg}}
+			{{name}}
+		</a>
+	</h1>
+	
+	{{> edit/person}}
+	
+	{{> list/filter}}
+
+	{{> list/series}}
+	{{> list/content}}
+
+
+{{/person}}
+
+
+{{/ content}}
+{{/ layout }}

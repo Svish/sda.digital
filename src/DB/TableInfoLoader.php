@@ -1,7 +1,7 @@
 <?php
 
 namespace DB;
-use PDO, Reflect;
+use PDO, Reflect, Log;
 
 /**
  * Performs DB migrations.
@@ -21,10 +21,14 @@ class TableInfoLoader
 
 	public function __invoke()
 	{
+		Log::trace('Loading table info…');
+
 		// Get database name
 		$this->database = $this->pdo
 			->query("SELECT database()")
 			->fetchColumn(0);
+
+		Log::trace("Database = {$this->database}");
 
 		// Get class map
 		foreach(Reflect::descendents('Data\\RelationalSql', 'Data') as $class)
@@ -36,12 +40,11 @@ class TableInfoLoader
 
 		// Get table info
 		$tables = $this->get_tables();
-		$relations = $this->get_relations($classes);
-		$tables = array_merge_recursive($tables, $relations);
+		$this->add_relations($classes, $tables);
 
 		// Yield as objects
 		foreach($tables as $name => $info)
-			yield $name => (object) $info;
+			yield $name => new TableInfo($info);
 	}
 
 
@@ -104,7 +107,9 @@ class TableInfoLoader
 				= [['DB\\Valid', 'type'], $type];
 
 			// Add nullable rule
-			if( ! $nullable && ! $auto_increment)
+			if( ! $nullable
+			 && ! $has_default
+			 && ! $auto_increment)
 				$tables[$table]['rules'][$column][] = 'not_empty';
 
 			// Add unique rule
@@ -123,11 +128,11 @@ class TableInfoLoader
 			$cols = implode(' AND ', $cols);
 
 			$table['query'] = [
+				'all' => "SELECT * FROM $name",
 				'get' => "SELECT * FROM $name WHERE $cols",
 				'delete' => "DELETE FROM $name WHERE $cols",
 			];
 		}
-
 		return $tables;
 	}
 
@@ -137,10 +142,8 @@ class TableInfoLoader
 	/**
 	 * $[table][relations][property] => [info]
 	 */
-	private function get_relations(array $class_map): array
+	private function add_relations(array $class_map, array &$_tables): array
 	{
-		$_tables = [];
-
 		// Get second degree relations
 		$second = $this->pdo
 			->query("SELECT DISTINCT
@@ -177,7 +180,8 @@ class TableInfoLoader
 				'class' => $class_map[$table[1]] ?? 'stdClass',
 				'column' => $column[0],
 				'fp' => "{$table[0]}_list",
-				'query' => "SELECT {$table[1]}.*
+				'through' => $through,
+				'query' => "SELECT {$table[1]}.*, $through.*
 					FROM {$table[1]}
 					INNER JOIN $through USING ({$column[1]}) 
 					WHERE $through.{$column[0]} = :{$column[0]}",
@@ -215,9 +219,6 @@ class TableInfoLoader
 		foreach($first as $rel)
 		{
 			extract($rel);
-			// Skip through-tables
-			if(in_array($table, $mmt))
-				continue;
 
 			// Many-to-One / One-to-One
 			$_tables[$table]['relations'][$referenced_table] = [

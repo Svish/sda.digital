@@ -3,31 +3,18 @@
 /**
  * Helper class for Clicky integration.
  */
-class Clicky
+class Clicky extends Data
 {
 	private static $api = 'https://in.getclicky.com/in.php';
 	private static $parameters = ['type', 'href','title', 'ref', 'ua', 'ip_address', 'session_id', 'goal', 'custom'];
 	private static $types = ['click', 'pageview', 'download', 'outbound', 'custom'];
-	private $config;
 
-
+	
 
 	public function __construct()
 	{
-		$this->config = Config::clicky();
-	}
-
-
-
-	public function __isset($key)
-	{
-		return array_key_exists(ENV, $this->config)
-			&& array_key_exists($key, $this->config[ENV]);
-	}
-
-	public function __get($key)
-	{
-		return $this->config[ENV][$key];
+		$config = Config::clicky()[ENV] ?? [];
+		parent::__construct($config);
 	}
 
 
@@ -35,7 +22,10 @@ class Clicky
 	public function log(array $data = null)
 	{
 		if( ! isset($this->site_id) || ! isset($this->admin_key))
+		{
+			Log::warn('Not logging because of missing site_id or admin_key');
 			return;
+		}
 
 		// Filter and append default values
 		$data = array_whitelist($data ?: [], self::$parameters)

@@ -17,11 +17,6 @@ table
 	font-size: small;
 	color: @table-color;
 
-	&.full-width
-	{
-		width: 100%;
-	}
-
 	&.fixed
 	{
 		table-layout: fixed;
@@ -43,13 +38,6 @@ table
 	th:empty
 	{
 		background-color: @background-color;
-	}
-	td:empty:before
-	{
-		content: 'null';
-		font-style: italic;
-		color: fadeOut(@table-color, 50%);
-		height: 1em;
 	}
 
 	// Header
@@ -85,6 +73,11 @@ table
 	{
 		background-color: @table-footer-background;
 		border-top: .35em solid @table-border-color;
+
+		td:empty
+		{
+			background-color: @background-color;
+		}
 	}
 
 	// Fancy body
@@ -168,7 +161,7 @@ table.xdebug-error
 				{
 					border-bottom: none;
 				}
-				td[data-key]:before
+				td[data-key]::before
 				{
 					content: attr(data-key);
 					position: absolute;

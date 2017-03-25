@@ -1,0 +1,96 @@
+{{% ACCESS editor }}
+{{% BLOCKS }}
+{{< layout }}
+{{$ title }}…i serier{{/ title }}
+
+{{$ content}}
+
+
+<script defer type="text/javascript" src="js/dnd.js"></script>
+<script defer type="text/javascript" src="js/manage-content-fresh-series.js"></script>
+
+
+<h1>…i serier</h1>
+
+<p>Her er innhold som nylig er <a href="manage/content/fresh-dirs">lagt til</a> av deg, som du her kan legge til i en ny eller en eksisterende serie.</p>
+
+<hr>
+
+<h2>Innhold</h2>
+
+{{> waiting }}
+<ul class="checkbox-list no-select">
+	<!-- ko foreach: content -->
+	<li>
+		<input type="checkbox" name="content[]" data-bind="checked: selected,
+			attr: {id: 'c-'+$index()}">
+		<label data-bind="attr: {for: 'c-'+$index()}">
+			<span data-bind="text: persons"></span>
+			-
+			<span data-bind="text: title"></span>
+		</label>
+	</li>
+
+	<!-- /ko -->
+</ul>
+
+<p>
+	<button data-bind="click: toggle">…</button>
+</p>
+
+
+
+<h2>Serie</h2>
+
+<input type="text" placeholder="Navn" data-bind="jqAuto: {
+				value: series.title,
+				source: $root.seriesLookup,
+				labelProp: 'title',
+				valueProp: 'series_id',
+				inputProp: 'series_id',
+				dataValue: series
+				}" required>
+
+<p>
+	<button>Opprett/Hent</button>
+</p>
+
+<hr>
+
+<h2>Rekkefølge</h2>
+
+
+
+
+<button>{{#svg}}save{{/svg}}</button>
+
+
+
+
+<script type="text/html" id="row-tmpl">
+	<tr>
+		<td data-bind="text: title"></td>
+		<td data-bind="text: count"></td>
+		<td>
+			<form action="{{PATH}}/../fresh-content">
+				<input type="hidden" name="path" data-bind="value: path">
+				<button>→</button>
+			</form>
+		</td>
+	</tr>
+</script>
+
+
+
+<pre>
+// TODO
+- search for series or add new
+- list files from freshly added
+- select and order files
+- add
+	- remove added files
+	- reset search
+</pre>
+
+{{/ content}}
+{{/ layout }}
