@@ -1,6 +1,9 @@
 Up next
 ===
 
+- (!) Change to model->for_x(X $type)
+	- $type->id()
+	- public function id() this->$auto_inc()
 
 - Edit content
 - Edit files
@@ -11,6 +14,8 @@ Up next
 	- Removable (_destroy)
 	
 - Add session_id() to fresh_log table?
+- (!) Merge list-items on item pages somehow?
+	- Order by "label"
 
 
 Maps
@@ -36,7 +41,9 @@ Tidbits
 
 - Flash updated fields after ID3-search
 
-
+- When clicking person in location
+	- highlight content at that location on person page
+	- similar other places?
 
 
 RelationalSql extends Sql

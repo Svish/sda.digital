@@ -17,19 +17,19 @@ class Api extends \Controller\Api
 	/**
 	 * Content
 	 */
-	public function get_person(): Person
+	public function get_content(): Content
 	{
-		return Model::persons()->get($_GET['id'] ?? null);
+		return Model::content()->get($_GET['id'] ?? null);
 	}
 
-	public function put_person(array $data): Person
+	public function put_content(array $data): Content
 	{
-		return Model::persons()->save($data);
+		return Model::content()->save($data);
 	}
 
-	public function delete_person(int $id)
+	public function delete_content(int $id)
 	{
-		Model::persons()->delete($id);
+		Model::content()->delete($id);
 	}
 
 
