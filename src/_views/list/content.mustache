@@ -1,15 +1,16 @@
-<ul class="item-list no-select">
+<ul class="item-list content-list no-select">
 	{{#content_list}}
 	<li>
 		<a href="{{url}}">
-			{{title}}
-			
 			{{#n}}<span class="count">#{{n}}</span>{{/n}}
+
+			{{title}}
 
 			<div class="meta">
 				<time datetime="{{created}}">{{created | df.full}}</time>
 				{{#speaker}}<br>{{speaker}}{{/speaker}}
 				{{#role}}<br>{{role | __ | ucfirst}}{{/role}}
+				{{#location}}<br>{{location}}{{/location}}
 			</div>
 		</a>
 	</li>

@@ -1,11 +1,19 @@
-<ul class="item-list no-select">
+<ul class="item-list series-list no-select">
 	{{#series_list}}
 	<li>
 		<a href="{{url}}">
-			{{#svg}}list{{/svg}}
-			{{title}}
-			<span class="count">{{count}}</span>
+			{{^n}}<span class="count">{{count}}{{#total}}/{{total}}{{/total}}</span>{{/n}}
 			{{#n}}<span class="count">#{{n}}</span>{{/n}}
+
+			{{#svg}}list{{/svg}}
+			{{title}}			
+
+			{{#speakers}}
+			<div class="meta">
+				{{speakers | __ | ucfirst}}
+			</div>
+			{{/speakers}}
+
 		</a>
 	</li>
 	{{/series_list}}

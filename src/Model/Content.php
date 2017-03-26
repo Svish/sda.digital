@@ -63,11 +63,14 @@ class Content extends Model
 	{
 		return DB::prepare("SELECT
 					content.*,
-					role
+					role,
+					location.name 'location'
 				FROM content
 				INNER JOIN content_person USING (content_id)
 				INNER JOIN person USING (person_id)
+				LEFT OUTER JOIN location USING (location_id)
 				WHERE person_id = ?
+				GROUP BY content_id
 				ORDER BY content.title")
 			->execute([$pid])
 			->fetchAll(C::class);

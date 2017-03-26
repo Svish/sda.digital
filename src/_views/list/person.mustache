@@ -1,10 +1,12 @@
-<ul class="item-list no-select">
+<ul class="item-list person-list no-select">
 	{{#person_list}}
 	<li>
 		<a href="{{url}}">
+			<span class="count">{{count}}{{#total}}/{{total}}{{/total}}</span>
+
 			{{#svg}}person{{/svg}}
 			{{name}}
-			<span class="count">{{count}}</span>
+			
 			{{#role}}<div class="meta">{{role | __ | ucfirst}}</div>{{/role}}
 		</a>
 	</li>

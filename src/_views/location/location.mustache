@@ -16,9 +16,9 @@
 	
 	{{> edit/location}}
 
-	<p>{{> map}}
+	<p data-bind="visible: ! item()">{{> map}}
 
-	<section class="meta flex">
+	<section class="meta flex" data-bind="visible: ! item()">
 		<div>
 			<h2>Adresse</h2>
 			<address>{{address}}</address>
@@ -31,7 +31,7 @@
 		{{/website}}
 	</section>
 
-	<section>
+	<section data-bind="visible: ! item()">
 		{{> list/filter}}
 		{{> list/series}}
 		{{> list/person}}

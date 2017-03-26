@@ -44,7 +44,7 @@
 			display: block;
 			position: relative;
 
-			padding: .5em 1em;
+			padding: .5em .75em;
 			color: inherit;
 
 			background: lighten(@background-color, 2%);
@@ -65,11 +65,8 @@
 			{
 				color: @small-color;
 				background: fade(lighten(@background-color, 2%), 75%);
-
-				position: absolute;
-				padding: .5em 1em .5em .5em;
-				right: 0;
-				top: 0;
+				float: right;
+				padding-left: .5em;
 			}
 
 			.meta
@@ -82,7 +79,7 @@
 }
 
 
-body.series:not(.index) .item-list:first-of-type
+body.series:not(.index) .content-list
 {
 	&,li
 	{

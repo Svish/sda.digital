@@ -1,10 +1,10 @@
-<ul class="item-list no-select">
+<ul class="item-list location-list no-select">
 	{{#location_list}}
 	<li>
 		<a href="{{url}}">
+			<span class="count">{{count}}</span>
 			{{#svg}}place{{/svg}}
 			{{name}}
-			<span class="count">{{count}}</span>
 		</a>
 	</li>
 	{{/location_list}}

@@ -118,10 +118,12 @@ class Persons extends Model
 		return DB::prepare("SELECT
 					person.*,
 					role,
-					COUNT(DISTINCT content_id) 'count'
+					COUNT(DISTINCT content_id) 'count',
+					(SELECT COUNT(*) FROM series_content WHERE series_id = series.series_id) 'total'
 				FROM person
 				INNER JOIN content_person USING (person_id)
 				INNER JOIN series_content USING (content_id)
+				INNER JOIN series USING (series_id)
 				WHERE series_id = ?
 				GROUP BY person_id
 				ORDER BY role, name")

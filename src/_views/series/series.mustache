@@ -20,11 +20,11 @@
 	{{> list/filter}}
 	{{> list/content}}
 
-	<h2>Deltakere</h2>
-	{{> list/person}}
-
-	<h2>Steder</h2>
-	{{> list/location}}
+	<section data-bind="visible: ! item()">
+		<hr>
+		{{> list/person}}
+		{{> list/location}}
+	</section>
 
 {{/series}}
 

@@ -20,7 +20,7 @@ class Text
 		$key = is_array($key) ? 'Array' : strval($key);
 		$args = array_shift($args);
 
-		$text = self::$t[$header][$key] ?? "$header.$key";
+		$text = self::$t[$header][$key] ?? $key;
 
 		if(is_array($text))
 			$text = implode("\r\n", $text);

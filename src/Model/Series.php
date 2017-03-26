@@ -77,9 +77,13 @@ class Series extends Model
 			: 'INNER';
 		return DB::query("SELECT
 					series.*,
-					COUNT(DISTINCT content_id) 'count'
+					COUNT(DISTINCT content_id) 'count',
+					GROUP_CONCAT(DISTINCT person.name SEPARATOR ', ') 'speakers'
 				FROM series
 				$join JOIN series_content USING (series_id)
+				INNER JOIN content_person USING (content_id)
+				INNER JOIN person USING (person_id)
+					WHERE role = 'speaker'
 				GROUP BY series_id
 				ORDER BY title")
 			->fetchAll(Serie::class);
@@ -108,7 +112,9 @@ class Series extends Model
 	{
 		return DB::query("SELECT
 					series.*,
-					COUNT(DISTINCT content_id) 'count'
+					COUNT(DISTINCT content_id) 'count',
+					(SELECT COUNT(*) FROM series_content WHERE series_id = series.series_id) 'total',
+					GROUP_CONCAT(DISTINCT content_person.role SEPARATOR ', ') 'speakers'
 				FROM series
 				INNER JOIN series_content USING (series_id)
 				INNER JOIN content USING (content_id)
@@ -127,11 +133,16 @@ class Series extends Model
 	{
 		return DB::query("SELECT
 					series.*,
-					COUNT(DISTINCT content_id) 'count'
+					COUNT(DISTINCT content_id) 'count',
+					(SELECT COUNT(*) FROM series_content WHERE series_id = series.series_id) 'total',
+					GROUP_CONCAT(DISTINCT person.name SEPARATOR ', ') 'speakers'
 				FROM series
 				INNER JOIN series_content USING (series_id)
 				INNER JOIN content USING (content_id)
+				INNER JOIN content_person USING (content_id)
+				INNER JOIN person USING (person_id)
 				WHERE location_id = $lid
+					AND role = 'speaker'
 				GROUP BY series_id
 				ORDER BY title")
 			->fetchAll(Serie::class);
