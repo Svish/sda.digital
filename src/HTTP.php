@@ -13,6 +13,7 @@ class HTTP
 				CURLOPT_URL => $url,
 				CURLOPT_HEADER => true,
 				CURLOPT_FOLLOWLOCATION => true,
+    			CURLOPT_USERAGENT => 'curl/'.curl_version()['version'],
 			]);
 
 		try
