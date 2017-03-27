@@ -43,7 +43,7 @@ class Series extends Model
 
 		foreach($data as $n => $cid)
 		{
-			$in->exec([$series->series_id, $cid, $n]);
+			$in->exec([$series->series_id, $cid, $n + 1]);
 			$out->exec([$cid, $uid]);
 		}
 
