@@ -1,7 +1,6 @@
 <?php
 
 namespace View\Helper;
-use Mustache_LambdaHelper;
 
 /**
  * Helper: SVG importer for Mustache templates.
@@ -14,13 +13,17 @@ class Svg
 {
 	const DIR = SRC.'_icons'.DIRECTORY_SEPARATOR;
 
-	public function __invoke($name, Mustache_LambdaHelper $render = null)
+	public function __invoke($name, $render = null)
 	{
 		if($render)
 			$name = $render($name);
 
 		$opt = explode(';', $name, 2);
-		$svg = file_get_contents(self::DIR.$opt[0].'.svg');
+		$file = self::DIR.$opt[0].'.svg';
+
+		if( ! is_file($file))
+			return "[svg={$opt[0]}]";
+		$svg = file_get_contents($file);
 
 		if(isset($opt[1]))
 			$svg = str_replace('<svg ', "<svg {$opt[1]} ", $svg);
