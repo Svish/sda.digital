@@ -10,7 +10,7 @@ return [
 
 	# Content slugs (type/id/slug)
 	# @see src/Data/UrlEntity
-	':alpha:/([\p{Nd}]+|new)(?:/:any:)?' => function (array &$request)
+	':alpha:/([\p{Nd}]+|new|my-fresh)(?:/:any:)?' => function (array &$request)
 	{
 		$type = array_shift($request['params']);
 		$type = ucfirst($type);

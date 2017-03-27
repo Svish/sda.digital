@@ -10,7 +10,8 @@ use ReflectionFunction, Mustache_LambdaHelper;
 class PhpFunction
 {
 	private static $whitelist = [
-		'ucfirst', 
+		'ucfirst',
+		'ucwords',
 		'strtolower',
 		'urlencode',
 		];

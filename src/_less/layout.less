@@ -5,7 +5,7 @@
 @background-color: #0d0d0d;
 @shadow-color: #1c1c1c;
 @text-color: #f0f0f0;
-@border-color: @shadow-color;
+@border-color: #232323;
 
 @accent1-color: #ed782a;
 @accent2-color: #3b53cf;
@@ -61,7 +61,8 @@ h2,h3,h4
 // Empty
 h1,h2,h3,h4,
 p,ul,ol,li,
-table,div,span
+table,div,span,
+section
 {
 	&:empty
 	{
@@ -74,7 +75,7 @@ table,div,span
 section
 {
 	margin-bottom: 3em;
-	& + &
+	&:not(:empty) + &
 	{
 		margin-top: -1em;
 		padding-top: 2em;
@@ -326,6 +327,7 @@ p.right
 @import "google";
 @import "search-bar";
 
+@import "page-front";
 @import "page-about";
 @import "page-tools";
 @import "page-manage-content";

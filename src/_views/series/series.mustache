@@ -20,6 +20,8 @@
 	{{> list/filter}}
 	{{> list/content}}
 
+	<section class="fresh" data-bind="html: fresh"></section>
+
 	<section data-bind="visible: ! item()">
 		<hr>
 		{{> list/person}}

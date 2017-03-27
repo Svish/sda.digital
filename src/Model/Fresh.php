@@ -20,20 +20,33 @@ class Fresh extends \Model
 	const DIR = ROOT.'_new'.DIRECTORY_SEPARATOR;
 
 
-	public function for_series(): array
+	public function forget_mine()
 	{
-		$uid = Model::users()->logged_in()->user_id;
+		$uid = Model::users()->logged_in()->id();
 
-		return DB::query("SELECT content_id, title, created,
-				GROUP_CONCAT(person.name SEPARATOR ', ') 'persons'
+		return DB::prepare('DELETE FROM fresh_log
+				WHERE user_id = ?')
+			->exec([$uid]);
+	}
+
+	public function mine(): array
+	{
+		$uid = Model::users()->logged_in()->id();
+
+		return DB::prepare("SELECT
+					content.*,
+					GROUP_CONCAT(DISTINCT person.name 
+						ORDER BY content_person.role, person.name
+						SEPARATOR ', ') 'speakers'
 				FROM content
-					INNER JOIN fresh_log USING (content_id)
-					INNER JOIN content_person USING (content_id)
-					INNER JOIN person USING (person_id)
-				WHERE fresh_log.user_id = 1
+				INNER JOIN fresh_log USING (content_id)
+				LEFT OUTER JOIN content_person USING (content_id)
+				LEFT OUTER JOIN person USING (person_id)
+				WHERE fresh_log.user_id = ?
 				GROUP BY content_id
-				ORDER BY content.created")
-			->fetchArray();
+				ORDER BY content.created ASC")
+			->execute([$uid])
+			->fetchAll(Content::class);
 	}
 
 
@@ -42,10 +55,6 @@ class Fresh extends \Model
 	 */
 	public function save(array $data)
 	{
-		Valid::check_array($data, [
-			'persons' => ['not_empty'],
-		]);
-
 		$uid = Model::users()->logged_in()->user_id;
 
 		try
@@ -194,7 +203,6 @@ class Fresh extends \Model
 	{
 		$path = self::safe_path($path);
 		$info = ID3::instance()->read($path);
-		$info = iterator_to_array($info);
 
 		Log::trace(self::from_win($path, true), $info);
 

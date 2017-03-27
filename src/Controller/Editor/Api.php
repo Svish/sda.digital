@@ -1,7 +1,7 @@
 <?php
 
 namespace Controller\Editor;
-use Model;
+use Model, View;
 use Data\Person;
 use Data\Series;
 use Data\Location;
@@ -53,16 +53,31 @@ class Api extends \Controller\Api
 
 
 	/**
-	 * Series
+	 * Series, with fresh content to potentially add
 	 */
-	public function get_series(): Series
+	public function get_series()
 	{
-		return Model::series()->get($_GET['id'] ?? null);
+		$series = Model::series()->get($_GET['id'] ?? null);
+		
+		$content = Model::fresh()->mine();
+		$content = View::template([
+				'content_list' => $content,
+				'fresh' => true,
+				], 'list/content')
+			->render('text/html');
+
+		return get_defined_vars();
 	}
 
 	public function put_series(array $data): Series
 	{
-		return Model::series()->save($data);
+		$x = Model::series()
+			->save($data['series'] ?? $data);
+
+		Model::series()
+			->save_content($data['content'] ?? null, $x);
+			
+		return $x;
 	}
 
 	public function delete_series(int $id)

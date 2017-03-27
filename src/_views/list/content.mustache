@@ -1,15 +1,23 @@
 <ul class="item-list content-list no-select">
 	{{#content_list}}
-	<li>
+	<li data-id="{{content_id}}" class="{{#fresh}}fresh{{/fresh}}">
 		<a href="{{url}}">
+
+			{{#role.editor}}
+			<button class="down">{{#svg}}down-arrow{{/svg}}</button>
+			<button class="up">{{#svg}}up-arrow{{/svg}}</button>
+			<button class="add">{{#svg}}add{{/svg}}</button>
+			<button class="remove">{{#svg}}remove{{/svg}}</button>
+			{{/role.editor}}
+		
 			{{#n}}<span class="count">#{{n}}</span>{{/n}}
 
 			{{title}}
 
 			<div class="meta">
 				<time datetime="{{created}}">{{created | df.full}}</time>
-				{{#speaker}}<br>{{speaker}}{{/speaker}}
-				{{#role}}<br>{{role | __ | ucfirst}}{{/role}}
+				{{#speakers}}<br>{{speakers}}{{/speakers}}
+				{{#role}}<br>{{role | __ | ucwords}}{{/role}}
 				{{#location}}<br>{{location}}{{/location}}
 			</div>
 		</a>

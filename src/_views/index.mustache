@@ -4,10 +4,28 @@
 
 {{$ content}}
 
-<pre>// TODO</pre>
+
+{{#role.admin}}
+{{> search }}
+{{/role.admin}}
+
+
+
+<div class="flex">
+
+	<section>
+		<h1>Nyeste</h1>
+		{{{latest_recorded}}}
+	</section>
+
+	<section>
+		<h1>Siste lagt til</h1>
+		{{{latest_added}}}
+	</section>
+
+</div>
 
 
 
 {{/ content}}
-
 {{/ layout }}

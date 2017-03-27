@@ -99,6 +99,17 @@ class Valid
 
 
 
+	public static function contains($value, $require): bool
+	{
+		foreach($value as $x)
+			if(empty(array_intersect($x, $require)))
+				return false;
+
+		return true;
+	}
+
+
+
 	public static function email($value): bool
 	{
 		return $value && Swift_Validate::email($value);

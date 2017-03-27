@@ -18,12 +18,6 @@ class Api extends \Controller\Api
 			->directories();
 	}
 
-	public function get_fresh_content_for_series()
-	{
-		return Model::fresh()
-			->for_series();
-	}
-
 	public function get_lookup_series()
 	{
 		return Model::series()
@@ -41,6 +35,7 @@ class Api extends \Controller\Api
 		$roles = [
 			['id' => 'speaker', 'label' => 'Taler'],
 			['id' => 'translator', 'label' => 'Oversetter'],
+			['id' => 'author', 'label' => 'Forfatter'],
 		];
 
 		return get_defined_vars();

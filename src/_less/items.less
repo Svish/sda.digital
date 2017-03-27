@@ -47,24 +47,18 @@
 			padding: .5em .75em;
 			color: inherit;
 
-			background: lighten(@background-color, 2%);
+			background-color: lighten(@background-color, 2%);
 			border: 1px solid lighten(@background-color, 15%);
 
 			&:hover
 			{
-				background: lighten(@background-color, 5%);
+				background-color: lighten(@background-color, 5%);
 				border: 1px solid lighten(@background-color, 25%);
-
-				.count
-				{
-					background: fade(lighten(@background-color, 5%), 75%);
-				}
 			}
 
 			.count
 			{
 				color: @small-color;
-				background: fade(lighten(@background-color, 2%), 75%);
 				float: right;
 				padding-left: .5em;
 			}
@@ -74,12 +68,18 @@
 				color: lighten(@small-color, 10%);
 				font-size: small;
 			}
+
+			button
+			{
+				float: right;
+				margin-left: .75em;
+			}
 		}
 	}
 }
 
-
-body.series:not(.index) .content-list
+body.series:not(.index) .content-list,
+body.file:not(.index) .content-list
 {
 	&,li
 	{
@@ -89,6 +89,55 @@ body.series:not(.index) .content-list
 	}
 }
 
+
+/**
+ * When editing series...
+ */
+.content-list
+{
+	button {display: none}
+}
+.content-list.ui-sortable
+{
+	.count {display: none}
+	.add {display: none}
+	.remove {display: block}
+	.up {display: block}
+	.down {display: block}
+
+	.ui-sortable-handle:first-child .up {visibility:hidden}
+	.ui-sortable-handle:last-child .down {visibility:hidden}
+	
+	.ui-sortable-handle.fresh a
+	{
+		border-color: darken(@accent1-color, 35%);
+	}
+}
+section.fresh
+{
+	.item-list li a
+	{
+		border-color: @error-color;
+	}
+	.item-list li.fresh a
+	{
+		border-color: @accent1-color;
+	}
+
+	.count {display: none}
+	.add {display: block}
+	.remove {display: none}
+	.up {display: none}
+	.down {display: none}
+}
+
+
+
+
+
+/**
+ * Responsiveness
+ */
 @media only screen and (max-width : 550px)
 {
 	.series,

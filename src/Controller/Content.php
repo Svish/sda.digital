@@ -8,16 +8,41 @@ use HTTP, Model, View;
  */
 class Content extends Controller
 {
-	const TEMPLATE = 'content/content';
 
 	public function get($id, $slug = null)
 	{
-		$content = Model::content()->for_page($id);
+		switch($id)
+		{
+			case 'my-fresh':
+				$template = 'content/my-fresh';
+				$content_list = Model::fresh()->mine();
+				break;
 
-		if( ! $slug || $slug != $content->slug)
-			HTTP::redirect($content->url);
+			case 'new':
+				throw new \Error\PageNotFound();
 
-		return View::template(get_defined_vars(), self::TEMPLATE)
+			default:
+				$template = 'content/content';
+				$content = Model::content()->for_page($id);
+
+				if( ! $slug || $slug != $content->slug)
+					HTTP::redirect($content->url);
+		}
+
+		return View::template(get_defined_vars(), $template)
 			->output();
+	}
+
+	public function post()
+	{
+		switch($_POST['action'] ?? null)
+		{
+			case 'delete':
+				Model::fresh()->forget_mine();
+				HTTP::redirect_self();
+
+			default:
+				throw new PageNotFound();
+		}
 	}
 }

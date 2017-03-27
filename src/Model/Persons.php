@@ -99,11 +99,11 @@ class Persons extends Model
 	/**
 	 * For person/$id.
 	 */
-	public function for_page($id): Person
+	public function for_page(int $id): Person
 	{
 		$x = self::get($id);
-		$x->content_list = Model::content()->for_person($id);
-		$x->series_list = Model::series()->for_person($id);
+		$x->content_list = Model::content()->for_person($x);
+		$x->series_list = Model::series()->for_person($x);
 
 		return $x;
 	}
@@ -113,7 +113,7 @@ class Persons extends Model
 	/**
 	 * Speakers of a series.
 	 */
-	public function for_series($sid): array
+	public function for_series(\Data\Series $p): array
 	{
 		return DB::prepare("SELECT
 					person.*,
@@ -127,7 +127,7 @@ class Persons extends Model
 				WHERE series_id = ?
 				GROUP BY person_id
 				ORDER BY role, name")
-			->execute([$sid])
+			->execute([$p->id()])
 			->fetchAll(Person::class);
 	}
 
@@ -136,7 +136,7 @@ class Persons extends Model
 	/**
 	 * Participants of content.
 	 */
-	public function for_content($cid): array
+	public function for_content(\Data\Content $c): array
 	{
 		return DB::prepare("SELECT
 					person.*,
@@ -145,7 +145,7 @@ class Persons extends Model
 				INNER JOIN content_person USING (person_id)
 				WHERE content_id = ?
 				ORDER BY role, name")
-			->execute([$cid])
+			->execute([$c->id()])
 			->fetchAll(Person::class);
 	}
 
@@ -154,7 +154,7 @@ class Persons extends Model
 	/**
 	 * Speakers at a location.
 	 */
-	public function for_location($lid): array
+	public function for_location(\Data\Location $l): array
 	{
 		return DB::prepare("SELECT
 					person.*,
@@ -166,7 +166,7 @@ class Persons extends Model
 					AND role = 'speaker'
 				GROUP BY person_id
 				ORDER BY name")
-			->execute([$lid])
+			->execute([$l->id()])
 			->fetchAll(Person::class);
 	}
 }

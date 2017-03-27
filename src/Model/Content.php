@@ -7,8 +7,6 @@ use DB, Model;
 
 class Content extends Model
 {
-	const DIR = '_'.DIRECTORY_SEPARATOR;
-
 	/**
 	 * Get location by id or email.
 	 */
@@ -20,13 +18,13 @@ class Content extends Model
 	/**
 	 * For location/$id.
 	 */
-	public function for_page($id): C
+	public function for_page(int $id): C
 	{
 		$x = self::get($id);
 		$x->load_relations('location', 'file_list');
 
-		$x->person_list = Model::persons()->for_content($id);
-		$x->series_list = Model::series()->for_content($id);
+		$x->person_list = Model::persons()->for_content($x);
+		$x->series_list = Model::series()->for_content($x);
 
 		return $x;
 	}
@@ -35,35 +33,36 @@ class Content extends Model
 	/**
 	 * Content in a series.
 	 */
-	public function for_series($sid): array
+	public function for_series(\Data\Series $s): array
 	{
 		return DB::prepare("SELECT
 					n,
 					content.*,
-					person.name 'speaker'
-
+					GROUP_CONCAT(DISTINCT person.name
+						ORDER BY content_person.role, person.name
+						SEPARATOR ', ') 'speakers'
 				FROM content
 				INNER JOIN series_content USING (content_id)
-				INNER JOIN content_person USING (content_id)
-				INNER JOIN person USING (person_id)
+				LEFT OUTER JOIN content_person USING (content_id)
+				LEFT OUTER JOIN person USING (person_id)
 				WHERE series_id = ?
-					AND content_person.role = 'speaker'
+				GROUP BY content_id
 				ORDER BY n")
-			->execute([$sid])
+			->execute([$s->id()])
 			->fetchAll(C::class);
-
-		return $x;
 	}
 
 
 	/**
 	 * Content of a speaker.
 	 */
-	public function for_person($pid): array
+	public function for_person(\Data\Person $p): array
 	{
 		return DB::prepare("SELECT
 					content.*,
-					role,
+					GROUP_CONCAT(DISTINCT content_person.role
+						ORDER BY content_person.role
+						SEPARATOR ', ') 'role',
 					location.name 'location'
 				FROM content
 				INNER JOIN content_person USING (content_id)
@@ -72,26 +71,54 @@ class Content extends Model
 				WHERE person_id = ?
 				GROUP BY content_id
 				ORDER BY content.title")
-			->execute([$pid])
+			->execute([$p->id()])
 			->fetchAll(C::class);
-
-		return $x;
 	}
 
 
 	/**
 	 * Content at a location.
 	 */
-	public function for_location($lid): array
+	public function for_location(\Data\Location $l): array
 	{
 		return DB::prepare("SELECT
-					content.*
+					content.*,
+					0 'location',
+					GROUP_CONCAT(DISTINCT person.name
+						ORDER BY content_person.role
+						SEPARATOR ', ') 'speakers'
 				FROM content
+				INNER JOIN location USING (location_id)
+				LEFT OUTER JOIN content_person USING (content_id)
+				LEFT OUTER JOIN person USING (person_id)
 				WHERE location_id = ?
+				GROUP BY content_id
 				ORDER BY content.created DESC")
-			->execute([$lid])
+			->execute([$l->id()])
 			->fetchAll(C::class);
+	}
 
-		return $x;
+
+	/**
+	 * Content of a speaker.
+	 */
+	public function for_file(\Data\File $f): array
+	{
+		return DB::prepare("SELECT
+					content.*,
+					GROUP_CONCAT(DISTINCT person.name
+						ORDER BY content_person.role, person.name
+						SEPARATOR ', ') 'speakers',
+					location.name 'location'
+				FROM content
+				INNER JOIN file USING (content_id)
+				LEFT OUTER JOIN content_person USING (content_id)
+				LEFT OUTER JOIN person USING (person_id)
+				LEFT OUTER JOIN location USING (location_id)
+				WHERE file_id = ?
+				GROUP BY content_id
+				ORDER BY content.title")
+			->execute([$f->id()])
+			->fetchAll(C::class);
 	}
 }

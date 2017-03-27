@@ -83,6 +83,17 @@ abstract class Sql extends \Data
 	}
 
 
+	/**
+	 * Gets the auto_increment id.
+	 *
+	 * @return Value of auto increment column; False if no such column.
+	 */
+	public function id(): int
+	{
+		if($this->table_info->auto_increment ?? false)
+			return $this->data[$this->table_info->auto_increment];
+		return false;
+	}
 
 
 	/**

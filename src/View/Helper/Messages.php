@@ -12,6 +12,11 @@ class Messages
 	{
 		$m = Session::unget(Message::SESSION_KEY, []);
 		return Mustache::engine()
-			->render('messages', ['list' => $m]);
+			->render('messages', [
+				'list' => $m,
+				'fl' => new FirstLine,
+				'rf' => new RemoveFirstLine,
+				'admin' => new Role('admin'),
+				]);
 	}
 }

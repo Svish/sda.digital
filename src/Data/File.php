@@ -8,6 +8,8 @@ use File as FileUtils;
 class File extends ExtendedSql
 {
 	const SERIALIZE = true;
+	const DIR = ROOT.'_'.DIRECTORY_SEPARATOR;
+
 
 
 	public function __construct()

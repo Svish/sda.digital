@@ -22,9 +22,12 @@ var ViewModel = function()
 
 	this.cancel = function()
 		{
-			this.item(null);
-			if( !ID )
+			if( ! ID )
+			{
 				window.location = Site.Url.Current+'/../index';
+				return;
+			}
+			this.item(null);
 		}
 	
 	this.save = function()

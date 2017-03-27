@@ -1,17 +1,15 @@
 Up next
 ===
 
+- (!) Fetch messages via ajax
+	- Remove after showing (currently invisibly hides menu...)
+
 - (!) Change to model->for_x(X $type)
 	- $type->id()
 	- public function id() this->$auto_inc()
 
 - Edit content
 - Edit files
-- (!) Edit series
-	- Add content from freshlog
-	- Add other content
-	- Sortable
-	- Removable (_destroy)
 	
 - Add session_id() to fresh_log table?
 - (!) Merge list-items on item pages somehow?
@@ -44,6 +42,10 @@ Tidbits
 - When clicking person in location
 	- highlight content at that location on person page
 	- similar other places?
+
+- Rename 'speakers' to 'persons' in list views and queries
+
+- Rename '.mustache' => '.m'?
 
 
 RelationalSql extends Sql
@@ -135,6 +137,10 @@ Public
 		- Add to / Remove from series
 	- https://www.audioverse.org/english/sermons/recordings/3162/revival-and-transformation.html
 	- https://www.audioverse.org/english/sermons/recordings/13863/1-soul-searching-our-emotions.html
+
+- File
+	- Generate name from content
+		- "Speaker - Title (time, etc.?)"
 
 - RSS Feed
 	- Latest content (created)

@@ -23,10 +23,13 @@ var ViewModel = function()
 
 	this.cancel = function()
 		{
+			if( ! ID )
+			{
+				window.location = Site.Url.Current+'/../index';
+				return;
+			}
 			this.item(null);
 			this.errors({});
-			if( !ID )
-				window.location = Site.Url.Current+'/../index';
 		}
 	
 	this.save = function()

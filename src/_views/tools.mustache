@@ -9,15 +9,22 @@
 
 	<section>
 		{{#role.editor}}
-		<a class="frame" href="manage/content/fresh-dirs">
+		<a class="frame fresh" href="manage/content/fresh-dirs">
 			{{#svg}}add{{/svg}}<br>
-			Nytt innhold…
+			Legg til nytt innhold
 		</a>
-		<a class="frame" href="manage/content/fresh-series">
-			{{#svg}}list{{/svg}}<br>
-			…i serier
+		<a class="frame" href="content/my-fresh">
+			{{#svg}}menu{{/svg}}<br>
+			Nylig lagt til
 		</a>
 		{{/role.editor}}
+
+		{{#role.admin}}
+		<a class="frame" href="admin/issues">
+			{{#svg}}error{{/svg}}<br>
+			Problemer
+		</a>
+		{{/role.admin}}
 	</section>
 
 	<section>
@@ -38,15 +45,6 @@
 		</a>
 		{{/role.login}}
 	</section>
-
-	{{#role.admin}}
-	<section>
-		<a class="frame" href="manage/content/issues">
-			{{#svg}}error{{/svg}}<br>
-			Problemer
-		</a>
-	</section>
-	{{/role.admin}}
 </div>
 
 {{/ content}}

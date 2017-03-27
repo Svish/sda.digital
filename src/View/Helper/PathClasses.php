@@ -9,6 +9,8 @@ class PathClasses
 {
 	public function __invoke()
 	{
+		if(PATH == 'index')
+			return 'index front';
 		return str_replace('/', ' ', PATH);
 	}
 }

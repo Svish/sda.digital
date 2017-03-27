@@ -18,11 +18,11 @@ class Files extends Model
 	/**
 	 * For file/$id.
 	 */
-	public function for_page($id): File
+	public function for_page(int $id): File
 	{
 		$x = self::get($id);
-		$x->load_relations('content');
-		$x->content_list = $x->content;
+		
+		$x->content_list = Model::content()->for_file($x);
 
 		return $x;
 	}

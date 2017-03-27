@@ -1,7 +1,7 @@
 <?php
 
 namespace View\Helper;
-use Text;
+use Text, Config;
 
 
 /**
@@ -9,11 +9,21 @@ use Text;
  */
 class I18N
 {
+	private $from;
+	private $to;
+
+	public function __construct()
+	{
+		$strings = Config::translations()[LANG] ?? [];
+		$this->from = array_keys($strings);
+		$this->to = array_values($strings);
+	}
+
 	public function __invoke($text, $render = null)
 	{
 		if($render)
 			$text = $render($text);
 
-		return Text::translate($text);
+		return str_replace($this->from, $this->to, $text);
 	}
 }

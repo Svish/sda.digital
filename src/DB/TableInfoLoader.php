@@ -98,6 +98,9 @@ class TableInfoLoader
 				'db_type' => $type,
 			];
 
+			if($auto_increment)
+				$tables[$table]['auto_increment'] = $column;
+
 			// Add primary keys
 			if($key == 'PRI')
 				$tables[$table]['primary_keys'][] = $column;

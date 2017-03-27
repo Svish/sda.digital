@@ -96,13 +96,13 @@ class Locations extends \Model
 	/**
 	 * For location/$id.
 	 */
-	public function for_page($id): Location
+	public function for_page(int $id): Location
 	{
 		$x = self::get($id);
 
-		$x->content_list = Model::content()->for_location($id);
-		$x->series_list = Model::series()->for_location($id);
-		$x->person_list = Model::persons()->for_location($id);
+		$x->content_list = Model::content()->for_location($x);
+		$x->series_list = Model::series()->for_location($x);
+		$x->person_list = Model::persons()->for_location($x);
 
 		return $x;
 	}
@@ -110,7 +110,7 @@ class Locations extends \Model
 	/**
 	 * Locations of a series.
 	 */
-	public function for_series($sid): array
+	public function for_series(\Data\Series $s): array
 	{
 		return DB::prepare("SELECT
 					location.*,
@@ -121,7 +121,7 @@ class Locations extends \Model
 				WHERE series_id = ?
 				GROUP BY location_id
 				ORDER BY location.name")
-			->execute([$sid])
+			->execute([$s->id()])
 			->fetchAll(Location::class);
 	}
 	

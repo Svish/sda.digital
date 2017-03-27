@@ -25,8 +25,18 @@ class Text
 		if(is_array($text))
 			$text = implode("\r\n", $text);
 
+		if(is_array($args))
+			$args = array_map(['self', 'implode'], $args);
+
 		return $args
 			? vsprintf($text, $args)
 			: $text;
+	}
+
+	private static function implode($item)
+	{
+		return is_array($item)
+			? json_encode($item)
+			: $item;
 	}
 }
