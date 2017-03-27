@@ -154,3 +154,4 @@ $('.content-list')
 		 	.hasClass('ui-sortable-handle');
 	});
 
+$('.gone').fadeIn();

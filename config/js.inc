@@ -16,11 +16,13 @@ return (object) [
 			'dnd.js',
 		],
 		'script.js' => [
+			'jquery.global-ajax.js',
 			'jquery.my-stuff.js',
 			'knockout.jqauto.js',
 			'knockout.my-stuff.js',
 			'polyfills.js',
 			'global.js',
+			'navigation.js',
 			],
 		],
 ];

@@ -78,6 +78,9 @@
 	}
 }
 
+/**
+ * Content list special cases
+ */
 body.series:not(.index) .content-list,
 body.file:not(.index) .content-list
 {
@@ -89,6 +92,47 @@ body.file:not(.index) .content-list
 	}
 }
 
+/**
+ * File table on content page
+ */
+body.content #content .file-table
+{
+	td,th
+	{
+		text-align: right;
+		white-space: nowrap;
+		&:first-child
+		{
+			text-align: left;
+			white-space: normal;
+			svg
+			{
+				margin-right: .5ch;
+			}
+		}
+		&:last-child
+		{
+			font-size: x-large;
+			border-left: .2em solid @table-border-color;
+			text-align: center;
+			line-height: 1em;
+		}
+		.hash
+		{
+			font-size: 0.5em;
+			vertical-align: middle;
+		}
+		small
+		{
+			opacity: .1;
+		}
+	}
+
+	tr:hover small
+	{
+		opacity: .3;
+	}
+}
 
 /**
  * When editing series...

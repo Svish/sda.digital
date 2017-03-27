@@ -16,26 +16,25 @@
 		{{#location}}
 		<span><b>Sted:</b> <a href="{{url}}">{{name}}</a></span>
 		{{/location}}
-		<span><b>Tatt opp:</b> {{time | df.flex | ucfirst}}</span>
-		<span><b>Lagt til:</b> <time datetime="{{created | df.iso}}">{{created | df.full}}</time></span>
+		<span><b>Tatt opp:</b> {{time | f.flex | ucfirst}}</span>
+		<span><b>Lagt til:</b> <time datetime="{{created | f.iso}}">{{created | f.full}}</time></span>
 	</div>
 
-	<pre>// TODO: Media player</pre>
+{{#role.admin}}
+<pre>// TODO
+* Edit content
+* Add content to series
+* Media player
+</pre>
+{{/role.admin}}
 
 	{{#md}}{{summary}}{{/md}}
 
 
-	<h2>Filer</h2>
 	{{> list/file}}
 
-	
 
-	<hr>
-
-	<h2>Deltakere</h2>
 	{{> list/person}}
-
-	<h2>Serier</h2>
 	{{> list/series}}
 
 {{/content}}

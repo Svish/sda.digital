@@ -12,11 +12,5 @@ class UrlLabel
 	{
 		if($render)
 			$url = $render($url);
-
-		$pos = strpos($url, '://');
-
-		return $pos !== false
-			? substr($url, $pos+3)
-			: $url;
 	}
 }

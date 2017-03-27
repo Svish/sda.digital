@@ -70,3 +70,5 @@ var view = new ViewModel();
 ko.applyBindings(view);
 if( ! ID)
 	view.edit();
+
+$('.gone').fadeIn();

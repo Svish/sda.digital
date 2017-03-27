@@ -15,7 +15,7 @@
 			{{title}}
 
 			<div class="meta">
-				<time datetime="{{created}}">{{created | df.full}}</time>
+				<time datetime="{{created}}">{{created | f.full}}</time>
 				{{#speakers}}<br>{{speakers}}{{/speakers}}
 				{{#role}}<br>{{role | __ | ucwords}}{{/role}}
 				{{#location}}<br>{{location}}{{/location}}

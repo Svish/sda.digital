@@ -48,3 +48,27 @@ Number.isInteger = Number.isInteger || function(value)
 		isFinite(value) && 
 		Math.floor(value) === value;
 };
+
+/**
+ * Get GET parameter value
+ * @see http://stackoverflow.com/a/5448595/39321
+ */
+function getQueryParameter(name, clean = true)
+{
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+
+	for(var i in vars)
+	{
+		var pair = vars[i].split("=");
+		if(pair[0] == name)
+		{
+			var value = decodeURIComponent(pair[1]);
+			return clean
+				? value.replace(/\+/g, ' ')
+				: value;
+		}
+	}
+
+	return false;
+}

@@ -16,7 +16,11 @@
 	
 	{{> edit/location}}
 
-	<p data-bind="visible: ! item()">{{> map}}
+	<p data-bind="visible: ! item()">
+		<a title="Gå til Google Maps" href="https://maps.google.com/?q={{address | f.encodeAddress}}">
+			{{> map}}
+		</a>
+	</p>
 
 	<section class="meta flex" data-bind="visible: ! item()">
 		<div>
@@ -26,7 +30,7 @@
 		{{#website}}
 		<div>
 			<h2>Nettside</h2>
-			<p><a href="{{website}}">{{website | urlLabel}}</a>
+			<p><a href="{{website}}" rel="nofollow">{{website | f.url}}</a>
 		</div>
 		{{/website}}
 	</section>

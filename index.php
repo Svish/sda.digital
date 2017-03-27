@@ -6,21 +6,6 @@ require 'functions.inc';
 require 'constants.inc';
 
 
-if(false)
-{
-	error_reporting(E_ALL);
-	$c = new Data\Content;
-	$c->file_list = [new Data\File, new Data\File];
-	echo '<pre>'.json_encode($c, JSON_PRETTY_PRINT).'</pre>';
-	echo '<hr>';
-
-	unset($c->file_list);
-	echo '<pre>'.json_encode([$c, $x], JSON_PRETTY_PRINT).'</pre>';
-	echo '<hr>';
-
-	$x->content = $c;
-}
-
 // Set error handler
 error_reporting(E_ALL);
 $eh = new Error\Handler();

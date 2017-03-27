@@ -68,14 +68,11 @@ RelationalSql extends Sql
 Admin
 ===
 
-- Content
-	- Add fresh
-		- Option:
-			- Put single (and replace with content template)
-			- Add as series (including already put)
-		- Auto-complete place and speakers
-	
-	- Update info
+- Fresh content
+	- Auto-complete speakers
+	- Inline add to series
+		- Like location, via drop-down?
+		- Copy to all?
 
 	- Add remote content?
 		- YouTube?
@@ -83,14 +80,7 @@ Admin
 		- Facebook?
 		- Etc?
 		- Use Redded 2016 for testing?
-	- List lost content (shouldn't get any, but who knows...)
 
-
-- Persons/Places
-	- (!) Throw ValidationFailed? if delete fails because of constraint
-	- Show count of content
-	- Link to person/place page
-		- person/<id>/<slug>
 
 
 
@@ -110,7 +100,6 @@ Public
 	- Searchbar on top
 		- Search for both content and series?
 		- Result replaces latest content
-	- http://flexbox.help/
 
 
 - (!) Show content length AND speaker
@@ -118,18 +107,13 @@ Public
 
 - Locations
 	- Link map to google maps page
+	- Edit
+		- Search for website?
+		- Show on dynamic map?
 
-- Series
-	- Playlist-player?
-	- Reorder
-	- Remove content
-	- Add content
-		- Emphazis on fresh-log
 
 - Content
 	- List files
-	- Embed codes?
-	- Share widget?
 	- Edit
 		- Content editable?
 		- {{#role.editor}}
@@ -137,6 +121,7 @@ Public
 		- Add to / Remove from series
 	- https://www.audioverse.org/english/sermons/recordings/3162/revival-and-transformation.html
 	- https://www.audioverse.org/english/sermons/recordings/13863/1-soul-searching-our-emotions.html
+	- Choose large/medium/small by comparing bitrate of same type
 
 - File
 	- Generate name from content
@@ -148,10 +133,20 @@ Public
 	- Series
 	- Person?
 
-- Search?
+
+- Search
 	- In titles and descriptions?
 	- Include speakers and series?
 		- Like iMDB: Speakers, Series, Content (hide empty sections)
+
+- Embedding and Sharing
+	- Embed
+		- Player for series/content/file?
+	- Sharing
+		- Facebook meta-data
+
+- Sitemap.xml
+	- Post to engines
 
 - Time?
 	- List by year/month

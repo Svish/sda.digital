@@ -1,14 +1,13 @@
 <?php
 
 namespace View\Helper;
-use ReflectionMethod;
-use DateTime;
-use Valid;
+use DateTime, ReflectionMethod;
+use Valid, Format;
 
 /**
- * Helper: Slightly date formatter.
+ * Helper: Slightly hackish formatter.
  */
-class Df
+class F
 {
 	private $cache = [];
 
@@ -33,10 +32,32 @@ class Df
 	}
 
 
-	private function _full($datetime, $render = null)
+
+	private function _hash($hash)
 	{
-		if($render)
-			$datetime = $render($datetime);
+		return strtoupper($hash);
+	}
+
+
+	private function _encodeAddress($address)
+	{
+		$address = preg_replace('/[\r\n]+/', ',', $address);
+		return urlencode($address);
+	}
+
+
+	private function _url($url)
+	{
+		$pos = strpos($url, '://');
+
+		return $pos !== false
+			? substr($url, $pos+3)
+			: $url;
+	}
+
+
+	private function _full($datetime)
+	{
 		$date = new DateTime($datetime);
 
 		$format = '%#d. %B %Y, %R';
@@ -44,21 +65,15 @@ class Df
 	}
 
 
-	private function _iso($datetime, $render = null)
+	private function _iso($datetime)
 	{
-		if($render)
-			$datetime = $render($datetime);
 		$date = new DateTime($datetime);
 		return $date->format(DateTime::ATOM);
 	}
 
 
-	private function _flex($datetime, $render = null)
+	private function _flex($datetime)
 	{
-		if($render)
-			$datetime = $render($datetime);
-
-		
 		// Uknown
 		if( ! $datetime)
 			return 'Ukjent';

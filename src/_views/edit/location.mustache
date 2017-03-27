@@ -1,7 +1,10 @@
 {{#role.editor}}
 
-<div id="editor">
+<div id="editor" class="gone">
 	<div data-bind="with: item">
+
+	<p>{{#svg}}help{{/svg}} Navnefeltet søker automatisk etter en adresse. Velg med musklikk eller enter for å fylle ut adresse og geo-lokasjon automatisk. Prøv piltast-ned dersom ikke noe dukker opp.
+
 	<p>
 		<input type="search" placeholder="Navn" data-bind="jqAuto: {
 			value: name,
