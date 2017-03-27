@@ -171,6 +171,10 @@ class Fresh extends \Model
 
 		// Group by name
 		$list = array_group_by('name', $files ?? []);
+		usort($list, function($x, $y)
+			{
+				return strnatcasecmp($x['name'], $y['name']);
+			});
 
 		// Yield content
 		foreach($list as $content)
