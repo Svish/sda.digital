@@ -35,4 +35,25 @@ class Security
 
 		return true;
 	}
+
+
+	/**
+	 * Checks if logged in and has required roles.
+	 *
+	 * @throws Unauthorized If not logged in.
+	 * @throws Forbidden If not having required roles
+	 */
+	public static function check(array $roles): bool
+	{
+		$user = Model::users()->logged_in();
+
+		if( ! $user)
+			return false;
+
+		array_unshift($roles, 'login');
+		if( ! $user->has_roles($roles))
+			return false;
+
+		return true;
+	}
 }

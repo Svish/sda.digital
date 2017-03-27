@@ -32,14 +32,9 @@ class Role
 
 	public function __invoke($text, \Mustache_LambdaHelper $render = null)
 	{
-		try
-		{
-			Security::require([$this->role]);
+		if(Security::check([$this->role]))
 			return $render ? $render($text) : $text;
-		}
-		catch(\Error\UserError $e)
-		{
-			return null;
-		}
+		
+		return null;
 	}
 }
