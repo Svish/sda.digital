@@ -52,7 +52,10 @@ class FileIcon extends Svg
 			return 'file-zip';
 
 		// Word document
-		if($t == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+		if(in_array($t, [
+			'application/msword',
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+			]))
 			return 'file-word';
 
 		// Excel
