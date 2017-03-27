@@ -94,7 +94,15 @@ class ID3
 					if(is_array($value))
 						$value = trim(implode(PHP_EOL.PHP_EOL, $value));
 
-					if(preg_match('/\s*\b(?<t>'.Valid::FLEXI_TIME.')\b\s*/', $value, $x, PREG_OFFSET_CAPTURE))
+
+					// xx-xx-xxx
+					if(preg_match('/\s*\b(\d{1,2})-(\d{1,2})-(\d{4})\b\s*/', $value, $x, PREG_OFFSET_CAPTURE))
+					{
+						yield 'time' => sprintf('%04u-%02u-%02u', $x[3][0], $x[2][0], $x[1][0]);
+						$value = substr_replace($value, '', $x[0][1], strlen($x[0][0]));
+					}
+					// xxxx-xx-xx xx:xx:xx
+					elseif(preg_match('/\s*\b(?<t>'.Valid::FLEXI_TIME.')\b\s*/', $value, $x, PREG_OFFSET_CAPTURE))
 					{
 						yield 'time' => $x['t'][0];
 						$value = substr_replace($value, '', $x['t'][1], strlen($x[0][0]));
