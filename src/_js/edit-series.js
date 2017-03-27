@@ -1,4 +1,4 @@
-var API = Site.Url.Base+'/editor/api/series';
+var API = Site.Url.Base+'editor/api/series';
 
 
 var ViewModel = function()
@@ -16,6 +16,7 @@ var ViewModel = function()
 	this.edit = function(e)
 		{
 			$.ajax({
+				type: 'GET',
 				url: API,
 				data: {id: ID},
 				context: this,

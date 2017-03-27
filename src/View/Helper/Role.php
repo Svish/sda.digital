@@ -24,15 +24,16 @@ class Role
 	private $role;
 	public function __construct($role)
 	{
-		if( ! is_string($role))
+		if($role instanceof \View)
 			return;
+
 
 		$this->role = $role;
 	}
 
-	public function __invoke($text, \Mustache_LambdaHelper $render = null)
+	public function __invoke($text = null, \Mustache_LambdaHelper $render = null)
 	{
-		if(Security::check([$this->role]))
+		if(Security::check($this->role ?: 'login'))
 			return $render ? $render($text) : $text;
 		
 		return null;

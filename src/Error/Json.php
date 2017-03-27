@@ -1,5 +1,6 @@
 <?php
 namespace Error;
+use Security;
 
 /**
  * Error view as Json.
@@ -20,7 +21,7 @@ class Json extends \View\Json
 		if($e instanceof ValidationFailed)
 			$data['errors'] = $e->errors;
 
-		if(ENV == 'dev')
+		if(Security::check('admin'))
 			$data['reason'] = self::from_win(Html::collect_xdebug($e));
 
 		parent::__construct($data);

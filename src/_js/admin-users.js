@@ -21,6 +21,7 @@ var ViewModel = function(data)
 	this.add = function()
 		{
 			$.ajax({
+				type: 'GET',
 				url: API+'new',
 				context: this,
 				success: function(data)

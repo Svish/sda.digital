@@ -1,8 +1,9 @@
 
-var API = 'manage/fresh/api/';
+var API = Site.Url.Base+'manage/fresh/api/';
 
 
 $.ajax({
+	type: 'GET',
 	url: API+'fresh-content',
 	data: {path: getQueryParameter('path')},
 	success: function(data)
