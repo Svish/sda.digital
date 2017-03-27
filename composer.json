@@ -16,7 +16,7 @@
 		"webuni/commonmark-table-extension": "^0.4.3",
 		"swiftmailer/swiftmailer": "5.*",
 		"james-heinrich/getid3": "1.*",
-		"geekality/consolelog": "dev-master"
+		"geekality/consolelog": "1.*"
 	},
 	
 	"autoload":

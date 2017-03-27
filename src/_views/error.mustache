@@ -4,15 +4,10 @@
 
 {{$ content}}
 
-
-
-	{{! TODO: Hide debug in production / not admin? }}
-	{{!#_user}}
+	{{#role.admin}}
 		{{{debug}}}
 		{{{stack}}}
-	{{!/_user}}
-
-
+	{{/role.admin}}
 
 	<p class="center">
 		<img class="frame" src="https://http.cat/{{status}}">

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ebe56737297efc18dd85fcb9c878a36a",
+    "content-hash": "74c267eec05aac9b649ce82fc460e7be",
     "packages": [
         {
             "name": "bitworking/mimeparse",
@@ -64,7 +64,7 @@
         },
         {
             "name": "geekality/consolelog",
-            "version": "dev-master",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Svish/consolelog.git",
@@ -102,7 +102,7 @@
                 "source": "https://github.com/Svish/consolelog/tree/master",
                 "issues": "https://github.com/Svish/consolelog/issues"
             },
-            "time": "2017-03-08 03:56:10"
+            "time": "2017-03-08T03:56:10+00:00"
         },
         {
             "name": "james-heinrich/getid3",
@@ -510,8 +510,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "kus/php-image": 20,
-        "geekality/consolelog": 20
+        "kus/php-image": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
