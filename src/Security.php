@@ -43,7 +43,7 @@ class Security
 	 * @throws Unauthorized If not logged in.
 	 * @throws Forbidden If not having required roles
 	 */
-	public static function check(array $roles): bool
+	public static function check(string ...$roles): bool
 	{
 		$user = Model::users()->logged_in();
 
