@@ -37,7 +37,7 @@ class Fresh extends \Model
 					content.*,
 					GROUP_CONCAT(DISTINCT person.name 
 						ORDER BY content_person.role, person.name
-						SEPARATOR ', ') 'speakers'
+						SEPARATOR ', ') 'persons'
 				FROM content
 				INNER JOIN fresh_log USING (content_id)
 				LEFT OUTER JOIN content_person USING (content_id)

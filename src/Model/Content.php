@@ -40,8 +40,10 @@ class Content extends Model
 					content.*,
 					GROUP_CONCAT(DISTINCT person.name
 						ORDER BY content_person.role, person.name
-						SEPARATOR ', ') 'speakers'
+						SEPARATOR ', ') 'persons',
+					GROUP_CONCAT(DISTINCT file.type ORDER BY file.type) 'types'
 				FROM content
+				INNER JOIN file USING (content_id)
 				INNER JOIN series_content USING (content_id)
 				LEFT OUTER JOIN content_person USING (content_id)
 				LEFT OUTER JOIN person USING (person_id)
@@ -62,9 +64,10 @@ class Content extends Model
 					content.*,
 					GROUP_CONCAT(DISTINCT content_person.role
 						ORDER BY content_person.role
-						SEPARATOR ', ') 'role',
-					location.name 'location'
+						SEPARATOR ', ') 'roles',
+					GROUP_CONCAT(DISTINCT file.type ORDER BY file.type) 'types'
 				FROM content
+				INNER JOIN file USING (content_id)
 				INNER JOIN content_person USING (content_id)
 				INNER JOIN person USING (person_id)
 				LEFT OUTER JOIN location USING (location_id)
@@ -86,8 +89,10 @@ class Content extends Model
 					0 'location',
 					GROUP_CONCAT(DISTINCT person.name
 						ORDER BY content_person.role
-						SEPARATOR ', ') 'speakers'
+						SEPARATOR ', ') 'persons',
+					GROUP_CONCAT(DISTINCT file.type ORDER BY file.type) 'types'
 				FROM content
+				INNER JOIN file USING (content_id)
 				INNER JOIN location USING (location_id)
 				LEFT OUTER JOIN content_person USING (content_id)
 				LEFT OUTER JOIN person USING (person_id)
@@ -108,7 +113,7 @@ class Content extends Model
 					content.*,
 					GROUP_CONCAT(DISTINCT person.name
 						ORDER BY content_person.role, person.name
-						SEPARATOR ', ') 'speakers',
+						SEPARATOR ', ') 'persons',
 					location.name 'location'
 				FROM content
 				INNER JOIN file USING (content_id)

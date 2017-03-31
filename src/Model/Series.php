@@ -118,7 +118,7 @@ class Series extends Model
 						ORDER BY 
 							content_person.role,
 							person.name
-						SEPARATOR ', ') 'speakers'
+						SEPARATOR ', ') 'persons'
 				FROM series
 				$join JOIN series_content USING (series_id)
 				LEFT OUTER JOIN content_person USING (content_id)
@@ -156,7 +156,7 @@ class Series extends Model
 					(SELECT COUNT(*) FROM series_content WHERE series_id = series.series_id) 'total',
 					GROUP_CONCAT(DISTINCT content_person.role
 						ORDER BY content_person.role
-						SEPARATOR ', ') 'speakers'
+						SEPARATOR ', ') 'persons'
 				FROM series
 				INNER JOIN series_content USING (series_id)
 				INNER JOIN content USING (content_id)
@@ -179,7 +179,7 @@ class Series extends Model
 					(SELECT COUNT(*) FROM series_content WHERE series_id = series.series_id) 'total',
 					GROUP_CONCAT(DISTINCT content_person.role
 						ORDER BY content_person.role
-						SEPARATOR ', ') 'speakers'
+						SEPARATOR ', ') 'persons'
 				FROM series
 				INNER JOIN series_content USING (series_id)
 				INNER JOIN content USING (content_id)

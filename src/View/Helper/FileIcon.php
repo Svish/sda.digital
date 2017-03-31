@@ -12,17 +12,21 @@ use Mustache_LambdaHelper;
  */
 class FileIcon extends Svg
 {
+
 	public function __invoke($type, $render = null)
 	{
 		if($render)
 			$type = $render($type);
 
-		$type = self::type($type);
+		$type = explode(',', $type);
+		$type = array_map([$this, 'type'], $type);
+		$type = array_map([$this, 'get'], $type);
 
-		return parent::__invoke($type);
+		return implode($type);
 	}
 
-	public static function type($t)
+
+	public function type($t)
 	{
 		// Audio
 		if(starts_with('audio/', $t))
@@ -50,6 +54,12 @@ class FileIcon extends Svg
 			'application/x-7z-compressed',
 			]))
 			return 'file-zip';
+
+		// Presentation
+		if(in_array($t, [
+			'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+			]))
+			return 'file-presentation';
 
 		// Word document
 		if(in_array($t, [

@@ -18,8 +18,12 @@ class Svg
 		if($render)
 			$name = $render($name);
 
-		$opt = explode(';', $name, 2);
-		$file = self::DIR.$opt[0].'.svg';
+		return $this->get($name);
+	}
+
+	protected function get($file)
+	{
+		$file = self::DIR.$file.'.svg';
 
 		if( ! is_file($file))
 			return "[svg={$opt[0]}]";

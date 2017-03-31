@@ -10,16 +10,20 @@
 			<button class="remove">{{#svg}}remove{{/svg}}</button>
 			{{/role.editor}}
 		
+			
 			{{#n}}<span class="count">#{{n}}</span>{{/n}}
 
+			<div class="icons">{{#fileIcon}}{{types}}{{/fileIcon}}</div>
+			
 			{{title}}
 
 			<div class="meta">
-				<time datetime="{{created}}">{{created | f.full}}</time>
-				{{#speakers}}<br>{{speakers}}{{/speakers}}
-				{{#role}}<br>{{role | __ | ucwords}}{{/role}}
-				{{#location}}<br>{{location}}{{/location}}
+				{{#time}}<time datetime="{{time}}">{{time | f.flex}}</time>{{/time}}
+				{{#persons}}<div class="persons">{{persons}}</div>{{/persons}}
+				{{#roles}}<div class="roles">{{roles | __ | ucwords}}</div>{{/roles}}
+				{{#location}}<div class="location">{{location}}</div>{{/location}}
 			</div>
+
 		</a>
 	</li>
 	{{/content_list}}

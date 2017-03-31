@@ -39,7 +39,7 @@ class Clicky extends Data
 				'sitekey_admin' => $this->admin_key,
 			];
 
-		if(@$_SERVER['HTTP_DNT'])
+		if($_SERVER['HTTP_DNT'] ?? null)
 			return;
 
 		if( ! in_array($data['type'], self::$types))
