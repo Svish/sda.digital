@@ -1,11 +1,14 @@
-#map_canvas
-{
-	height: 10em;
-	width: 15em;
-	margin-bottom: 2em;
-}
 
-.map
-{
-	border: .5em solid @border-color;
+.map-link
+{		
+	.map
+	{
+		border: .5em solid lighten(@border-color, 5%);
+		opacity: .9;
+		&:hover
+		{
+			border-color: @accent2-color;
+			opacity: 1;
+		}
+	}
 }

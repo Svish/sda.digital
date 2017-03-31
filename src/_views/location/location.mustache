@@ -17,7 +17,7 @@
 	{{> edit/location}}
 
 	<p data-bind="visible: ! item()">
-		<a title="Gå til Google Maps" href="https://maps.google.com/?q={{address | f.encodeAddress}}">
+		<a class="map-link" title="Gå til Google Maps" href="https://maps.google.com/?q={{address | f.encodeAddress}}">
 			{{> map}}
 		</a>
 	</p>
