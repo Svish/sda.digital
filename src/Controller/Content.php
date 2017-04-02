@@ -38,8 +38,11 @@ class Content extends Controller
 		switch($_POST['action'] ?? null)
 		{
 			case 'delete':
-				Model::fresh()->forget_mine();
-				HTTP::redirect_self();
+				if(PATH == 'content/my-fresh')
+				{
+					Model::fresh()->forget_mine();
+					HTTP::redirect_self();
+				}
 
 			default:
 				throw new PageNotFound();
