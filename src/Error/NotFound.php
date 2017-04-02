@@ -3,12 +3,14 @@
 namespace Error;
 
 /**
- * 400 Unknown Login
+ * 404 Not found
+ *
+ * Used for e.g. database entities, not pages.
  */
 class NotFound extends UserError
 {
 	public function __construct($id, $what)
 	{
-		parent::__construct(400, [$id, $what]);
+		parent::__construct(404, [$id, $what]);
 	}
 }

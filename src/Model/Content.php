@@ -2,6 +2,7 @@
 
 namespace Model;
 use Data\Content as C;
+use Data\File;
 use DB, Model;
 
 
@@ -14,6 +15,35 @@ class Content extends Model
 	{
 		return C::get($id);
 	}
+
+
+
+
+	/**
+	 * Delete content by id.
+	 *
+	 * NOTE: Also deletes files.
+	 */
+	public function delete(int $id): bool
+	{
+		$x = $this->get($id);
+		$x->load_relations('file_list');
+
+		// Remove files and content
+		DB::begin();
+		foreach($x->file_list as $file)
+			File::delete($file->id());
+
+		$result = C::delete($x->id());
+		DB::commit();
+		
+		// Remove actual files
+		foreach($x->file_list as $file)
+			@unlink($file->path);
+
+		return $result;
+	}
+
 
 
 	/**
