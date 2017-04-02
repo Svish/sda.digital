@@ -4,13 +4,6 @@ Up next
 - (!) Fetch messages via ajax
 	- Remove after showing (currently invisibly hides menu...)
 
-- (!) Change to model->for_x(X $type)
-	- $type->id()
-	- public function id() this->$auto_inc()
-
-- (!) Cache Security::check calls
-	
-- Add session_id() to fresh_log table?
 - (!) Merge list-items on item pages somehow?
 	- Order by "label"
 
@@ -32,7 +25,7 @@ Maps
 Tidbits
 ===
 
-- (!) Use Knockout on user/me? And contact? Others?
+- Use Knockout on user/me? And contact? Others?
 
 - Move array_* from functions.inc to Array class
 
@@ -48,31 +41,11 @@ Tidbits
 	- highlight content at that location on person page
 	- similar other places?
 
-- Rename 'speakers' to 'persons' in list views and queries
-
-- Rename '.mustache' => '.m'?
-
 - Remove empty folders
 	- After removing content
 	- After... updating path?
 	- Or just in Issues thing?
 
-
-RelationalSql extends Sql
-===
-
-- Add() / Remove()
-	- Add dirty rel for save
-- Save()
-- Load with()
-	- Group by?
-	- key:foo?
-	- stream with yield and manual pdo "fetcher"?
-	- Query()->stream(...$with)
-		- implode(', ', map($rel_columns, (c) => "$rel.$c AS :$rel:$c"))
-			- Or just use $self.$c and $rel.$c?
-		- Load/Handle relationships?
-			- If class is RelationalSql
 
 
 Admin
@@ -82,7 +55,9 @@ Admin
 	- Auto-complete speakers
 	- Inline add to series
 		- Like location, via drop-down?
-		- Copy to all?
+		- Copy to all?	
+
+	- Add session_id() to fresh_log table?
 
 	- Add remote content?
 		- YouTube?
@@ -93,23 +68,20 @@ Admin
 
 
 
-
 Public
 ===
 
-- Cache model::for_(speaker/location/series/content) view data
+- Cache model::for_page and for_index
 	- (!) Remember footer and header changes...
 	- Somehow clear on save
-		- Don't remove slashes in cached key names, then delete 'url'?
 
 - Front
 	- Remove "Siste - " from <title>
-	- Latest content
-		- By added
-		- Fetch more link/button
 	- Searchbar on top
 		- Search for both content and series?
 		- Result replaces latest content
+	- Latest content
+		- Fetch more link/button
 
 
 - (!) Show content length AND speaker
@@ -152,6 +124,8 @@ Public
 	- List by year/month
 	- Choose between created/recorded
 
+
+
 Profile?
 ===
 
@@ -163,3 +137,22 @@ Profile?
 - Add last_login / login_log?
 - MyFavorites? (favorite_series_id =>)
 - MySeries? (series.owner != null)
+
+
+
+RelationalSql extends Sql
+===
+
+- (?) Add() / Remove()
+	- Add dirty rel for save
+- (?) Save()
+	- Currently handled manually in models...
+- (?) Load with()
+	- Group by?
+	- key:foo?
+	- stream with yield and manual pdo "fetcher"?
+	- Query()->stream(...$with)
+		- implode(', ', map($rel_columns, (c) => "$rel.$c AS :$rel:$c"))
+			- Or just use $self.$c and $rel.$c?
+		- Load/Handle relationships?
+			- If class is RelationalSql
