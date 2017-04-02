@@ -18,9 +18,9 @@ class Series extends Model
 
 
 	/**
-	 * Save series content.
+	 * Set series content, in given order.
 	 */
-	public function save_content(array $data, S $series)
+	public function set_content(array $data, S $series)
 	{
 		if($data === null)
 			return;
@@ -54,13 +54,8 @@ class Series extends Model
 	/**
 	 * Save series data.
 	 */
-	public function save($data): S
+	public function save(array $data): S
 	{
-		$data = array_whitelist($data, [
-			'series_id',
-			'title',
-			]);
-
 		$x = $this->get($data['series_id'] ?? null);
 		$x->set($data);
 		$x->validate();

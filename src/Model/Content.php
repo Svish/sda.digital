@@ -15,6 +15,57 @@ class Content extends Model
 		return C::get($id);
 	}
 
+
+	/**
+	 * Save content data.
+	 */
+	public function save(array $data): C
+	{
+		$x = $this->get($data['content_id'] ?? null);
+		$x->set($data);
+		$x->validate();
+		$x->save();
+
+		return $x;
+	}
+
+
+	/**
+	 * Set persons of data.
+	 */
+	public function set_persons(array $data, C $content)
+	{
+		if($data === null)
+			return;
+
+		DB::begin();
+
+		// Delete current persons
+		DB::prepare('DELETE FROM content_person
+				WHERE content_id = ?')
+			->exec([$content->content_id]);
+		
+		// Insert new set
+		$in = DB::prepare('INSERT INTO content_person
+				(content_id, person_id, role)
+				VALUES (?, ?, ?)');
+
+		foreach($data as $person)
+		{
+			$person = \Data\Person::from($person);
+			$person->save();
+
+			$cp = new \Data\ContentPerson;
+			$cp->content_id = $content->content_id;
+			$cp->person_id = $person->person_id;
+			$cp->role = $person->role;
+			$cp->save();
+		}
+
+		DB::commit();
+	}
+
+
 	/**
 	 * For location/$id.
 	 */

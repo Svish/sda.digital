@@ -22,11 +22,6 @@ class Persons extends Model
 	 */
 	public function save(array $data): Person
 	{
-		$data = array_whitelist($data, [
-			'person_id',
-			'name',
-			]);
-
 		$x = $this->get($data['person_id'] ?? null);
 		$x->set($data);
 		$x->validate();
@@ -71,6 +66,20 @@ class Persons extends Model
 	{
 		return DB::query('SELECT * FROM person ORDER BY name')
 			->fetchAll(Person::class);
+	}
+
+
+	/**
+	 * Get all roles for persons in content.
+	 */
+	public function all_roles(): array
+	{
+		// TODO: Get from DB
+		return [
+			['role' => 'speaker', 'label' => 'Taler'],
+			['role' => 'translator', 'label' => 'Oversetter'],
+			['role' => 'author', 'label' => 'Forfatter'],
+		];
 	}
 
 
@@ -147,6 +156,25 @@ class Persons extends Model
 				ORDER BY role, name")
 			->execute([$c->id()])
 			->fetchAll(Person::class);
+	}
+
+
+
+	/**
+	 * Participants of content; just what's needed for content editor.
+	 */
+	public function for_content_editor(\Data\Content $c): array
+	{
+		return DB::prepare("SELECT
+					person.person_id,
+					person.name,
+					content_person.role			
+				FROM person
+				INNER JOIN content_person USING (person_id)
+				WHERE content_id = ?
+				ORDER BY role, name")
+			->execute([$c->id()])
+			->fetchArray();
 	}
 
 

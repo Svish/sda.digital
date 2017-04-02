@@ -9,12 +9,29 @@
 
 
 	input,
+	select,
 	textarea
 	{
 		width: 100%;
 		&.number
 		{
 			max-width: 13ch;
+		}
+	}
+
+	fieldset
+	{
+		div
+		{
+			white-space: nowrap;
+			input
+			{
+				width: 30ch;
+			}
+			select
+			{
+				width: 15ch;
+			}
 		}
 	}
 

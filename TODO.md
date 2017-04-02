@@ -10,10 +10,18 @@ Up next
 
 - Edit content
 - Edit files
+
+- (!) Cache Security::check calls
 	
 - Add session_id() to fresh_log table?
 - (!) Merge list-items on item pages somehow?
 	- Order by "label"
+
+- (!) Rename content.time => recorded/when
+
+- DB\Valid::must_exist
+	- ['must_exist', ['table', 'column']]
+
 
 
 Maps
@@ -138,6 +146,8 @@ Public
 	- In titles and descriptions?
 	- Include speakers and series?
 		- Like iMDB: Speakers, Series, Content (hide empty sections)
+	- Full text index?
+		- http://stackoverflow.com/a/11144591/39321
 
 - Embedding and Sharing
 	- Embed
@@ -150,8 +160,7 @@ Public
 
 - Time?
 	- List by year/month
-	- Choose between created/time
-		- (!) Rename time => recorded
+	- Choose between created/recorded
 
 Profile?
 ===

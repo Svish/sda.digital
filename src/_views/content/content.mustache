@@ -12,17 +12,21 @@
 			{{title}}
 		</a>
 	</h1>
-	<div class="meta no-select">
-		{{#location}}
-		<span><b>Sted:</b> <a href="{{url}}">{{name}}</a></span>
-		{{/location}}
-		<span><b>Tatt opp:</b> {{time | f.flex | ucfirst}}</span>
-		<span><b>Lagt til:</b> <time datetime="{{created | f.iso}}">{{created | f.full}}</time></span>
+	<div class="meta">
+		
+		<div><b>Sted:</b>
+			{{#location}}<a href="{{url}}">{{name}}</a>{{/location}}
+			{{^location}}Ukjent{{/location}}
+		</div>
+		<div><b>Tatt opp:</b> {{time | f.flex | ucfirst}}</div>
+		<div><b>Lagt til:</b> <time datetime="{{created | f.iso}}">{{created | f.full}}</time></div>
 	</div>
+
+	{{> edit/content}}
+
 
 {{#role.admin}}
 <pre>// TODO
-* Edit content
 * Add content to series
 * Media player
 </pre>
