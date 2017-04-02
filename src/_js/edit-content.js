@@ -72,7 +72,7 @@ var ViewModel = function()
 				url: API,
 				data: ''+ID,
 				contentType: 'application/json',
-				success: () => window.location = Site.Url.Current+'/../../index',
+				success: () => window.location = Site.Url.Base,
 			});
 		};
 }
