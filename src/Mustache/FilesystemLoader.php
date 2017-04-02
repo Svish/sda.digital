@@ -9,8 +9,16 @@ use Security;
  */
 class FilesystemLoader extends \Mustache_Loader_FilesystemLoader
 {
+	const EXT = '.ms';
 	const ACCESS_PRAGMA = '/{{%\s*ACCESS\s*((?<=\s).+)?}}/';
 
+
+	public function __construct($baseDir, array $options = [])
+	{
+		parent::__construct($baseDir, $options + [
+				'extension' => self::EXT,
+			]);
+	}
 
 	/**
 	 * Load the given file, and process our custom pragma.
