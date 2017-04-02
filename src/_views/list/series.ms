@@ -1,6 +1,6 @@
 <ul class="item-list series-list no-select">
 	{{#series_list}}
-	<li data-id="{{series_id}}">
+	<li class="series" data-id="{{series_id}}">
 		<a href="{{url}}">
 			{{^n}}<span class="count">{{count}}{{#total}}/{{total}}{{/total}}</span>{{/n}}
 			{{#n}}<span class="count">#{{n}}</span>{{/n}}

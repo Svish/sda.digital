@@ -1,6 +1,6 @@
 <ul class="item-list person-list no-select">
 	{{#person_list}}
-	<li data-id="{{person_id}}">
+	<li class="person" data-id="{{person_id}}">
 		<a href="{{url}}">
 			<span class="count">{{count}}{{#total}}/{{total}}{{/total}}</span>
 

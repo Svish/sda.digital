@@ -2,6 +2,7 @@
 
 <div id="editor" class="gone">
 	<div data-bind="with: item">
+		
 		<p>
 			<input type="text" placeholder="Tittel" data-bind="value: title" required>
 			<span class="field error" data-bind="text: errors().title"></span>
@@ -52,6 +53,9 @@
 			<div class="field error" data-bind="text: errors().persons"></div>
 		</fieldset>
 	</div>
+
+	<p>{{#svg}}error{{/svg}} Fjerner du innholdet, vil også de fysiske filene som er en del av dette innholdet slettes.
+
 	{{> edit/buttons}}
 </div>
 

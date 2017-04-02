@@ -1,6 +1,6 @@
 <ul class="item-list content-list no-select">
 	{{#content_list}}
-	<li data-id="{{content_id}}" class="{{#fresh}}fresh{{/fresh}}">
+	<li data-id="{{content_id}}" class="content {{#fresh}}fresh{{/fresh}}">
 		<a href="{{url}}">
 
 			{{#role.editor}}

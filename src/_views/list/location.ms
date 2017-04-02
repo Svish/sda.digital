@@ -1,6 +1,6 @@
 <ul class="item-list location-list no-select">
 	{{#location_list}}
-	<li data-id="{{location_id}}">
+	<li class="location" data-id="{{location_id}}">
 		<a href="{{url}}">
 			<span class="count">{{count}}</span>
 			{{#svg}}place{{/svg}}

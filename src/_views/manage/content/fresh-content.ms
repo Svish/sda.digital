@@ -55,7 +55,7 @@
 	<p>Da var det ikke mer å legge til i denne mappen. 🎉
 	<ul>
 		<li>Gå til en <a href="{{_path}}/../fresh-dirs">annen mappe</a>.
-		<li>Organiser det du allerede har lagt til <a href="{{_path}}/../fresh-series">i serier</a>.
+		<li>Se hva du <a href="content/my-fresh">nylig har lagt til</a>, og Organiser det <a href="series/index">i serier</a>.
 		<li>Ha en fin dag videre. 🐱🏍
 	</ul>
 </section>
