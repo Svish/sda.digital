@@ -8,9 +8,6 @@ Up next
 	- $type->id()
 	- public function id() this->$auto_inc()
 
-- Edit content
-- Edit files
-
 - (!) Cache Security::check calls
 	
 - Add session_id() to fresh_log table?
@@ -54,6 +51,11 @@ Tidbits
 - Rename 'speakers' to 'persons' in list views and queries
 
 - Rename '.mustache' => '.m'?
+
+- Remove empty folders
+	- After removing content
+	- After... updating path?
+	- Or just in Issues thing?
 
 
 RelationalSql extends Sql
@@ -113,22 +115,10 @@ Public
 - (!) Show content length AND speaker
 	- How to get smoothly in person/series/location listings?
 
-- Locations
-	- Link map to google maps page
-	- Edit
-		- Search for website?
-		- Show on dynamic map?
-
 
 - Content
-	- List files
-	- Edit
-		- Content editable?
-		- {{#role.editor}}
 		- Add files (select from new)
 		- Add to / Remove from series
-	- https://www.audioverse.org/english/sermons/recordings/3162/revival-and-transformation.html
-	- https://www.audioverse.org/english/sermons/recordings/13863/1-soul-searching-our-emotions.html
 	- Choose large/medium/small by comparing bitrate of same type
 
 - File

@@ -60,7 +60,7 @@ class Users extends \Model
 	
 	private function _login(User $user): User
 	{
-		Session::set(self::SESSION_KEY, $user->pk());
+		Session::set(self::SESSION_KEY, $user->id());
 		return $user;
 	}
 
@@ -81,20 +81,33 @@ class Users extends \Model
 	 */
 	public function logged_in()
 	{
+		// Already checked this request
+		if(self::$_user !== null)
+			return self::$_user;
+
 		// Supposed to be logged in
 		$id = Session::get(self::SESSION_KEY);
-		if( ! $id || ! is_array($id))
-			return false;
+		if( ! $id)
+			return self::$_user = false;
 
 		// User (still) exists?
-		$user = self::$_user ?? $this->get(...array_values($id));
-		if( ! $user)
-			return false;
+		try
+		{
+			$user = self::$_user ?? $this->get($id);
+		}
+		catch(\Error\NotFound $e)
+		{
+			return self::$_user = false;
+		}
+
+		// Can (still) login?
+		if( ! $user->has_roles(['login']))
+			return self::$_user = false;
 
 		// Return user
 		return self::$_user = $user;
 	}
-	private static $_user;
+	private static $_user = null;
 
 
 
