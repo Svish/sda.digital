@@ -1,7 +1,7 @@
 <?php
 
 namespace View\Helper;
-use Config, Mustache;
+use Config, Model, Mustache;
 
 /**
  * Helper: Returns HTML for Clicky tracking code.
@@ -15,7 +15,11 @@ class Clicky
 		$config = Config::clicky()[ENV] ?? false;
 
 		if($config)
+		{
+			$config['user'] = Model::users()->logged_in();
+			
 			return Mustache::engine()
 				->render('clicky', $config);
+		}
 	}
 }
