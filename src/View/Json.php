@@ -43,8 +43,8 @@ class Json extends View
 			HTTP::exit();
 
 		// Output
-		$json = json_encode($this->_data, 
-			JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
+		// JSON_PRETTY_PRINT
+		$json = json_encode($this->_data, JSON_UNESCAPED_UNICODE);
 
 		if($json === false)
 			throw new \Exception('JSON encode failed: '.json_last_error_msg());
