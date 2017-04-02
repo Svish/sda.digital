@@ -172,7 +172,7 @@ class Series extends Model
 					series.*,
 					COUNT(DISTINCT content_id) 'count',
 					(SELECT COUNT(*) FROM series_content WHERE series_id = series.series_id) 'total',
-					GROUP_CONCAT(DISTINCT content_person.role
+					GROUP_CONCAT(DISTINCT person.name
 						ORDER BY content_person.role
 						SEPARATOR ', ') 'persons'
 				FROM series
