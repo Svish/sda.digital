@@ -24,7 +24,7 @@ class Reset extends \Controller\Page
 			}
 		}
 
-		return View::template()->output();
+		return View::layout()->output();
 	}
 
 

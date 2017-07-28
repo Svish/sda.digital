@@ -29,7 +29,7 @@ class Content extends Controller
 					HTTP::redirect($content->url);
 		}
 
-		return View::template(get_defined_vars(), $template)
+		return View::layout(get_defined_vars(), $template)
 			->output();
 	}
 

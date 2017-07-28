@@ -1,22 +1,18 @@
 {
 	"repositories":
 	[
+		{"type": "vcs", "url": "https://github.com/Svish/consolelog"},
 		{"type": "vcs", "url": "https://github.com/Svish/php-image"},
-		{"type": "vcs", "url": "https://github.com/Svish/consolelog"}
+		{"type": "vcs", "url": "https://github.com/Svish/php-weblib"}
 	],
 	"require":
 	{
 		"php": "7.*",
-        "bitworking/mimeparse": "2.*",
-		"leafo/lessphp": "0.*",
+		"geekality/weblib": "dev-master",
+		
 		"kus/php-image": "dev-master",
-		"mustache/mustache": "2.*",
-		"league/commonmark": "0.*",
-		"webuni/commonmark-attributes-extension": "^0.3.2",
-		"webuni/commonmark-table-extension": "^0.4.3",
-		"swiftmailer/swiftmailer": "5.*",
-		"james-heinrich/getid3": "1.*",
-		"geekality/consolelog": "1.*"
+		"swiftmailer/swiftmailer": "6.*",
+		"james-heinrich/getid3": "1.*"
 	},
 	
 	"autoload":

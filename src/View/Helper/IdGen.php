@@ -3,7 +3,7 @@
 namespace View\Helper;
 
 /**
- * Helper: Makes sets of ids.
+ * Helper: Makes pairs of ids.
  */
 class IdGen
 {

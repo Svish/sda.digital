@@ -5,7 +5,7 @@ use Config, Model, View, Mustache;
 /**
  * Views using Mustache templates.
  */
-class Front extends Template
+class Front extends Layout
 {
 	public function __construct()
 	{
@@ -18,7 +18,7 @@ class Front extends Template
 
 	private function r($template, $data)
 	{
-		return View::template($data, $template)
+		return View::layout($data, $template)
 			->render('text/html');
 	}
 }

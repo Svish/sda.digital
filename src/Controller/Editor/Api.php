@@ -100,7 +100,7 @@ class Api extends \Controller\Api
 		$series = array_whitelist($series->jsonData(), $this->series_fields);
 		
 		$content = Model::fresh()->mine();
-		$content = View::template([
+		$content = View::layout([
 				'content_list' => $content,
 				'fresh' => true,
 				], 'list/content')

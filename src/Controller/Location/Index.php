@@ -13,7 +13,7 @@ class Index extends \Controller\Page
 	{
 		$location_list = Model::locations()->for_index();
 
-		return View::template(get_defined_vars())
+		return View::layout(get_defined_vars())
 			->output();
 	}
 }

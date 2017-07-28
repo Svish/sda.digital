@@ -24,7 +24,7 @@ class Series extends Controller
 				HTTP::redirect($series->url);	
 		}
 
-		return View::template(get_defined_vars(), $template)
+		return View::layout(get_defined_vars(), $template)
 			->output();
 	}
 }

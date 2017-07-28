@@ -21,8 +21,8 @@ class Me extends \Controller\Page
 
 	public function get()
 	{
-		return View::template(['me' => $this->me])
-			->output();;
+		return View::layout(['me' => $this->me])
+			->output();
 	}
 
 

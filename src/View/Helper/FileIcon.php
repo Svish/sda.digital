@@ -4,11 +4,7 @@ namespace View\Helper;
 use Mustache_LambdaHelper;
 
 /**
- * Helper: SVG importer for Mustache templates.
- *
- * If the name includes a ";" everything
- * following it will be added to the <svg> 
- * tag as attributes.
+ * Helper: SVG File Icon importer for Mustache templates.
  */
 class FileIcon extends Svg
 {

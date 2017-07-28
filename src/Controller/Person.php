@@ -24,7 +24,7 @@ class Person extends Controller
 				HTTP::redirect($person->url);	
 		}
 
-		return View::template(get_defined_vars(), $template)
+		return View::layout(get_defined_vars(), $template)
 			->output();
 	}
 }

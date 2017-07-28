@@ -1,10 +1,20 @@
 <?php
 
+use Email\Smtp;
+use Email\Message;
+
 /**
  * Email helper.
+ * 
+ * @uses Config email
  */
 class Email
 {
+	public function __construct()
+	{
+		$this->config = Config::email();
+	}
+
 	public static function __callStatic($name, $args)
 	{
 		try
@@ -48,11 +58,11 @@ class Email
 	 */
 	public function send_info($to, $subject, $message)
 	{
-		$message = Swift_Message::newInstance()
+		$message = (new Message)
 			->setFrom($this->config['smtp']['sender'])
 			->setTo($to)
 			->setSubject($subject)
-			->setBody($message);
+			->setBodyMd($message);
 
 		return $this->send($message);
 	}
@@ -63,11 +73,11 @@ class Email
 	 */
 	public function send_feedback($from, $subject, $message)
 	{
-		$message = Swift_Message::newInstance()
+		$message = (new Message)
 			->setTo($this->config['contact']['address'])
 			->setFrom($from)
 			->setSubject($subject)
-			->setBody($message);
+			->setBodyMd($message);
 
 		return $this->send($message);
 	}
@@ -76,33 +86,8 @@ class Email
 	/**
 	 * Send message.
 	 */
-	private function send(Swift_Message $message): bool
+	private function send(Message $message): bool
 	{
-		// Set common message stuff
-		$text = $message->getBody();
-		$html = Markdown::render($text);
-		$message
-			->setSender($this->config['smtp']['sender'])
-			->setBody($html, 'text/html')
-			->addPart($text, 'text/plain');
-
-		// Create transport
-		$transport = Swift_SmtpTransport::newInstance()
-			->setEncryption('tls')
-			->setHost($this->config['smtp']['server'])
-			->setPort($this->config['smtp']['port'])
-			->setUsername($this->config['smtp']['username'])
-			->setPassword($this->config['smtp']['password']);
-
-		// Send message
-		$mailer = Swift_Mailer::newInstance($transport);
-		$mailer->registerPlugin(Email\SwiftLogger::plugin());
-		return $mailer->send($message) > 0;
-	}
-
-
-	public function __construct()
-	{
-		$this->config = Config::contact();
+		return Smtp::send($message);
 	}
 }

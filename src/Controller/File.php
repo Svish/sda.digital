@@ -18,7 +18,7 @@ class File extends Controller
 		if($slug == 'download')
 			return $this->download($file);
 
-		return View::template(get_defined_vars(), 'file/file')
+		return View::layout(get_defined_vars(), 'file/file')
 			->output();
 	}
 

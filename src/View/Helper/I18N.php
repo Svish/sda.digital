@@ -5,7 +5,9 @@ use Text, Config;
 
 
 /**
- * Helper: Translation in Mustache templates.
+ * Helper: Basic translation in Mustache templates.
+ * 
+ * @uses Config translations
  */
 class I18N
 {

@@ -21,7 +21,7 @@ class Contact extends Page
 		if(isset($_GET['sent']))
 			Message::ok('email-sent');
 
-		return View::template()->output();;
+		return View::layout()->output();;
 	}
 
 

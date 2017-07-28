@@ -1,6 +1,7 @@
 <?php
 
 namespace Data;
+use Format;
 
 class Slug extends Computed
 {
@@ -19,19 +20,11 @@ class Slug extends Computed
 
 	protected function _set(string $key, $value)
 	{
-		yield $this->column_slug => self::slug($value);
+		yield $this->column_slug => Format::slug($value);
 	}
 
 	protected function _unset(string $key)
 	{
 		yield $this->column_slug;
-	}
-	
-	private static function slug($txt)
-	{
-		$txt = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $txt);
-		$txt = preg_replace('/\W+/', '-', $txt);
-		$txt = trim($txt, '-');
-		return strtolower($txt);
 	}
 }

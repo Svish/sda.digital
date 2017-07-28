@@ -6,6 +6,7 @@ require 'functions.inc';
 require 'constants.inc';
 
 
+
 // Set error handler
 error_reporting(E_ALL);
 $eh = new Error\Handler();

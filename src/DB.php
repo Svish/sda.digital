@@ -9,6 +9,7 @@ use Cache\PreCheckedCache;
  * PDO helper
  *
  * @see https://phpdelusions.net/pdo
+ * @uses Config database
  */
 class DB
 {

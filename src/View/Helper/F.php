@@ -5,7 +5,12 @@ use DateTime, ReflectionMethod;
 use Valid, Format;
 
 /**
- * Helper: Slightly hackish formatter.
+ * Helper: Formatter
+ * 
+ * Slightly hackish formatter for various stuff.
+ * 
+ *     {{website | f.url}}
+ *     {{hash | f.hash}}
  */
 class F
 {
@@ -35,7 +40,7 @@ class F
 
 	private function _hash($hash)
 	{
-		return strtoupper($hash);
+		return chunk_split($hash, 2, ' ');
 	}
 
 

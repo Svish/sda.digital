@@ -5,6 +5,8 @@ use Config, Mustache;
 
 /**
  * Helper: Google API Helper.
+ * 
+ * @uses Config google
  */
 class Google
 {

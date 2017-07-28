@@ -1,6 +1,15 @@
 Up next
 ===
 
+- (!) Send 'editor' flag to template for use in list templates
+	- Only output buttons and such if it's there?
+
+- (!) Series
+	- Remove: Remove-button, like content under series
+	- Adding: Search textbox followed by listing of search-result series, with add button
+		- Use as experiment for searching?
+		- Similar for persons? Maybe not?
+
 - (!) Fetch messages via ajax
 	- Remove after showing (currently invisibly hides menu...)
 

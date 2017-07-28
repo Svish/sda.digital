@@ -87,7 +87,7 @@ class Users extends \Model
 
 		// Supposed to be logged in
 		$id = Session::get(self::SESSION_KEY);
-		if( ! $id)
+		if( ! $id || ! is_int($id))
 			return self::$_user = false;
 
 		// User (still) exists?

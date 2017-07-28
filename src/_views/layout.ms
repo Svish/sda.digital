@@ -22,7 +22,7 @@
 		</script>
 
 	</head>
-	<body class="{{pathClasses}}">
+	<body class="{{_pc}}">
 		{{> header}}
 
 		{{{messages}}}

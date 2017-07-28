@@ -24,7 +24,7 @@ class Location extends Controller
 				HTTP::redirect($location->url);	
 		}
 
-		return View::template(get_defined_vars(), $template)
+		return View::layout(get_defined_vars(), $template)
 			->output();
 	}
 }
