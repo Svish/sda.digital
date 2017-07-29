@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "91805f822ec47972502fcdd423d30444",
+    "content-hash": "19468f32ea804c35883c6a03352e4620",
     "packages": [
         {
             "name": "bitworking/mimeparse",
@@ -175,7 +175,7 @@
         },
         {
             "name": "geekality/consolelog",
-            "version": "dev-master",
+            "version": "v1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Svish/consolelog.git",
@@ -213,7 +213,7 @@
                 "source": "https://github.com/Svish/consolelog/tree/v1.2",
                 "issues": "https://github.com/Svish/consolelog/issues"
             },
-            "time": "2017-07-27 07:41:44"
+            "time": "2017-07-27T07:41:44+00:00"
         },
         {
             "name": "geekality/weblib",
@@ -221,13 +221,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Svish/php-weblib.git",
-                "reference": "a39ea95f19a5186b6b270cc85e79011f2ca9722d"
+                "reference": "b70aa3d166c7a703f46f78e3d5fc991ddd226f3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Svish/php-weblib/zipball/a39ea95f19a5186b6b270cc85e79011f2ca9722d",
-                "reference": "a39ea95f19a5186b6b270cc85e79011f2ca9722d",
+                "url": "https://api.github.com/repos/Svish/php-weblib/zipball/b70aa3d166c7a703f46f78e3d5fc991ddd226f3f",
+                "reference": "b70aa3d166c7a703f46f78e3d5fc991ddd226f3f",
                 "shasum": ""
+            },
+            "require": {
+                "bitworking/mimeparse": "2.*",
+                "geekality/consolelog": "*",
+                "leafo/lessphp": "0.*",
+                "league/commonmark": "0.*",
+                "mustache/mustache": "2.*",
+                "php": "7.*",
+                "webuni/commonmark-attributes-extension": "0.*",
+                "webuni/commonmark-table-extension": "0.*"
             },
             "type": "library",
             "autoload": {
@@ -243,7 +253,7 @@
                 "source": "https://github.com/Svish/php-weblib/tree/master",
                 "issues": "https://github.com/Svish/php-weblib/issues"
             },
-            "time": "2017-07-28 14:51:14"
+            "time": "2017-07-28 23:59:05"
         },
         {
             "name": "james-heinrich/getid3",
@@ -658,7 +668,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "geekality/consolelog": 20,
         "geekality/weblib": 20,
         "kus/php-image": 20
     },
