@@ -7,7 +7,7 @@
 		<base href="{{#_url}}/{{/_url}}" />
 		<link rel="canonical" href="{{#_url}}/{{_path}}{{/_url}}">
 
-		{{!>favicons}}
+		{{! TODO: >favicons}}
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		{{#_css}}
@@ -18,7 +18,13 @@
 		<script type="text/javascript" src="{{.}}"></script>
 		{{/_js}}
 		<script>
-			var Site = {Env: '{{ENV}}', Url: {Base: '{{_url}}', Current: '{{_path}}'}};
+			var Site = {
+					Env: '{{ENV}}',
+					Url: {
+						Base: '{{_url}}',
+						Current: '{{_path}}'
+					}
+				};
 		</script>
 
 	</head>

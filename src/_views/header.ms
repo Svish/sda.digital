@@ -4,6 +4,6 @@
 		<a href=".">SDA<span>.</span>digital</a>
 	</h1>
 	
-	{{>menu}}
+	{{> menu }}
 
 </header>

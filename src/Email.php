@@ -10,28 +10,6 @@ use Email\Message;
  */
 class Email
 {
-	public function __construct()
-	{
-		$this->config = Config::email();
-	}
-
-	public static function __callStatic($name, $args)
-	{
-		try
-		{
-			Log::group();
-			Log::trace_raw("Sending $name email…");
-			$result = call_user_func_array([new self, "send_$name"], $args);
-			Log::groupEnd();
-			return $result;
-		}
-		catch(Swift_SwiftException $e)
-		{
-			throw new Exception('Failed to send email.', $e);
-		}
-	}
-
-
 	public function send_reset(\Data\User $user)
 	{
 		// Make token
@@ -83,11 +61,38 @@ class Email
 	}
 
 
-	/**
-	 * Send message.
-	 */
+
+
+
+	public function __construct()
+	{
+		$this->config = Config::email();
+	}
+
+
+
 	private function send(Message $message): bool
 	{
 		return Smtp::send($message);
 	}
+
+
+
+	public static function __callStatic($name, $args)
+	{
+		try
+		{
+			Log::group();
+			Log::trace_raw("Sending $name email…");
+			$result = call_user_func_array([new self, "send_$name"], $args);
+			Log::groupEnd();
+			return $result;
+		}
+		catch(Swift_SwiftException $e)
+		{
+			throw new Exception('Failed to send email.', $e);
+		}
+	}
+
+
 }
