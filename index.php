@@ -2,9 +2,6 @@
 
 // Include autoloader and stuff
 require 'vendor/autoload.php';
-require 'functions.inc';
-require 'constants.inc';
-
 
 
 // Set error handler

@@ -21,7 +21,7 @@ Up next
 - DB\Valid::must_exist
 	- ['must_exist', ['table', 'column']]
 
-
+- https://getcomposer.org/doc/articles/autoloader-optimization.md
 
 Maps
 ===

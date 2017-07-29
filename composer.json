@@ -9,14 +9,17 @@
 	{
 		"php": "7.*",
 		"geekality/weblib": "dev-master",
+		"geekality/php-image": "dev-master",
 		
-		"kus/php-image": "dev-master",
 		"swiftmailer/swiftmailer": "6.*",
 		"james-heinrich/getid3": "1.*"
 	},
 	
 	"autoload":
 	{
-		"psr-4": {"": "src/"}
+		"psr-4": {"": "src/"},
+		"files": [
+			"constants.inc"
+		]
 	}
 }

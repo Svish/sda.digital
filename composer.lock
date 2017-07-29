@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "19468f32ea804c35883c6a03352e4620",
+    "content-hash": "2a4c14776ebe7059ff4a92bc9c39607f",
     "packages": [
         {
             "name": "bitworking/mimeparse",
@@ -216,17 +216,48 @@
             "time": "2017-07-27T07:41:44+00:00"
         },
         {
+            "name": "geekality/php-image",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Svish/php-image.git",
+                "reference": "64ab56ebcb3a66761335bb1e9fb2d9cfdbe5dcc2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Svish/php-image/zipball/64ab56ebcb3a66761335bb1e9fb2d9cfdbe5dcc2",
+                "reference": "64ab56ebcb3a66761335bb1e9fb2d9cfdbe5dcc2",
+                "shasum": ""
+            },
+            "require": {
+                "php": "7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "support": {
+                "source": "https://github.com/Svish/php-image/tree/master"
+            },
+            "time": "2017-07-29 00:52:42"
+        },
+        {
             "name": "geekality/weblib",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Svish/php-weblib.git",
-                "reference": "b70aa3d166c7a703f46f78e3d5fc991ddd226f3f"
+                "reference": "6ba6ec2828033cd38b2c7b44d3b5a958c746d973"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Svish/php-weblib/zipball/b70aa3d166c7a703f46f78e3d5fc991ddd226f3f",
-                "reference": "b70aa3d166c7a703f46f78e3d5fc991ddd226f3f",
+                "url": "https://api.github.com/repos/Svish/php-weblib/zipball/6ba6ec2828033cd38b2c7b44d3b5a958c746d973",
+                "reference": "6ba6ec2828033cd38b2c7b44d3b5a958c746d973",
                 "shasum": ""
             },
             "require": {
@@ -243,7 +274,10 @@
             "autoload": {
                 "psr-4": {
                     "": "src/"
-                }
+                },
+                "files": [
+                    "src/_functions.inc"
+                ]
             },
             "license": [
                 "MIT"
@@ -253,7 +287,7 @@
                 "source": "https://github.com/Svish/php-weblib/tree/master",
                 "issues": "https://github.com/Svish/php-weblib/issues"
             },
-            "time": "2017-07-28 23:59:05"
+            "time": "2017-07-29 00:58:09"
         },
         {
             "name": "james-heinrich/getid3",
@@ -290,52 +324,6 @@
                 "tags"
             ],
             "time": "2017-03-27T21:12:55+00:00"
-        },
-        {
-            "name": "kus/php-image",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Svish/php-image.git",
-                "reference": "26516ed3a918971b76be55ba8928cb4592c52287"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Svish/php-image/zipball/26516ed3a918971b76be55ba8928cb4592c52287",
-                "reference": "26516ed3a918971b76be55ba8928cb4592c52287",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/PHPImage.php"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Blake Kus",
-                    "email": "blakekus@gmail.com",
-                    "homepage": "http://www.blakek.us"
-                }
-            ],
-            "description": "Wrapper for PHP's GD Library for easy image manipulation",
-            "homepage": "http://blakek.us",
-            "keywords": [
-                "gd",
-                "image",
-                "php",
-                "text"
-            ],
-            "support": {
-                "source": "https://github.com/Svish/php-image/tree/master"
-            },
-            "time": "2016-01-20 06:46:06"
         },
         {
             "name": "leafo/lessphp",
@@ -669,7 +657,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "geekality/weblib": 20,
-        "kus/php-image": 20
+        "geekality/php-image": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
